@@ -1,0 +1,5 @@
+<mj-section mj-class="credit-pad" css-class="credit-pad">
+	<mj-column>
+		<mj-text mj-class="credit-text">&copy; %year% Site Name &mdash; powered by <a href="https://plura.pt" class="credit-link">Plura&trade;</a></mj-text>
+	</mj-column>
+</mj-section>

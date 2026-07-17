@@ -1,0 +1,18 @@
+<!--
+	Text-based placeholder header — works with zero image assets. Once the client has a
+	logo PNG ready (must be publicly hosted, e.g. assets/images/mail/logo.png — never under
+	app/templates/, which is .htaccess-locked and unreachable by email clients), swap the
+	mj-text below for something like:
+		<mj-image mj-class="logo-image" src="https://example.com/assets/images/mail/logo.png" alt="Site Name" href="https://example.com/" />
+-->
+<mj-section mj-class="header-pad">
+	<mj-column>
+		<mj-text mj-class="footer-name" padding="32px 0 28px">Site Name</mj-text>
+	</mj-column>
+</mj-section>
+
+<mj-section mj-class="header-pad">
+	<mj-column>
+		<mj-divider mj-class="accent-divider" />
+	</mj-column>
+</mj-section>

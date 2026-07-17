@@ -1,0 +1,42 @@
+#bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--site-space-2xl) var(--site-space-lg);
+    text-align: center;
+    gap: var(--site-space-xl);
+}
+
+.divider {
+    width: 80px;
+    height: 1px;
+    background: var(--site-color-border);
+    opacity: .6;
+}
+
+/* Minimal placeholder logo lockup — replace with the client's real logo mark/wordmark. */
+.site-logo__name {
+    font-family: var(--site-font-serif);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    letter-spacing: var(--site-tracking-sm);
+}
+
+.site-logo__tagline {
+    font-family: var(--site-font-sans);
+    font-size: var(--site-text-xs);
+    letter-spacing: var(--site-tracking-lg);
+    text-transform: uppercase;
+    color: var(--site-color-muted);
+    margin-top: .5rem;
+}

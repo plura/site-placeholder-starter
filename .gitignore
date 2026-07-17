@@ -1,0 +1,4 @@
+app/config.php
+.vscode/sftp.json
+node_modules/
+.DS_Store

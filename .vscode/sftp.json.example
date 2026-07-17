@@ -1,0 +1,19 @@
+[
+    {
+        "name": "Site Name — Placeholder",
+        "context": ".",
+        "host": "your-host.example.com",
+        "protocol": "ftp",
+        "port": 21,
+        "username": "your-username",
+        "password": "your-password",
+        "remotePath": "/",
+        "uploadOnSave": false,
+        "useTempFile": false,
+        "openSsh": false,
+        "syncOption": {
+            "delete": true
+        },
+        "ignore": [".gitkeep", ".git", ".gitignore", ".claude", ".vscode", "config.example.php", "mail-templates"]
+    }
+]

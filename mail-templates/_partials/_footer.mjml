@@ -1,0 +1,18 @@
+<!-- Replace the placeholder contact details, address, and social links below with the client's real values. -->
+<mj-section mj-class="footer-pad" css-class="footer-pad">
+	<mj-column mj-class="footer-column">
+		<mj-text mj-class="footer-name" padding="0 0 20px">Site Name</mj-text>
+		<mj-text mj-class="footer-text" padding="0 0 20px">
+			<a href="mailto:info@example.com" class="footer-link">info&zwnj;@example&zwnj;.com</a><br />
+			<a href="tel:+351900000000" class="footer-link">+351&zwnj; 900&zwnj; 000&zwnj; 000</a><br />
+			<a href="https://maps.app.goo.gl/" class="footer-link">Address line, Postal Code City</a>
+		</mj-text>
+		<mj-text mj-class="footer-text" padding="0">
+			<a href="https://www.instagram.com/" class="footer-link">Instagram</a>
+			&nbsp;&middot;&nbsp;
+			<a href="https://www.facebook.com/" class="footer-link">Facebook</a>
+			&nbsp;&middot;&nbsp;
+			<a href="https://www.linkedin.com/" class="footer-link">LinkedIn</a>
+		</mj-text>
+	</mj-column>
+</mj-section>
