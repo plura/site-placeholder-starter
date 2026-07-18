@@ -15,7 +15,7 @@ Macieira, and future ones) instead of re-deriving it each time.
 - `app/submit.php` — field-agnostic: it loops raw POST data with no hardcoded field list,
   and reads human-readable labels from a `labels` JSON field the frontend builds live from
   the form's own `<label for="...">` elements (see `assets/js/modal.js`). Adding a field to
-  the contact form (e.g. a phone number) requires zero changes here.
+  the contact form (e.g. a company name) requires zero changes here.
 - `app/lib/phpmailer/` — vendored PHPMailer, never modified.
 - The MJML **structural** patterns in `mail-templates/_partials/` — the responsive
   side-by-side/stacked field layout, the message quote-block, the full-bleed frame
@@ -25,7 +25,7 @@ Macieira, and future ones) instead of re-deriving it each time.
 - `assets/css/base.css` — brand colors, fonts, spacing scale (all under one `:root` block,
   everything else in `layout.css`/`components.css` references these variables by name).
 - `index.html` — logo/wordmark, copy, contact details, JSON-LD business info, meta tags,
-  contact form fields beyond the universal name/email/message.
+  contact form fields beyond the universal name/email/phone/message.
 - `mail-templates/_partials/_head.mjml` — brand colors for the email (kept intentionally
   separate from the website's own CSS variables — see below).
 - `app/config.example.php` → `config.php` — SMTP credentials, `site_name` for email subjects.
@@ -51,7 +51,7 @@ both when customizing a project; don't assume one implies the other.
 3. `index.html` — replace all placeholder text, URLs, JSON-LD fields (fill in `@type`,
    address, phone, socials — don't invent `openingHours`/`geo`/`priceRange` without real
    verified values), meta tags, favicon `<link>` paths.
-4. Add real contact-form fields if needed beyond name/email/message — copy a row from
+4. Add real contact-form fields if needed beyond name/email/phone/message — copy a row from
    `mail-templates/_partials/_fields.mjml`, no `submit.php` changes required. Make sure the
    `<label for="...">` text in `index.html` matches what should appear in the email.
 5. `mail-templates/_partials/_head.mjml` — replace the placeholder color palette (see the

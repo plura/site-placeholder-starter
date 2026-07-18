@@ -1,8 +1,8 @@
 <!--
-	Universal minimum field set: name, email, message. To add project-specific fields
-	(phone, a select dropdown, etc.), copy one of the name/email row+divider pairs below,
-	rename the label text and the %placeholder%, and make sure the contact form's <label
-	for="..."> text matches (submit.php reads labels straight from the form, not from here).
+	Universal minimum field set: name, email, phone, message. To add project-specific fields
+	(a select dropdown, etc.), copy one of the row+divider pairs below, rename the label text
+	and the %placeholder%, and make sure the contact form's <label for="..."> text matches
+	(submit.php reads labels straight from the form, not from here).
 -->
 <mj-section mj-class="card-row" css-class="card-row">
 	<mj-column width="30%">
@@ -24,6 +24,20 @@
 	</mj-column>
 	<mj-column width="70%">
 		<mj-text mj-class="field-value-text">%email%</mj-text>
+	</mj-column>
+</mj-section>
+<mj-section mj-class="card-row" css-class="card-row">
+	<mj-column>
+		<mj-divider mj-class="field-divider" />
+	</mj-column>
+</mj-section>
+
+<mj-section mj-class="card-row" css-class="card-row">
+	<mj-column width="30%">
+		<mj-text mj-class="field-label-text">Telefone</mj-text>
+	</mj-column>
+	<mj-column width="70%">
+		<mj-text mj-class="field-value-text">%phone%</mj-text>
 	</mj-column>
 </mj-section>
 <mj-section mj-class="card-row" css-class="card-row">

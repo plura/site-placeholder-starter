@@ -162,10 +162,10 @@ dialog p {
 
 .form-group label {
     display: block;
-    font-size: var(--site-text-xs);
+    font-size: 0.65rem;
     letter-spacing: var(--site-tracking-lg);
     text-transform: uppercase;
-    color: var(--site-color-muted);
+    color: var(--site-color-border);
     margin-bottom: .35rem;
 }
 
@@ -175,7 +175,7 @@ dialog p {
     width: 100%;
     padding: .4rem 0;
     border: none;
-    border-bottom: 1px solid var(--site-color-border);
+    border-bottom: 1px solid var(--site-color-muted);
     border-radius: 0;
     font-family: var(--site-font-sans);
     font-size: var(--site-text-base);
@@ -188,7 +188,7 @@ dialog p {
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-    color: var(--site-color-border);
+    color: var(--site-color-muted);
 }
 
 .form-group input:focus,
@@ -197,7 +197,7 @@ dialog p {
     border-bottom-color: var(--site-color-dark);
 }
 
-.form-group textarea { resize: none; min-height: 72px; }
+.form-group textarea { resize: none; min-height: 120px; }
 
 .form-group select {
     cursor: pointer;
@@ -258,7 +258,28 @@ dialog p {
 
 /* ── Footer ── */
 .footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--site-space-xl);
+}
+
+.legal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--site-space-sm);
     font-size: var(--site-text-xs);
     color: var(--site-color-muted);
     letter-spacing: var(--site-tracking-sm);
 }
+
+.legal p { margin: 0; }
+
+.footer-credit a {
+    color: var(--site-color-muted);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.footer-credit a:hover { color: var(--site-color-fg); }
