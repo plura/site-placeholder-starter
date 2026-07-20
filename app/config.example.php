@@ -15,4 +15,12 @@ return [
     'to_name'     => '',
 
     'site_name'   => '',           // used in email subject lines, e.g. "Site Name — novo contacto do site"
+
+    // OPTIONAL — only needed for the mailing-list signup (standalone form and/or the contact
+    // form's newsletter checkbox). Leave both empty and remove the newsletter feature (see
+    // README) if this project doesn't need it.
+    'mailchimp' => [
+        'api_key' => '', // includes the datacenter suffix, e.g. abc123def-us21
+        'list_id' => '', // Audience/List ID
+    ],
 ];

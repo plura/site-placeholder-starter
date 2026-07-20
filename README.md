@@ -15,7 +15,9 @@ Macieira, and future ones) instead of re-deriving it each time.
 - `app/submit.php` — field-agnostic: it loops raw POST data with no hardcoded field list,
   and reads human-readable labels from a `labels` JSON field the frontend builds live from
   the form's own `<label for="...">` elements (see `assets/js/modal.js`). Adding a field to
-  the contact form (e.g. a company name) requires zero changes here.
+  the contact form (e.g. a company name) requires zero changes here. The one exception is
+  `newsletter` — a reserved field name for the optional mailing-list opt-in checkbox (see
+  "Optional features" below), which is deliberately excluded from the generic loop.
 - `app/lib/phpmailer/` — vendored PHPMailer, never modified.
 - The MJML **structural** patterns in `mail-templates/_partials/` — the responsive
   side-by-side/stacked field layout, the message quote-block, the full-bleed frame
@@ -42,28 +44,62 @@ cards read more reliably across mail clients that mangle dark-mode email — so 
 almost always wants its own, usually lighter, palette regardless of the site's theme. Set
 both when customizing a project; don't assume one implies the other.
 
+## Optional features
+
+Everything ships "on" by default. Decide per project what's actually needed, then delete the
+rest — every optional block is delimited with a matching marker (`<!-- OPTIONAL: ... -->` /
+`<!-- /OPTIONAL -->` in HTML, `/* OPTIONAL: ... */` / `/* /OPTIONAL */` in CSS, a `// OPTIONAL:`
+comment in PHP/JS, or a whole-file comment for files that are optional in their entirety) so
+removal is a clean, complete delete rather than guesswork about what else goes with it.
+
+Work through these questions before starting the "New project checklist" below:
+
+1. **Does this project want the contact form (modal)?** This is the starter's core feature —
+   assumed present. If not needed at all, remove `#contact-dialog` from `index.html`,
+   `assets/js/modal.js` (and its import in `main.js`), `app/submit.php`, and the
+   `mail-templates/contact/` + `app/templates/contact*.html` pair.
+2. **If yes — which fields?** Name + Email are the only two `submit.php` actually requires;
+   Phone and Message are optional by default (see step 4 below for adding/removing rows).
+3. **Does this project want the mailing-list opt-in checkbox on the contact form?** An
+   optional checkbox (`name="newsletter"`) that, when checked, also subscribes the submitter
+   via Mailchimp on successful contact submission. To remove: delete the marked block in
+   `index.html`'s `#contact-form` and the marked block near the end of `app/submit.php`.
+4. **Does this project want the standalone mailing-list signup?** A separate, inline (not
+   modal) single-email-field section on the page — lower friction than a checkbox buried in
+   a longer form, for a passive "leave your email" ask. Same pattern used on the Buscardini
+   site. To remove: delete the marked `.newsletter` block in `index.html`, its styles in
+   `components.css`, `assets/js/newsletter.js` and its import in `main.js`.
+5. **If keeping either mailing-list feature**, both use the **Mailchimp Marketing API**
+   (double opt-in — Mailchimp sends its own confirmation email, this starter never does) via
+   the shared `app/lib/mailchimp.php` helper. Fill in `mailchimp.api_key` / `mailchimp.list_id`
+   in `config.php`. If neither mailing-list feature survives step 3/4, also delete
+   `app/subscribe.php`, `app/lib/mailchimp.php`, and the `mailchimp` block in
+   `config.example.php`/`config.php`. If a project needs a different ESP than Mailchimp,
+   that's a rewrite of the one function in `app/lib/mailchimp.php`, not a new architecture.
+
 ## New project checklist
 
 1. Copy this whole repo as the starting point for the new client repo (or its `placeholder/`
    subfolder, if the target project also has a WordPress `theme/`/`plugin/` per the Plura
    lean repo structure).
-2. `assets/css/base.css` — replace the color/font values, keep the variable names.
-3. `index.html` — replace all placeholder text, URLs, JSON-LD fields (fill in `@type`,
+2. Decide on "Optional features" above and delete what's not needed.
+3. `assets/css/base.css` — replace the color/font values, keep the variable names.
+4. `index.html` — replace all placeholder text, URLs, JSON-LD fields (fill in `@type`,
    address, phone, socials — don't invent `openingHours`/`geo`/`priceRange` without real
    verified values), meta tags, favicon `<link>` paths.
-4. Add real contact-form fields if needed beyond name/email/phone/message — copy a row from
+5. Add real contact-form fields if needed beyond name/email/phone/message — copy a row from
    `mail-templates/_partials/_fields.mjml`, no `submit.php` changes required. Make sure the
    `<label for="...">` text in `index.html` matches what should appear in the email.
-5. `mail-templates/_partials/_head.mjml` — replace the placeholder color palette (see the
+6. `mail-templates/_partials/_head.mjml` — replace the placeholder color palette (see the
    comment at the top of the file) and swap the header logo (`_header.mjml`) for a real
    `<mj-image>` once a public-facing logo PNG exists (never point it at `app/templates/` —
    that's `.htaccess`-locked and unreachable by email clients; put it under
    `assets/images/mail/`).
-6. Compile the MJML (see below), then `cp app/config.example.php app/config.php` and fill
-   in real SMTP credentials.
-7. Generate favicons and `assets/images/og.png` — see specs below.
-8. Copy `.vscode/sftp.json.example` → `sftp.json`, fill in real host/credentials.
-9. Update `robots.txt` / `sitemap.xml` / `site.webmanifest` with the real domain.
+7. Compile the MJML (see below), then `cp app/config.example.php app/config.php` and fill
+   in real SMTP credentials (and Mailchimp keys, if keeping either mailing-list feature).
+8. Generate favicons and `assets/images/og.png` — see specs below.
+9. Copy `.vscode/sftp.json.example` → `sftp.json`, fill in real host/credentials.
+10. Update `robots.txt` / `sitemap.xml` / `site.webmanifest` with the real domain.
 
 ## Compiling the MJML
 

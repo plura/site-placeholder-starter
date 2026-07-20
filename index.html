@@ -95,6 +95,25 @@
 
     <div class="divider" id="divider"></div>
 
+    <!-- OPTIONAL: mailing list signup, separate from the contact form — a lower-friction inline
+         ask (no modal) for a single-field "leave your email" action. Remove this whole block
+         (and its styles in components.css, assets/js/newsletter.js + its import in main.js,
+         and app/subscribe.php + app/lib/mailchimp.php) if this project has no mailing list. -->
+    <div class="newsletter">
+        <p class="newsletter__kicker">Fique a par das novidades</p>
+        <form id="newsletter-form" novalidate>
+            <div class="newsletter__row">
+                <label for="newsletter-email" class="sr-only">Email</label>
+                <input type="email" id="newsletter-email" name="email" placeholder="o.seu@email.com" required>
+                <button type="submit" class="newsletter__submit" aria-label="Subscrever">
+                    <i data-lucide="arrow-right" width="16" height="16"></i>
+                </button>
+            </div>
+            <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+        </form>
+    </div>
+    <!-- /OPTIONAL -->
+
     <footer class="footer">
         <div class="contact">
             <a href="tel:+351900000000">
@@ -156,6 +175,13 @@
                 <label for="message">Mensagem (opcional)</label>
                 <textarea id="message" name="message" placeholder="Em que podemos ajudar?"></textarea>
             </div>
+            <!-- OPTIONAL: newsletter opt-in — also subscribes the submitter via app/submit.php's
+                 optional block. Remove this label if this project has no mailing list. -->
+            <label class="form-check">
+                <input type="checkbox" name="newsletter" value="1">
+                <span>Também quero receber novidades por email</span>
+            </label>
+            <!-- /OPTIONAL -->
             <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
             <button type="submit" class="btn-submit">Enviar</button>
         </form>

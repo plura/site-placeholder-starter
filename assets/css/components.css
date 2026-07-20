@@ -199,6 +199,27 @@ dialog p {
 
 .form-group textarea { resize: none; min-height: 120px; }
 
+/* OPTIONAL: newsletter opt-in checkbox inside the contact form — remove alongside the
+   <label class="form-check"> in index.html if this project has no mailing list. */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: var(--site-space-xs);
+    font-size: var(--site-text-sm);
+    color: var(--site-color-muted);
+    cursor: pointer;
+    margin-bottom: 1.1rem;
+}
+
+.form-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--site-color-dark);
+    cursor: pointer;
+}
+/* /OPTIONAL */
+
 .form-group select {
     cursor: pointer;
     padding-right: 1.25rem;
@@ -229,6 +250,64 @@ dialog p {
     letter-spacing: var(--site-tracking-sm);
     text-wrap: pretty;
 }
+
+/* OPTIONAL: standalone mailing-list signup — remove alongside the .newsletter block in
+   index.html (and assets/js/newsletter.js) if this project has no mailing list. */
+.newsletter {
+    width: 100%;
+    max-width: 320px;
+}
+
+.newsletter__kicker {
+    font-size: var(--site-text-xs);
+    letter-spacing: var(--site-tracking-lg);
+    text-transform: uppercase;
+    color: var(--site-color-muted);
+    margin-bottom: var(--site-space-sm);
+}
+
+.newsletter__row {
+    display: flex;
+    align-items: stretch;
+    gap: var(--site-space-sm);
+    border-bottom: 1px solid var(--site-color-muted);
+    transition: border-color var(--site-transition);
+}
+
+.newsletter__row:focus-within { border-color: var(--site-color-fg); }
+
+.newsletter__row input {
+    flex: 1;
+    min-width: 0;
+    padding: .5rem 0;
+    border: none;
+    background: transparent;
+    font-family: var(--site-font-sans);
+    font-size: var(--site-text-base);
+    color: var(--site-color-fg);
+    outline: none;
+}
+
+.newsletter__row input::placeholder { color: var(--site-color-muted); }
+
+.newsletter__submit {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--site-color-fg);
+    cursor: pointer;
+    padding: 0 .25rem;
+    transition: color var(--site-transition), transform var(--site-transition-fast);
+}
+
+.newsletter__submit:hover { color: var(--site-color-accent); transform: translateX(2px); }
+
+/* .form-success/.form-error are tuned for the modal's white background — override for
+   readable contrast against this section's dark page background. */
+.newsletter .form-success { color: var(--site-color-fg); padding: 0; }
+.newsletter .form-error { color: #e08a8a; margin: .5rem 0 0; }
+/* /OPTIONAL */
 
 /* ── Socials ── */
 .socials {

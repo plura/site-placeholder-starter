@@ -49,9 +49,11 @@ if (!empty($_POST['labels']) && is_string($_POST['labels'])) {
     }
 }
 
+// 'newsletter' is a control flag (see the optional opt-in block near the bottom of this
+// file), not content — excluded here so it never leaks into the email body as a field.
 $data = [];
 foreach ($_POST as $key => $value) {
-    if ($key === 'botcheck' || $key === 'labels' || !is_string($value)) {
+    if ($key === 'botcheck' || $key === 'labels' || $key === 'newsletter' || !is_string($value)) {
         continue;
     }
     $data[$key] = strip_tags(trim($value));
@@ -156,6 +158,20 @@ send_mail(
     $config['to_email'],
     $config['to_name']
 );
+
+// —— OPTIONAL: newsletter opt-in checkbox ————————————————————————————————————
+// Only fires if the contact form includes a `newsletter` checkbox (see index.html) and it
+// was checked. Best-effort: a Mailchimp failure here doesn't fail the contact submission
+// itself, since the notification/reply emails have already sent successfully by this point.
+// Safe to delete this block (and the checkbox in index.html) if this project has no
+// newsletter, or delete the newsletter feature's other pieces per the README.
+if (!empty($_POST['newsletter'])) {
+    require_once __DIR__ . '/lib/mailchimp.php';
+    $optin = mailchimp_subscribe($config, $data['email']);
+    if (!$optin['success']) {
+        error_log('Newsletter opt-in via contact form failed: ' . $optin['message']);
+    }
+}
 
 // —— Done ————————————————————————————————————————————————————————————————————
 echo json_encode(['success' => true]);
