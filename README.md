@@ -37,13 +37,30 @@ Macieira, and future ones) instead of re-deriving it each time.
   per-client art direction, not part of this starter. Add them as their own JS modules and
   wire them up from `assets/js/main.js`.
 
-## Why the email's colors are separate from the website's
+## Why the email's colors and fonts are separate from the website's
 
 The website CSS and the MJML email templates each have their own color tokens, deliberately
 not shared. A client's actual site may be light or dark themed, but light-background email
 cards read more reliably across mail clients that mangle dark-mode email — so the email
 almost always wants its own, usually lighter, palette regardless of the site's theme. Set
-both when customizing a project; don't assume one implies the other.
+both when customizing a project; don't assume one implies the other. In the starter's default
+placeholder palette, this already lines up more than it might look at a glance: the frame/card
+colors (`#eeeeee`/`#ffffff`) closely mirror the website's own light-theme tokens
+(`--light-bg`/`--light-surface` in `assets/css/base.css`), and the accent blue (`#4a90d9`) is
+an exact match with `--site-color-accent` — not a coincidence, kept in sync deliberately.
+
+Fonts are separate for the same reliability reason, not shared with `assets/css/base.css`'s
+`--site-font-serif`/`--site-font-sans` (Cardo/Outfit, loaded via Google Fonts): most mail
+clients strip external font loading entirely, so `_head.mjml` uses system font stacks instead
+(`Georgia, 'Times New Roman', serif` for headings, `Helvetica Neue, Helvetica, Arial,
+sans-serif` for body text) — these render identically everywhere with zero load risk. They're
+not a personality match for Cardo/Outfit (more neutral/classic than delicate-serif/
+light-geometric-sans), and that's an intentional tradeoff, not an oversight: web-safe
+alternatives closer to Cardo/Outfit's character (e.g. Baskerville, Century Gothic) have
+materially worse Outlook/Windows support, trading real rendering reliability for a closer but
+riskier aesthetic match. Don't try to load the website's Google Fonts into the email to "fix"
+this — the structural language (uppercase tracked labels, thin dividers, solid uppercase
+buttons) already carries the brand identity independent of the exact typeface.
 
 ## Dark/light mode
 
