@@ -1,3 +1,7 @@
+/* OPTIONAL (2/2): manual toggle — remove alongside the #theme-toggle button + inline anti-FOUC
+   script in index.html, assets/js/theme.js and its import in main.js, and base.css's OPTIONAL
+   (2/2) block, for an auto-only (no manual override) dark/light site. Remove alongside
+   OPTIONAL (1/2) too (see base.css) for a single-theme site with no dark/light distinction. */
 /* ── Theme toggle ── */
 .theme-toggle {
     position: fixed;
@@ -31,6 +35,7 @@
 
 :root[data-theme="light"] .theme-toggle__icon--sun { display: none; }
 :root[data-theme="light"] .theme-toggle__icon--moon { display: block; }
+/* /OPTIONAL */
 
 /* ── Contact ── */
 .contact {
@@ -271,6 +276,8 @@ dialog p {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23f5f5f5' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
+/* OPTIONAL (1/2): dark/light mode — remove alongside base.css's OPTIONAL (1/2) block for a
+   single-theme site; the unthemed rules above already cover that single (dark) theme alone. */
 @media (prefers-color-scheme: light) {
     :root:not([data-theme]) .form-group select {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999999' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -279,13 +286,17 @@ dialog p {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23111111' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
 }
+/* /OPTIONAL */
 
+/* OPTIONAL (2/2): manual toggle — remove alongside base.css's OPTIONAL (2/2) block for an
+   auto-only (no manual override) dark/light site. */
 :root[data-theme="light"] .form-group select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999999' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 :root[data-theme="light"] .form-group select:focus {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23111111' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
+/* /OPTIONAL */
 
 /* ── Form feedback ── */
 .form-success {

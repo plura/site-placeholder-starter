@@ -10,15 +10,23 @@
 
 :root {
     /*
-        Colors — theme-reactive. Two independent axes: page (the canvas — bg/fg/muted/border)
-        and surface (the modal card — surface/surface-fg/surface-muted/surface-label), each with
-        its own dark/light values below. Default is dark (matches this starter's original
-        look); @media (prefers-color-scheme: light) switches it automatically unless a manual
-        [data-theme] override (see assets/js/theme.js) is present, which always wins.
+        Colors. Two independent axes: page (the canvas — bg/fg/muted/border) and surface (the
+        modal card — surface/surface-fg/surface-muted/surface-label). --site-color-accent and
+        --site-danger are shared constants, not split per axis.
 
-        BRAND CUSTOMIZATION: edit the raw --dark-*/--light-* hex values below for the client's
-        actual palette — keep both the raw and --site-* names as-is, everything else references
-        --site-* names only.
+        BRAND CUSTOMIZATION: edit the raw --dark- hex values below for the client's actual
+        palette (and --light- too, if keeping dark/light mode — see OPTIONAL block below).
+        Keep both the raw and --site- names as-is, everything else references --site- names
+        only.
+
+        --site- resolves to --dark- unconditionally here, which also makes this the
+        single-theme fallback if dark/light mode (below) is removed — this project ships one
+        theme (dark) unless an OPTIONAL block re-introduces a light variant.
+
+        Two independently removable layers, see the two OPTIONAL blocks below for details:
+        (1) dark/light mode itself — the site auto-follows the OS/browser preference, no JS;
+        (2) the manual toggle on top of it — a button that lets a visitor override (1) and
+            persists the choice. Keeping (1) without (2) is a valid, smaller combination.
     */
     --site-color-accent: #4a90d9; /* constant across both themes */
 
@@ -32,6 +40,10 @@
     --dark-surface-muted: #9a9a9a;
     --dark-surface-label: #cfcfcf;
 
+    /* OPTIONAL (1/2): dark/light mode — remove this block (and the @media block below, and the
+       @media-only select-SVG rules in components.css) if this project ships one theme only. The
+       --site- block right after this one keeps working unmodified either way (it already
+       points at --dark-, which becomes this project's only theme once this is gone). */
     --light-bg:            #f5f4f2;
     --light-fg:            #1a1a1a;
     --light-muted:         #707070;
@@ -41,6 +53,7 @@
     --light-surface-fg:    #111111;
     --light-surface-muted: #999999;
     --light-surface-label: #333333;
+    /* /OPTIONAL */
 
     --site-bg:            var(--dark-bg);
     --site-fg:            var(--dark-fg);
@@ -80,6 +93,9 @@
     --site-transition-fast: 0.15s;
 }
 
+/* OPTIONAL (1/2): dark/light mode — see the removal note on the --light- block above. This
+   block alone (with that one) is enough for the site to auto-follow the OS/browser preference,
+   no JS required — keep this without OPTIONAL (2/2) below for an auto-only, no-toggle site. */
 @media (prefers-color-scheme: light) {
     :root:not([data-theme]) {
         --site-bg:            var(--light-bg);
@@ -93,7 +109,14 @@
         --site-surface-label: var(--light-surface-label);
     }
 }
+/* /OPTIONAL */
 
+/* OPTIONAL (2/2): manual toggle — only meaningful together with OPTIONAL (1/2) above. Gives
+   [data-theme="light"] (set by #theme-toggle / assets/js/theme.js) explicit override power over
+   the OS/browser preference. Remove alongside the toggle button + inline anti-FOUC script in
+   index.html, assets/js/theme.js and its import in main.js, the .theme-toggle rules and the
+   [data-theme] select-SVG rule in components.css, if this project should auto-follow the
+   OS/browser preference only, with no manual override. */
 :root[data-theme="light"] {
     --site-bg:            var(--light-bg);
     --site-fg:            var(--light-fg);
@@ -105,6 +128,7 @@
     --site-surface-muted: var(--light-surface-muted);
     --site-surface-label: var(--light-surface-label);
 }
+/* /OPTIONAL */
 
 html, body {
     height: 100%;

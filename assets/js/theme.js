@@ -1,3 +1,7 @@
+// OPTIONAL (2/2): manual dark/light toggle. Safe to delete this whole file (and its import in
+// main.js, #theme-toggle in index.html, and the OPTIONAL (2/2) blocks in base.css/
+// components.css) for an auto-only (no manual override) dark/light site — the OPTIONAL (1/2)
+// blocks alone already make the site auto-follow the OS/browser preference with no JS at all.
 const STORAGE_KEY = 'theme';
 
 const root       = document.documentElement;

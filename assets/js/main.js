@@ -1,5 +1,5 @@
 import './modal.js';
-import './theme.js';
+import './theme.js'; // OPTIONAL (2/2) — remove for an auto-only dark/light site (or both theme tiers, see base.css)
 import './newsletter.js'; // OPTIONAL — remove if this project has no mailing-list signup
 
 const { lucide } = window;

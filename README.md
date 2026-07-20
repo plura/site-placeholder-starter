@@ -77,6 +77,11 @@ equivalent mail-client-dark-mode-mangling constraint forcing it to stay light-on
   SVG, which can't reference CSS custom properties — its dark/light variants are spelled out as
   separate rules instead of tokenized. Doesn't matter unless a project actually adds a
   `<select>` to the contact form (none does by default).
+- **Both the mode and the toggle are optional, independently of each other** — see "Optional
+  features" below. Every block involved is marked `OPTIONAL (1/2)` (dark/light mode itself —
+  auto-follows the OS/browser preference, no JS) or `OPTIONAL (2/2)` (the manual toggle layered
+  on top of it). Keeping (1/2) without (2/2) is a valid, smaller combination (auto-only, no
+  override button); removing both means a single (dark) theme.
 
 ## Optional features
 
@@ -110,6 +115,16 @@ Work through these questions before starting the "New project checklist" below:
    `app/subscribe.php`, `app/lib/mailchimp.php`, and the `mailchimp` block in
    `config.example.php`/`config.php`. If a project needs a different ESP than Mailchimp,
    that's a rewrite of the one function in `app/lib/mailchimp.php`, not a new architecture.
+6. **Does this project want dark/light mode at all?** See "Dark/light mode" above for the full
+   mechanism. Two independently removable tiers, marked `OPTIONAL (1/2)` and `OPTIONAL (2/2)`:
+   - Keep both for the default: auto-follows the OS/browser preference, with a manual toggle
+     button that overrides it and persists the choice.
+   - Keep only `OPTIONAL (1/2)` (delete every `OPTIONAL (2/2)` block, `#theme-toggle` in
+     `index.html`, and `assets/js/theme.js` + its import) for auto-only — no toggle button, no
+     JS at all, purely `prefers-color-scheme`-driven.
+   - Delete both tiers entirely for a single (dark) theme — `--site-*` already resolves to
+     `--dark-*` unconditionally, so nothing else needs to change once the switching blocks are
+     gone.
 
 ## New project checklist
 

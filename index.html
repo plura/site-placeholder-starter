@@ -9,13 +9,16 @@
     <link rel="canonical" href="https://example.com/">
     <meta name="theme-color" content="#1a1a1a">
 
-    <!--
-        Applies a stored light/dark override (see assets/js/theme.js) before first paint, so
-        there's no flash of the wrong theme. Deliberately does nothing when no override is
-        stored — the CSS's own @media (prefers-color-scheme) handles following the system
-        setting live in that case; this script only needs to step in when a manual choice
-        differs from it. Must stay a plain synchronous script (no defer/type=module).
-    -->
+    <!-- OPTIONAL (2/2): manual toggle — remove this script (and #theme-toggle below,
+         assets/js/theme.js + its import in main.js, and the OPTIONAL (2/2) blocks in
+         base.css/components.css) for an auto-only (no manual override) dark/light site — the
+         OPTIONAL (1/2) blocks alone already make the site auto-follow the OS/browser
+         preference with no JS at all. Remove both tiers for a single-theme site.
+         Applies a stored light/dark override (see assets/js/theme.js) before first paint, so
+         there's no flash of the wrong theme. Deliberately does nothing when no override is
+         stored — the CSS's own @media (prefers-color-scheme) handles following the system
+         setting live in that case; this script only needs to step in when a manual choice
+         differs from it. Must stay a plain synchronous script (no defer/type=module). -->
     <script>
         (function () {
             var stored = localStorage.getItem('theme');
@@ -27,6 +30,7 @@
             if (meta) meta.setAttribute('content', theme === 'light' ? '#f5f4f2' : '#1a1a1a');
         })();
     </script>
+    <!-- /OPTIONAL -->
 
     <!-- Favicons — see README for the asset spec (sizes, formats) -->
     <link rel="icon" type="image/png" sizes="96x96" href="assets/favicons/favicon-96x96.png">
@@ -92,10 +96,12 @@
 
 <canvas id="bg-canvas"></canvas>
 
+<!-- OPTIONAL (2/2): manual toggle — see the note on the inline script in <head> above. -->
 <button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema claro/escuro">
     <i data-lucide="sun" width="18" height="18" class="theme-toggle__icon theme-toggle__icon--sun"></i>
     <i data-lucide="moon" width="18" height="18" class="theme-toggle__icon theme-toggle__icon--moon"></i>
 </button>
+<!-- /OPTIONAL -->
 
 <div class="page">
 
