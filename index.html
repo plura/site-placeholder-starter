@@ -7,12 +7,31 @@
     <meta name="description" content="Site Name — one to two sentence description matching the JSON-LD description below.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://example.com/">
+    <meta name="theme-color" content="#1a1a1a">
+
+    <!--
+        Applies a stored light/dark override (see assets/js/theme.js) before first paint, so
+        there's no flash of the wrong theme. Deliberately does nothing when no override is
+        stored — the CSS's own @media (prefers-color-scheme) handles following the system
+        setting live in that case; this script only needs to step in when a manual choice
+        differs from it. Must stay a plain synchronous script (no defer/type=module).
+    -->
+    <script>
+        (function () {
+            var stored = localStorage.getItem('theme');
+            if (stored === 'light' || stored === 'dark') {
+                document.documentElement.setAttribute('data-theme', stored);
+            }
+            var theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', theme === 'light' ? '#f5f4f2' : '#1a1a1a');
+        })();
+    </script>
 
     <!-- Favicons — see README for the asset spec (sizes, formats) -->
     <link rel="icon" type="image/png" sizes="96x96" href="assets/favicons/favicon-96x96.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
     <link rel="manifest" href="site.webmanifest">
-    <meta name="theme-color" content="#1a1a1a">
 
     <!-- Open Graph -->
     <meta property="og:type"        content="website">
@@ -72,6 +91,11 @@
 <body>
 
 <canvas id="bg-canvas"></canvas>
+
+<button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema claro/escuro">
+    <i data-lucide="sun" width="18" height="18" class="theme-toggle__icon theme-toggle__icon--sun"></i>
+    <i data-lucide="moon" width="18" height="18" class="theme-toggle__icon theme-toggle__icon--moon"></i>
+</button>
 
 <div class="page">
 

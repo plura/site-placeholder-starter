@@ -1,3 +1,37 @@
+/* ── Theme toggle ── */
+.theme-toggle {
+    position: fixed;
+    top: var(--site-space-lg);
+    right: var(--site-space-lg);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: 1px solid var(--site-border);
+    border-radius: 50%;
+    color: var(--site-fg);
+    cursor: pointer;
+    transition: border-color var(--site-transition), color var(--site-transition);
+}
+
+.theme-toggle:hover {
+    border-color: var(--site-color-accent);
+    color: var(--site-color-accent);
+}
+
+.theme-toggle__icon--moon { display: none; }
+
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme]) .theme-toggle__icon--sun { display: none; }
+    :root:not([data-theme]) .theme-toggle__icon--moon { display: block; }
+}
+
+:root[data-theme="light"] .theme-toggle__icon--sun { display: none; }
+:root[data-theme="light"] .theme-toggle__icon--moon { display: block; }
+
 /* ── Contact ── */
 .contact {
     display: flex;
@@ -10,7 +44,7 @@
     display: flex;
     align-items: center;
     gap: var(--site-space-xs);
-    color: var(--site-color-muted);
+    color: var(--site-muted);
     text-decoration: none;
     font-size: var(--site-text-base);
     transition: color var(--site-transition);
@@ -20,7 +54,7 @@
 
 .contact a svg {
     flex-shrink: 0;
-    color: var(--site-color-muted);
+    color: var(--site-muted);
 }
 
 /* ── Buttons ── */
@@ -28,13 +62,13 @@
     display: inline-block;
     padding: .55rem 1.8rem;
     background: transparent;
-    color: var(--site-color-fg);
+    color: var(--site-fg);
     font-family: var(--site-font-sans);
     font-size: var(--site-text-sm);
     font-weight: 300;
     letter-spacing: var(--site-tracking-xl);
     text-transform: uppercase;
-    border: 1px solid var(--site-color-fg);
+    border: 1px solid var(--site-fg);
     cursor: pointer;
     transition: background var(--site-transition), border-color var(--site-transition), color var(--site-transition), transform var(--site-transition-fast);
 }
@@ -42,15 +76,15 @@
 .btn-cta:hover {
     background: var(--site-color-accent);
     border-color: var(--site-color-accent);
-    color: var(--site-color-bg);
+    color: var(--site-bg);
     transform: translateY(-1px);
 }
 
 .btn-submit {
     width: 100%;
     padding: .85rem;
-    background: var(--site-color-fg);
-    color: var(--site-color-bg);
+    background: var(--site-surface-fg);
+    color: var(--site-surface);
     font-family: var(--site-font-sans);
     font-size: var(--site-text-sm);
     font-weight: 300;
@@ -62,7 +96,7 @@
     transition: background var(--site-transition), color var(--site-transition);
 }
 
-.btn-submit:hover { background: var(--site-color-accent); color: var(--site-color-bg); }
+.btn-submit:hover { background: var(--site-color-accent); color: var(--site-surface); }
 
 /* ── CTA wrap ── */
 .cta-wrap {}
@@ -99,7 +133,7 @@ dialog[open] {
 
 dialog::backdrop {
     backdrop-filter: blur(0px);
-    background: color-mix(in srgb, var(--site-color-dark) 0%, transparent);
+    background: color-mix(in srgb, black 0%, transparent);
     transition:
         background 0.35s ease,
         backdrop-filter 0.35s ease,
@@ -109,21 +143,23 @@ dialog::backdrop {
 
 dialog[open]::backdrop {
     backdrop-filter: blur(4px);
-    background: color-mix(in srgb, var(--site-color-dark) 55%, transparent);
+    background: color-mix(in srgb, black 55%, transparent);
 }
 
 @starting-style {
     dialog[open]::backdrop {
         backdrop-filter: blur(0px);
-        background: color-mix(in srgb, var(--site-color-dark) 0%, transparent);
+        background: color-mix(in srgb, black 0%, transparent);
     }
 }
 
 .dialog__inner {
-    background: var(--site-color-white);
+    background: var(--site-surface);
+    border: 1px solid color-mix(in srgb, var(--site-surface-fg) 12%, transparent);
     box-shadow: 0 24px 64px rgba(0, 0, 0, .15);
     padding: var(--site-space-xl) var(--site-space-lg);
     position: relative;
+    transition: background var(--site-transition);
 }
 
 .modal-close {
@@ -133,25 +169,25 @@ dialog[open]::backdrop {
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--site-color-muted);
+    color: var(--site-surface-muted);
     transition: color var(--site-transition);
     line-height: 1;
     padding: .25rem;
 }
 
-.modal-close:hover { color: var(--site-color-dark); }
+.modal-close:hover { color: var(--site-surface-fg); }
 
 dialog h2 {
     font-family: var(--site-font-serif);
     font-size: var(--site-text-lg);
     font-weight: 400;
-    color: var(--site-color-dark);
+    color: var(--site-surface-fg);
     margin-bottom: .4rem;
 }
 
 dialog p {
     font-size: var(--site-text-sm);
-    color: var(--site-color-muted);
+    color: var(--site-surface-muted);
     margin-bottom: 1.75rem;
 }
 
@@ -165,7 +201,7 @@ dialog p {
     font-size: 0.65rem;
     letter-spacing: var(--site-tracking-lg);
     text-transform: uppercase;
-    color: var(--site-color-border);
+    color: var(--site-surface-label);
     margin-bottom: .35rem;
 }
 
@@ -175,11 +211,11 @@ dialog p {
     width: 100%;
     padding: .4rem 0;
     border: none;
-    border-bottom: 1px solid var(--site-color-muted);
+    border-bottom: 1px solid var(--site-surface-muted);
     border-radius: 0;
     font-family: var(--site-font-sans);
     font-size: var(--site-text-base);
-    color: var(--site-color-dark);
+    color: var(--site-surface-fg);
     background: transparent;
     transition: border-color var(--site-transition);
     outline: none;
@@ -188,13 +224,13 @@ dialog p {
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-    color: var(--site-color-muted);
+    color: var(--site-surface-muted);
 }
 
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-    border-bottom-color: var(--site-color-dark);
+    border-bottom-color: var(--site-surface-fg);
 }
 
 .form-group textarea { resize: none; min-height: 120px; }
@@ -206,7 +242,7 @@ dialog p {
     align-items: center;
     gap: var(--site-space-xs);
     font-size: var(--site-text-sm);
-    color: var(--site-color-muted);
+    color: var(--site-surface-muted);
     cursor: pointer;
     margin-bottom: 1.1rem;
 }
@@ -215,28 +251,46 @@ dialog p {
     width: 16px;
     height: 16px;
     margin: 0;
-    accent-color: var(--site-color-dark);
+    accent-color: var(--site-surface-fg);
     cursor: pointer;
 }
 /* /OPTIONAL */
 
+/* Select arrow is a data-URI SVG — can't reference CSS custom properties, so light/dark
+   variants are spelled out per theme instead. Default (unthemed) matches the dark surface. */
 .form-group select {
     cursor: pointer;
     padding-right: 1.25rem;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999999' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239a9a9a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0 center;
     background-size: 10px 6px;
 }
 
 .form-group select:focus {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23f5f5f5' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme]) .form-group select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999999' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+    :root:not([data-theme]) .form-group select:focus {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23111111' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+}
+
+:root[data-theme="light"] .form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999999' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+:root[data-theme="light"] .form-group select:focus {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23111111' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 /* ── Form feedback ── */
 .form-success {
     font-size: var(--site-text-sm);
-    color: var(--site-color-dark);
+    color: var(--site-surface-fg);
     text-align: center;
     padding: 2rem 0 1rem;
     letter-spacing: var(--site-tracking-sm);
@@ -245,7 +299,7 @@ dialog p {
 
 .form-error {
     font-size: var(--site-text-xs);
-    color: #b04040;
+    color: var(--site-danger);
     margin-bottom: 0.75rem;
     letter-spacing: var(--site-tracking-sm);
     text-wrap: pretty;
@@ -262,7 +316,7 @@ dialog p {
     font-size: var(--site-text-xs);
     letter-spacing: var(--site-tracking-lg);
     text-transform: uppercase;
-    color: var(--site-color-muted);
+    color: var(--site-muted);
     margin-bottom: var(--site-space-sm);
 }
 
@@ -270,11 +324,11 @@ dialog p {
     display: flex;
     align-items: stretch;
     gap: var(--site-space-sm);
-    border-bottom: 1px solid var(--site-color-muted);
+    border-bottom: 1px solid var(--site-muted);
     transition: border-color var(--site-transition);
 }
 
-.newsletter__row:focus-within { border-color: var(--site-color-fg); }
+.newsletter__row:focus-within { border-color: var(--site-fg); }
 
 .newsletter__row input {
     flex: 1;
@@ -284,18 +338,18 @@ dialog p {
     background: transparent;
     font-family: var(--site-font-sans);
     font-size: var(--site-text-base);
-    color: var(--site-color-fg);
+    color: var(--site-fg);
     outline: none;
 }
 
-.newsletter__row input::placeholder { color: var(--site-color-muted); }
+.newsletter__row input::placeholder { color: var(--site-muted); }
 
 .newsletter__submit {
     display: flex;
     align-items: center;
     background: none;
     border: none;
-    color: var(--site-color-fg);
+    color: var(--site-fg);
     cursor: pointer;
     padding: 0 .25rem;
     transition: color var(--site-transition), transform var(--site-transition-fast);
@@ -303,10 +357,10 @@ dialog p {
 
 .newsletter__submit:hover { color: var(--site-color-accent); transform: translateX(2px); }
 
-/* .form-success/.form-error are tuned for the modal's white background — override for
-   readable contrast against this section's dark page background. */
-.newsletter .form-success { color: var(--site-color-fg); padding: 0; }
-.newsletter .form-error { color: #e08a8a; margin: .5rem 0 0; }
+/* .form-success defaults to the modal's surface tokens — override for the page's own tokens
+   since this section sits directly on the page canvas, not inside the modal. .form-error
+   already uses --site-danger, which is tuned to work on both page and surface, no override needed. */
+.newsletter .form-success { color: var(--site-fg); padding: 0; }
 /* /OPTIONAL */
 
 /* ── Socials ── */
@@ -317,12 +371,12 @@ dialog p {
 }
 
 .socials a {
-    color: var(--site-color-muted);
+    color: var(--site-muted);
     transition: color var(--site-transition);
     line-height: 1;
 }
 
-.socials a:hover { color: var(--site-color-fg); }
+.socials a:hover { color: var(--site-fg); }
 
 .social-icon {
     display: block;
@@ -349,16 +403,16 @@ dialog p {
     align-items: center;
     gap: var(--site-space-sm);
     font-size: var(--site-text-xs);
-    color: var(--site-color-muted);
+    color: var(--site-muted);
     letter-spacing: var(--site-tracking-sm);
 }
 
 .legal p { margin: 0; }
 
 .footer-credit a {
-    color: var(--site-color-muted);
+    color: var(--site-muted);
     font-weight: 700;
     text-decoration: none;
 }
 
-.footer-credit a:hover { color: var(--site-color-fg); }
+.footer-credit a:hover { color: var(--site-fg); }

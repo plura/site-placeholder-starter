@@ -9,14 +9,48 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-    /* Colors */
-    --site-color-accent: #4a90d9;
-    --site-color-bg:     #1a1a1a;
-    --site-color-fg:     #f0f0f0;
-    --site-color-dark:   #111111;
-    --site-color-muted:  #999999;
-    --site-color-white:  #ffffff;
-    --site-color-border: #333333;
+    /*
+        Colors — theme-reactive. Two independent axes: page (the canvas — bg/fg/muted/border)
+        and surface (the modal card — surface/surface-fg/surface-muted/surface-label), each with
+        its own dark/light values below. Default is dark (matches this starter's original
+        look); @media (prefers-color-scheme: light) switches it automatically unless a manual
+        [data-theme] override (see assets/js/theme.js) is present, which always wins.
+
+        BRAND CUSTOMIZATION: edit the raw --dark-*/--light-* hex values below for the client's
+        actual palette — keep both the raw and --site-* names as-is, everything else references
+        --site-* names only.
+    */
+    --site-color-accent: #4a90d9; /* constant across both themes */
+
+    --dark-bg:            #1a1a1a;
+    --dark-fg:            #f0f0f0;
+    --dark-muted:         #999999;
+    --dark-border:        #333333;
+    --dark-danger:        #e08a8a;
+    --dark-surface:       #242424;
+    --dark-surface-fg:    #f5f5f5;
+    --dark-surface-muted: #9a9a9a;
+    --dark-surface-label: #cfcfcf;
+
+    --light-bg:            #f5f4f2;
+    --light-fg:            #1a1a1a;
+    --light-muted:         #707070;
+    --light-border:        #d8d6d2;
+    --light-danger:        #b04040;
+    --light-surface:       #ffffff;
+    --light-surface-fg:    #111111;
+    --light-surface-muted: #999999;
+    --light-surface-label: #333333;
+
+    --site-bg:            var(--dark-bg);
+    --site-fg:            var(--dark-fg);
+    --site-muted:         var(--dark-muted);
+    --site-border:        var(--dark-border);
+    --site-danger:        var(--dark-danger);
+    --site-surface:       var(--dark-surface);
+    --site-surface-fg:    var(--dark-surface-fg);
+    --site-surface-muted: var(--dark-surface-muted);
+    --site-surface-label: var(--dark-surface-label);
 
     /* Spacing */
     --site-space-xs:  0.5rem;
@@ -46,12 +80,39 @@
     --site-transition-fast: 0.15s;
 }
 
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme]) {
+        --site-bg:            var(--light-bg);
+        --site-fg:            var(--light-fg);
+        --site-muted:         var(--light-muted);
+        --site-border:        var(--light-border);
+        --site-danger:        var(--light-danger);
+        --site-surface:       var(--light-surface);
+        --site-surface-fg:    var(--light-surface-fg);
+        --site-surface-muted: var(--light-surface-muted);
+        --site-surface-label: var(--light-surface-label);
+    }
+}
+
+:root[data-theme="light"] {
+    --site-bg:            var(--light-bg);
+    --site-fg:            var(--light-fg);
+    --site-muted:         var(--light-muted);
+    --site-border:        var(--light-border);
+    --site-danger:        var(--light-danger);
+    --site-surface:       var(--light-surface);
+    --site-surface-fg:    var(--light-surface-fg);
+    --site-surface-muted: var(--light-surface-muted);
+    --site-surface-label: var(--light-surface-label);
+}
+
 html, body {
     height: 100%;
     font-family: var(--site-font-sans);
-    background: var(--site-color-bg);
-    color: var(--site-color-fg);
+    background: var(--site-bg);
+    color: var(--site-fg);
     overflow-x: hidden;
+    transition: background var(--site-transition), color var(--site-transition);
 }
 
 .sr-only {

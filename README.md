@@ -25,7 +25,8 @@ Macieira, and future ones) instead of re-deriving it each time.
 
 **Must customize per project:**
 - `assets/css/base.css` — brand colors, fonts, spacing scale (all under one `:root` block,
-  everything else in `layout.css`/`components.css` references these variables by name).
+  everything else in `layout.css`/`components.css` references these variables by name). Colors
+  are dark/light-theme-reactive — see "Dark/light mode" below before editing them.
 - `index.html` — logo/wordmark, copy, contact details, JSON-LD business info, meta tags,
   contact form fields beyond the universal name/email/phone/message.
 - `mail-templates/_partials/_head.mjml` — brand colors for the email (kept intentionally
@@ -43,6 +44,39 @@ not shared. A client's actual site may be light or dark themed, but light-backgr
 cards read more reliably across mail clients that mangle dark-mode email — so the email
 almost always wants its own, usually lighter, palette regardless of the site's theme. Set
 both when customizing a project; don't assume one implies the other.
+
+## Dark/light mode
+
+The site follows the visitor's OS/browser preference (`prefers-color-scheme`) by default, with
+a manual toggle (top-right corner, `#theme-toggle` / `assets/js/theme.js`) that overrides it and
+persists the choice in `localStorage`. The contact modal re-themes too (a dark card in dark
+mode), not just the page canvas — it doesn't stay fixed-light the way the email templates
+deliberately do (see above); the website's modal is fully within our own CSS, so there's no
+equivalent mail-client-dark-mode-mangling constraint forcing it to stay light-only.
+
+- **Two independent color axes** in `assets/css/base.css`: **page** tokens (`--site-bg`,
+  `--site-fg`, `--site-muted`, `--site-border`) style the canvas; **surface** tokens
+  (`--site-surface`, `--site-surface-fg`, `--site-surface-muted`, `--site-surface-label`) style
+  the modal card. Kept separate because the modal doesn't always reuse the page's exact
+  background/foreground pairing — e.g. `.btn-submit` deliberately inverts the surface tokens
+  for its own fill/text, independent of what the page tokens are doing. `--site-color-accent`
+  and `--site-danger` are shared constants, not split per axis.
+- Each token has raw `--dark-*`/`--light-*` hex values defined once near the top of `:root`;
+  `--site-*` then resolves to whichever set is active. **When doing BRAND CUSTOMIZATION, edit
+  the raw `--dark-*`/`--light-*` values, not the `--site-*` lines** — the `--site-*` lines are
+  the switching mechanism itself, not the palette.
+- Switching precedence: an explicit `[data-theme="light"]`/`[data-theme="dark"]` attribute on
+  `<html>` (set by the toggle) always wins; otherwise `@media (prefers-color-scheme: light)`
+  applies the light palette; the unconditional `:root` default (no query needed) is dark.
+- An early inline `<script>` in `index.html`'s `<head>` applies a stored `localStorage`
+  override (if any) and updates the `theme-color` `<meta>` tag before first paint, to avoid a
+  flash of the wrong theme. It must stay a plain synchronous script (no `defer`/`type="module"`)
+  and must come *after* the `theme-color` meta tag in document order, since it looks that tag up
+  by selector — moving it earlier silently breaks the meta-tag update (not the theme itself).
+- The `<select>` arrow icon (`.form-group select`'s `background-image`) is a literal data-URI
+  SVG, which can't reference CSS custom properties — its dark/light variants are spelled out as
+  separate rules instead of tokenized. Doesn't matter unless a project actually adds a
+  `<select>` to the contact form (none does by default).
 
 ## Optional features
 

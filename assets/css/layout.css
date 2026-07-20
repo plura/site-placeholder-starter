@@ -21,7 +21,7 @@
 .divider {
     width: 80px;
     height: 1px;
-    background: var(--site-color-border);
+    background: var(--site-border);
     opacity: .6;
 }
 
@@ -37,6 +37,6 @@
     font-size: var(--site-text-xs);
     letter-spacing: var(--site-tracking-lg);
     text-transform: uppercase;
-    color: var(--site-color-muted);
+    color: var(--site-muted);
     margin-top: .5rem;
 }

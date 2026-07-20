@@ -1,4 +1,5 @@
 import './modal.js';
+import './theme.js';
 import './newsletter.js'; // OPTIONAL — remove if this project has no mailing-list signup
 
 const { lucide } = window;
