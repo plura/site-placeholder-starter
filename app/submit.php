@@ -100,15 +100,15 @@ function send_mail(array $cfg, string $to_email, string $to_name, string $subjec
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host       = $cfg['smtp_host'];
+        $mail->Host       = $cfg['smtp']['host'];
         $mail->SMTPAuth   = true;
-        $mail->Username   = $cfg['smtp_user'];
-        $mail->Password   = $cfg['smtp_pass'];
-        $mail->SMTPSecure = $cfg['smtp_secure'] === 'ssl' ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = (int) $cfg['smtp_port'];
+        $mail->Username   = $cfg['smtp']['user'];
+        $mail->Password   = $cfg['smtp']['pass'];
+        $mail->SMTPSecure = $cfg['smtp']['secure'] === 'ssl' ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = (int) $cfg['smtp']['port'];
         $mail->CharSet    = 'UTF-8';
 
-        $mail->setFrom($cfg['from_email'], $cfg['from_name']);
+        $mail->setFrom($cfg['contact']['from_email'], $cfg['contact']['from_name']);
         $mail->addAddress($to_email, $to_name);
 
         if ($reply_email) {
@@ -131,9 +131,9 @@ function send_mail(array $cfg, string $to_email, string $to_name, string $subjec
 $template = __DIR__ . '/templates/contact.html';
 $sent = send_mail(
     $config,
-    $config['to_email'],
-    $config['to_name'],
-    "{$config['site_name']} — novo contacto do site",
+    $config['contact']['to_email'],
+    $config['contact']['to_name'],
+    "{$config['contact']['site_name']} — novo contacto do site",
     build_body($data, $template, $labels),
     file_exists($template),
     $data['email'],
@@ -152,11 +152,11 @@ send_mail(
     $config,
     $data['email'],
     $data['name'],
-    "{$config['site_name']} — recebemos o seu contacto",
+    "{$config['contact']['site_name']} — recebemos o seu contacto",
     build_body($data, $reply_template, $labels),
     file_exists($reply_template),
-    $config['to_email'],
-    $config['to_name']
+    $config['contact']['to_email'],
+    $config['contact']['to_name']
 );
 
 // —— OPTIONAL: newsletter opt-in checkbox ————————————————————————————————————
