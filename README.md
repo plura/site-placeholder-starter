@@ -147,7 +147,12 @@ Work through these questions before starting the "New project checklist" below:
 
 1. Copy this whole repo as the starting point for the new client repo (or its `placeholder/`
    subfolder, if the target project also has a WordPress `theme/`/`plugin/` per the Plura
-   lean repo structure).
+   lean repo structure). Before copying, note this starter's current commit
+   (`git log -1 --format="%H %ad" --date=short`) and add a line near the top of the new
+   project's own README: "Forked from site-placeholder-starter at commit `<hash>` (`<date>`)."
+   Cheap now, saves real reconstruction work later if this starter changes and the new project
+   ever wants to check what it might be missing — see the two examples this note format was
+   validated against: `plura/site-sandramacieira` and `plura/site-preventionlab`.
 2. Decide on "Optional features" above and delete what's not needed.
 3. `assets/css/base.css` — replace the color/font values, keep the variable names.
 4. `index.html` — replace all placeholder text, URLs, JSON-LD fields (fill in `@type`,
