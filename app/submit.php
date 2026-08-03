@@ -5,17 +5,19 @@ date_default_timezone_set('Europe/Lisbon');
 
 header('Content-Type: application/json; charset=UTF-8');
 
+$strings = require __DIR__ . '/strings.php';
+
 // Only accept POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Método não permitido.']);
+    echo json_encode(['success' => false, 'message' => $strings['method_not_allowed']]);
     exit;
 }
 
 // Config
 if (!file_exists(__DIR__ . '/config.php')) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Erro de configuração do servidor.']);
+    echo json_encode(['success' => false, 'message' => $strings['config_error']]);
     exit;
 }
 $config = require __DIR__ . '/config.php';
@@ -62,13 +64,13 @@ foreach ($_POST as $key => $value) {
 // —— Validate ————————————————————————————————————————————————————————————————
 if (empty($data['name']) || empty($data['email'])) {
     http_response_code(422);
-    echo json_encode(['success' => false, 'message' => 'Por favor preencha os campos obrigatórios.']);
+    echo json_encode(['success' => false, 'message' => $strings['required_fields']]);
     exit;
 }
 
 if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
     http_response_code(422);
-    echo json_encode(['success' => false, 'message' => 'Por favor introduza um endereço de email válido.']);
+    echo json_encode(['success' => false, 'message' => $strings['invalid_email']]);
     exit;
 }
 
@@ -133,7 +135,7 @@ $sent = send_mail(
     $config,
     $config['contact']['to_email'],
     $config['contact']['to_name'],
-    "{$config['contact']['site_name']} — novo contacto do site",
+    sprintf($strings['subject_notify'], $config['contact']['site_name']),
     build_body($data, $template, $labels),
     file_exists($template),
     $data['email'],
@@ -142,7 +144,7 @@ $sent = send_mail(
 
 if (!$sent) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Erro ao enviar. Por favor tente novamente ou contacte-nos por email.']);
+    echo json_encode(['success' => false, 'message' => $strings['send_error']]);
     exit;
 }
 
@@ -152,7 +154,7 @@ send_mail(
     $config,
     $data['email'],
     $data['name'],
-    "{$config['contact']['site_name']} — recebemos o seu contacto",
+    sprintf($strings['subject_reply'], $config['contact']['site_name']),
     build_body($data, $reply_template, $labels),
     file_exists($reply_template),
     $config['contact']['to_email'],
@@ -167,7 +169,7 @@ send_mail(
 // newsletter, or delete the newsletter feature's other pieces per the README.
 if (!empty($_POST['newsletter'])) {
     require_once __DIR__ . '/lib/mailchimp.php';
-    $optin = mailchimp_subscribe($config, $data['email']);
+    $optin = mailchimp_subscribe($config, $data['email'], $strings);
     if (!$optin['success']) {
         error_log('Newsletter opt-in via contact form failed: ' . $optin['message']);
     }

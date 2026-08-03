@@ -17,7 +17,7 @@ return [
         'to_email'   => '',       // where contact notifications go
         'to_name'    => '',
 
-        'site_name'  => '',       // used in email subject lines, e.g. "Site Name — novo contacto do site"
+        'site_name'  => '',       // used in email subject lines, e.g. "Site Name — new enquiry from the website"
     ],
 
     // OPTIONAL — only needed for the mailing-list signup (standalone form and/or the contact
