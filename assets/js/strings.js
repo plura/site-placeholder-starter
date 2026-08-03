@@ -1,7 +1,8 @@
 // Every user-facing string the JS renders, in one place — so translating a project means
 // editing this file rather than hunting through the modules. Consumers import the resolved
-// set and never learn how many languages exist, which keeps the OPTIONAL block purely
-// additive: adding or removing a language never touches modal.js/newsletter.js.
+// set and never learn how many languages exist, so adding or removing a language never
+// changes their copy. (Their endpoint paths are a separate matter — a page one directory
+// down needs data-app-base; see modal.js.)
 //
 // Keys are semantic ('submit'), not the English source text as in gettext/.po. The copy here
 // is placeholder text that every project rewrites, and source-string keys would silently go

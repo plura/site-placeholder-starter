@@ -142,6 +142,10 @@ Work through these questions before starting the "New project checklist" below:
    - Delete both tiers entirely for a single (dark) theme — `--site-*` already resolves to
      `--dark-*` unconditionally, so nothing else needs to change once the switching blocks are
      gone.
+7. **Does this project want a second language?** Ships on, with `pt/` as a worked example
+   alongside the English root page. Most projects are single-language and should delete the
+   whole tier — see "The second language" under "Language" below for the file list, and for
+   the separate procedure when the default language should be Portuguese rather than English.
 
 ## New project checklist
 
@@ -177,9 +181,11 @@ Work through these questions before starting the "New project checklist" below:
 ```
 npx mjml mail-templates/contact/contact.mjml -o app/templates/contact.html --config.allowIncludes true --config.includePath . --config.minify true
 npx mjml mail-templates/contact/contact-reply.mjml -o app/templates/contact-reply.html --config.allowIncludes true --config.includePath . --config.minify true
+npx mjml mail-templates/contact/contact-reply.pt.mjml -o app/templates/contact-reply.pt.html --config.allowIncludes true --config.includePath . --config.minify true
 ```
 
-Run from the repo root, after any `mail-templates/` edit.
+Run from the repo root, after any `mail-templates/` edit. The third line is Tier 2 only — drop
+it (and its source file) for a single-language site.
 
 ## Mail template gotchas (cost real debugging time — read before changing structure)
 
@@ -287,3 +293,49 @@ track where the client is, not what language the site is in.
 Local dev: the page is static, so Live Server serves it as-is. `php -S localhost:8000` from the
 repo root only if you need to exercise the endpoints — note it ignores `.htaccess`, so
 `app/templates/` is readable locally but blocked in production.
+
+### The second language (Tier 2)
+
+Ships on, with Portuguese at `/pt/` as a worked example. **Most projects are single-language
+and should delete the whole tier.** It consists of:
+
+- `pt/` — a full copy of the root page. Static HTML has no include mechanism, so the `<head>`
+  is duplicated wholesale. **Any structural change to `index.html` has to be mirrored there**
+  (favicons, meta, the theme script, form fields, JSON-LD) or the two drift. Only copy, paths,
+  and language metadata are meant to differ.
+- The `.lang-switch` anchor in both pages, and the `.lang-switch` block in `components.css`.
+- `<link rel="alternate" hreflang>` in both pages, and the `xhtml:link` entries in `sitemap.xml`.
+- `OVERRIDES` in `assets/js/strings.js` and `$OVERRIDES` in `app/strings.php`.
+- `mail-templates/contact/contact-reply.pt.mjml` → `app/templates/contact-reply.pt.html`, plus
+  the marked block in `submit.php` that selects it.
+
+Leave `data-app-base` and `.page-controls` in place when removing the tier — both are correct
+for a single root-level page.
+
+**Adding a third language:** copy `pt/` to the new code, add its `OVERRIDES` block to both
+strings files, and add its `hreflang` line to *every* page and to the sitemap. Every version
+must list every version, itself included — a one-sided pairing is ignored outright.
+
+### Changing the default language
+
+Serving Portuguese at `/` and English at `/en/` is rearrangement, not deletion, and it touches
+more than the copy:
+
+1. **Both strings files** — `BASE`/`$BASE` take the new default language, `OVERRIDES` takes the
+   old one. Rename the override key (`pt` → `en`).
+2. **The pages** — swap the copy between `index.html` and `pt/index.html`, then rename the
+   directory (`pt/` → `en/`). Its `data-app-base="../app/"` is unchanged; the root page keeps
+   `app/`.
+3. **Language metadata in both** — `<html lang>`, `og:locale`, `<link rel="canonical">`, and
+   every `hreflang` href. `x-default` must point at whatever now sits at `/`.
+4. **`sitemap.xml`** — same `x-default` rule, and the `<loc>` values swap.
+5. **Mail templates** — the *unsuffixed* `contact-reply.mjml` is always the default language, so
+   its copy and the suffixed file's swap over; rename the suffixed pair to the new non-default
+   code and recompile both.
+6. **The switcher** — label, `href`, `hreflang`, `lang`, and `aria-label` in both pages.
+
+The trap in this direction is step 1: English key names with Portuguese values is fine, but if
+a key is *missing* from `OVERRIDES` it silently falls back to `BASE` — which is now Portuguese,
+so an untranslated English page renders a Portuguese string. Semantic keys mean a typo'd key
+gives `undefined` rather than the wrong language, but a genuinely absent one still falls back.
+Check both pages render end to end after the swap.
