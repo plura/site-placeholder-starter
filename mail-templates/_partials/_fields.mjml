@@ -1,12 +1,15 @@
 <!--
-	Universal minimum field set: name, email, phone, message. To add project-specific fields
-	(a select dropdown, etc.), copy one of the row+divider pairs below, rename the label text
-	and the %placeholder%, and make sure the contact form's <label for="..."> text matches
-	(submit.php reads labels straight from the form, not from here).
+	Universal minimum field set: name, email, phone, message. Both halves of every row are
+	placeholders — for a field named FIELD, the label cell takes its <label> text as posted by
+	the contact form, and the value cell takes what was typed. Nothing here needs to match the
+	form by hand, and the labels arrive in whatever language the visitor's page was in.
+
+	To add a project-specific field (a select dropdown, etc.), copy one of the row+divider pairs
+	below and rename both placeholders to the field's name attribute. No submit.php changes.
 -->
 <mj-section mj-class="card-row" css-class="card-row">
 	<mj-column width="30%">
-		<mj-text mj-class="field-label-text">Name</mj-text>
+		<mj-text mj-class="field-label-text">%label_name%</mj-text>
 	</mj-column>
 	<mj-column width="70%">
 		<mj-text mj-class="field-value-text">%name%</mj-text>
@@ -20,7 +23,7 @@
 
 <mj-section mj-class="card-row" css-class="card-row">
 	<mj-column width="30%">
-		<mj-text mj-class="field-label-text">Email</mj-text>
+		<mj-text mj-class="field-label-text">%label_email%</mj-text>
 	</mj-column>
 	<mj-column width="70%">
 		<mj-text mj-class="field-value-text">%email%</mj-text>
@@ -34,7 +37,7 @@
 
 <mj-section mj-class="card-row" css-class="card-row">
 	<mj-column width="30%">
-		<mj-text mj-class="field-label-text">Phone</mj-text>
+		<mj-text mj-class="field-label-text">%label_phone%</mj-text>
 	</mj-column>
 	<mj-column width="70%">
 		<mj-text mj-class="field-value-text">%phone%</mj-text>
@@ -48,7 +51,7 @@
 
 <mj-section mj-class="card-bottom" css-class="card-bottom">
 	<mj-column>
-		<mj-text mj-class="message-label-text">Message</mj-text>
+		<mj-text mj-class="message-label-text">%label_message%</mj-text>
 		<mj-raw><tr><td class="message-quote">%message%</td></tr></mj-raw>
 	</mj-column>
 </mj-section>

@@ -85,8 +85,8 @@ $data['email'] = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
  *
  * @param array       $data          Submitted fields, keyed by input name.
  * @param string|null $template_path Compiled template under app/templates/, or null for text.
- * @param array       $labels        Human-readable field names posted by the form. Only used by
- *                                   the plain-text fallback — the HTML templates carry their own.
+ * @param array       $labels        Human-readable field names posted by the form, substituted
+ *                                   for %label_<field>%. Falls back to the field's own name.
  * @param string      $lang_note     Pre-formatted language note substituted for %lang%, e.g.
  *                                   " · PT". Empty on a single-language site, rendering nothing.
  * @return string
@@ -105,11 +105,23 @@ function build_body(array $data, ?string $template_path, array $labels = [], str
         return implode("\n", $lines);
     }
 
-    $html = str_replace(['%year%', '%date%', '%lang%'], [date('Y'), date('d/m/Y H:i'), $lang_note], $template);
+    $pairs = [
+        '%year%' => date('Y'),
+        '%date%' => date('d/m/Y H:i'),
+        '%lang%' => $lang_note,
+    ];
+
     foreach ($data as $key => $value) {
-        $html = str_replace('%' . $key . '%', nl2br(htmlspecialchars($value, ENT_QUOTES, 'UTF-8')), $html);
+        // Field labels come from the form that was submitted, not from the template — which is
+        // what makes this handler field-agnostic, and incidentally puts them in the visitor's
+        // language. ucfirst() covers a direct POST that carried no labels at all (bots, curl).
+        $pairs['%label_' . $key . '%'] = htmlspecialchars($labels[$key] ?? ucfirst($key), ENT_QUOTES, 'UTF-8');
+        $pairs['%' . $key . '%']       = nl2br(htmlspecialchars($value, ENT_QUOTES, 'UTF-8'));
     }
-    return $html;
+
+    // strtr(), not str_replace(): it substitutes in a single pass, so a submitted value that
+    // happens to contain a %placeholder% can't be re-substituted by a later replacement.
+    return strtr($template, $pairs);
 }
 
 function send_mail(array $cfg, string $to_email, string $to_name, string $subject, string $body, bool $is_html, string $reply_email = '', string $reply_name = ''): bool {

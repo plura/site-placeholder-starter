@@ -157,24 +157,31 @@ Work through these questions before starting the "New project checklist" below:
    Cheap now, saves real reconstruction work later if this starter changes and the new project
    ever wants to check what it might be missing — see the two examples this note format was
    validated against: `plura/site-sandramacieira` and `plura/site-preventionlab`.
-2. Decide on "Optional features" above and delete what's not needed.
-3. `assets/css/base.css` — replace the color/font values, keep the variable names.
-4. `index.html` — replace all placeholder text, URLs, JSON-LD fields (fill in `@type`,
+2. **Decide the two languages before touching any copy** — they're independent, and getting
+   this wrong means redoing work rather than adjusting it (see "Language" below):
+   - What language does the **site** serve? Sets `$BASE` in `app/strings.php`, `index.html`,
+     and — if a second language is kept — whether Tier 2's directory is `pt/` or `en/`.
+   - What language does the **owner** read? Sets `$OWNER` in `app/strings.php` and the three
+     chrome strings in `contact.mjml`. A Portuguese client with an English site is normal.
+3. Decide on "Optional features" above and delete what's not needed.
+4. `assets/css/base.css` — replace the color/font values, keep the variable names.
+5. `index.html` — replace all placeholder text, URLs, JSON-LD fields (fill in `@type`,
    address, phone, socials — don't invent `openingHours`/`geo`/`priceRange` without real
    verified values), meta tags, favicon `<link>` paths.
-5. Add real contact-form fields if needed beyond name/email/phone/message — copy a row from
-   `mail-templates/_partials/_fields.mjml`, no `submit.php` changes required. Make sure the
-   `<label for="...">` text in `index.html` matches what should appear in the email.
-6. `mail-templates/_partials/_head.mjml` — replace the placeholder color palette (see the
+6. Add real contact-form fields if needed beyond name/email/phone/message — copy a row+divider
+   pair in `mail-templates/_partials/_fields.mjml` and rename both placeholders to the field's
+   `name`. No `submit.php` changes, and no label text to keep in sync — the email takes its
+   labels from the form's own `<label>` elements.
+7. `mail-templates/_partials/_head.mjml` — replace the placeholder color palette (see the
    comment at the top of the file) and swap the header logo (`_header.mjml`) for a real
    `<mj-image>` once a public-facing logo PNG exists (never point it at `app/templates/` —
    that's `.htaccess`-locked and unreachable by email clients; put it under
    `assets/images/mail/`).
-7. Compile the MJML (see below), then `cp app/config.example.php app/config.php` and fill
+8. Compile the MJML (see below), then `cp app/config.example.php app/config.php` and fill
    in real SMTP credentials (and Mailchimp keys, if keeping either mailing-list feature).
-8. Generate favicons and `assets/images/og.png` — see specs below.
-9. Copy `.vscode/sftp.json.example` → `sftp.json`, fill in real host/credentials.
-10. Update `robots.txt` / `sitemap.xml` / `site.webmanifest` with the real domain.
+9. Generate favicons and `assets/images/og.png` — see specs below.
+10. Copy `.vscode/sftp.json.example` → `sftp.json`, fill in real host/credentials.
+11. Update `robots.txt` / `sitemap.xml` / `site.webmanifest` with the real domain.
 
 ## Compiling the MJML
 
