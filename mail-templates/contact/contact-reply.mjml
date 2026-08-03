@@ -1,7 +1,7 @@
 <mjml>
 <mj-head>
-	<mj-title>Obrigado pelo seu contacto</mj-title>
-	<mj-preview>Obrigado pelo seu contacto — Site Name</mj-preview>
+	<mj-title>Thanks for getting in touch</mj-title>
+	<mj-preview>Thanks for getting in touch — Site Name</mj-preview>
 	<mj-include path="../_partials/_head.mjml" />
 </mj-head>
 <mj-body>
@@ -11,12 +11,12 @@
 
 		<mj-section mj-class="body-card" css-class="body-card">
 			<mj-column>
-				<mj-text mj-class="heading" align="center" padding="0 0 20px">Obrigado pelo seu contacto</mj-text>
-				<mj-text mj-class="intro-text" align="center">Olá %name%, recebemos a sua mensagem. Iremos analisá-la e entraremos em contacto consigo brevemente.</mj-text>
+				<mj-text mj-class="heading" align="center" padding="0 0 20px">Thanks for getting in touch</mj-text>
+				<mj-text mj-class="intro-text" align="center">Hi %name%, we've received your message. We'll take a look and get back to you shortly.</mj-text>
 				<mj-raw><tr><td class="message-quote">%message%</td></tr></mj-raw>
 				<mj-divider mj-class="field-divider" padding="20px 0 0" />
-				<mj-text mj-class="urgent-text">Se o assunto for urgente, pode contactar-nos diretamente através do <a href="tel:+351900000000" class="urgent-link">+351&zwnj; 900&zwnj; 000&zwnj; 000</a>.</mj-text>
-				<mj-button mj-class="cta-button" href="https://example.com/">Visitar o site</mj-button>
+				<mj-text mj-class="urgent-text">If it's urgent, you can reach us directly on <a href="tel:+351900000000" class="urgent-link">+351&zwnj; 900&zwnj; 000&zwnj; 000</a>.</mj-text>
+				<mj-button mj-class="cta-button" href="https://example.com/">Visit the site</mj-button>
 			</mj-column>
 		</mj-section>
 

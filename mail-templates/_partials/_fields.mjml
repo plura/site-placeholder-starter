@@ -6,7 +6,7 @@
 -->
 <mj-section mj-class="card-row" css-class="card-row">
 	<mj-column width="30%">
-		<mj-text mj-class="field-label-text">Nome</mj-text>
+		<mj-text mj-class="field-label-text">Name</mj-text>
 	</mj-column>
 	<mj-column width="70%">
 		<mj-text mj-class="field-value-text">%name%</mj-text>
@@ -34,7 +34,7 @@
 
 <mj-section mj-class="card-row" css-class="card-row">
 	<mj-column width="30%">
-		<mj-text mj-class="field-label-text">Telefone</mj-text>
+		<mj-text mj-class="field-label-text">Phone</mj-text>
 	</mj-column>
 	<mj-column width="70%">
 		<mj-text mj-class="field-value-text">%phone%</mj-text>
@@ -48,7 +48,7 @@
 
 <mj-section mj-class="card-bottom" css-class="card-bottom">
 	<mj-column>
-		<mj-text mj-class="message-label-text">Mensagem</mj-text>
+		<mj-text mj-class="message-label-text">Message</mj-text>
 		<mj-raw><tr><td class="message-quote">%message%</td></tr></mj-raw>
 	</mj-column>
 </mj-section>
