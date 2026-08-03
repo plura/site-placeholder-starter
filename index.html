@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@
     <meta property="og:site_name"   content="Site Name">
     <meta property="og:title"       content="Site Name | One-line Description">
     <meta property="og:description" content="One to two sentence description matching the JSON-LD description below.">
-    <meta property="og:locale"      content="pt_PT">
+    <meta property="og:locale"      content="en_GB">
     <meta property="og:image"       content="https://example.com/assets/images/og.png">
     <meta property="og:image:width"  content="1200">
     <meta property="og:image:height" content="630">
@@ -97,7 +97,7 @@
 <canvas id="bg-canvas"></canvas>
 
 <!-- OPTIONAL (2/2): manual toggle — see the note on the inline script in <head> above. -->
-<button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema claro/escuro">
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme">
     <i data-lucide="sun" width="18" height="18" class="theme-toggle__icon theme-toggle__icon--sun"></i>
     <i data-lucide="moon" width="18" height="18" class="theme-toggle__icon theme-toggle__icon--moon"></i>
 </button>
@@ -130,12 +130,12 @@
          (and its styles in components.css, assets/js/newsletter.js + its import in main.js,
          and app/subscribe.php + app/lib/mailchimp.php) if this project has no mailing list. -->
     <div class="newsletter">
-        <p class="newsletter__kicker">Fique a par das novidades</p>
+        <p class="newsletter__kicker">Stay up to date</p>
         <form id="newsletter-form" novalidate>
             <div class="newsletter__row">
                 <label for="newsletter-email" class="sr-only">Email</label>
-                <input type="email" id="newsletter-email" name="email" placeholder="o.seu@email.com" required>
-                <button type="submit" class="newsletter__submit" aria-label="Subscrever">
+                <input type="email" id="newsletter-email" name="email" placeholder="your@email.com" required>
+                <button type="submit" class="newsletter__submit" aria-label="Subscribe">
                     <i data-lucide="arrow-right" width="16" height="16"></i>
                 </button>
             </div>
@@ -157,7 +157,7 @@
         </div>
 
         <div class="cta-wrap">
-            <button class="btn-cta" id="open-modal">Saber Mais</button>
+            <button class="btn-cta" id="open-modal">Learn More</button>
         </div>
 
         <div class="socials">
@@ -173,7 +173,7 @@
         </div>
 
         <div class="legal">
-            <p>&copy; 2026 Site Name. Todos os direitos reservados.</p>
+            <p>&copy; 2026 Site Name. All rights reserved.</p>
             <p class="footer-credit">Powered by <a href="https://plura.pt" target="_blank" rel="noopener">Plura</a></p>
         </div>
     </footer>
@@ -183,37 +183,37 @@
 <!-- Modal -->
 <dialog id="contact-dialog" aria-labelledby="modal-title">
     <div class="dialog__inner">
-        <button class="modal-close" id="close-modal" aria-label="Fechar">
+        <button class="modal-close" id="close-modal" aria-label="Close">
             <i data-lucide="x" width="20" height="20"></i>
         </button>
-        <h2 id="modal-title">Fique a par</h2>
-        <p>Deixe os seus dados e entraremos em contacto assim que estivermos disponíveis.</p>
+        <h2 id="modal-title">Get in touch</h2>
+        <p>Leave your details and we'll be in touch as soon as we're up and running.</p>
         <form id="contact-form" novalidate>
             <div class="form-group">
-                <label for="name">Nome</label>
-                <input type="text" id="name" name="name" placeholder="O seu nome" required>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Your name" required>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="o.seu@email.com" required>
+                <input type="email" id="email" name="email" placeholder="your@email.com" required>
             </div>
             <div class="form-group">
-                <label for="phone">Telefone (opcional)</label>
+                <label for="phone">Phone (optional)</label>
                 <input type="tel" id="phone" name="phone" placeholder="+351 900 000 000">
             </div>
             <div class="form-group">
-                <label for="message">Mensagem (opcional)</label>
-                <textarea id="message" name="message" placeholder="Em que podemos ajudar?"></textarea>
+                <label for="message">Message (optional)</label>
+                <textarea id="message" name="message" placeholder="How can we help?"></textarea>
             </div>
             <!-- OPTIONAL: newsletter opt-in — also subscribes the submitter via app/submit.php's
                  optional block. Remove this label if this project has no mailing list. -->
             <label class="form-check">
                 <input type="checkbox" name="newsletter" value="1">
-                <span>Também quero receber novidades por email</span>
+                <span>I'd also like to receive news by email</span>
             </label>
             <!-- /OPTIONAL -->
             <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
-            <button type="submit" class="btn-submit">Enviar</button>
+            <button type="submit" class="btn-submit">Send</button>
         </form>
     </div>
 </dialog>

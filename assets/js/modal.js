@@ -61,6 +61,10 @@ form.addEventListener('submit', async function (e) {
 
     const data = new FormData(form);
 
+    // Tells the endpoint which language to answer in (see app/strings.php). Inert on a
+    // single-language site, where strings.php just falls through to its base copy.
+    data.set('lang', document.documentElement.lang);
+
     // If a project adds a <select> whose posted value is a slug (not human-readable),
     // swap it for the selected option's visible text before submitting — e.g.:
     //   const interest = form.querySelector('[name="interest"]');

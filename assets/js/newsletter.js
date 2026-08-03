@@ -13,6 +13,9 @@ if (form) {
 
         const data = new FormData(form);
 
+        // See the note in modal.js — tells the endpoint which language to answer in.
+        data.set('lang', document.documentElement.lang);
+
         submitBtn.disabled = true;
 
         try {
