@@ -1,6 +1,10 @@
 import STRINGS from './strings.js';
 
-const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+// Set per page in <html data-app-base>, since a language version one directory down reaches
+// the endpoints by a different path than the one at the root. Falls back to the root layout.
+const APP_BASE = document.documentElement.dataset.appBase ?? 'app/';
+
+const FOCUSABLE ='a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const dialog   = document.getElementById('contact-dialog');
 const openBtn  = document.getElementById('open-modal');
@@ -81,7 +85,7 @@ form.addEventListener('submit', async function (e) {
     submitBtn.textContent = STRINGS.submitting;
 
     try {
-        const res  = await fetch('./app/submit.php', { method: 'POST', body: data });
+        const res  = await fetch(APP_BASE + 'submit.php', { method: 'POST', body: data });
         const json = await res.json();
 
         if (res.ok && json.success) {

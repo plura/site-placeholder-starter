@@ -1,0 +1,38 @@
+<!--
+	OPTIONAL (Tier 2): Portuguese auto-reply. A full copy of contact-reply.mjml — MJML has no
+	string-injection mechanism, so a translated template means a translated file. Structural
+	changes to contact-reply.mjml must be mirrored here; only the copy and the CTA href differ.
+
+	Only the reply is translated. contact.mjml (the notification) goes to the site owner, who
+	reads one language regardless of which version the visitor used.
+
+	Compiles to app/templates/contact-reply.pt.html — see the README for the command.
+-->
+<mjml>
+<mj-head>
+	<mj-title>Obrigado pelo seu contacto</mj-title>
+	<mj-preview>Obrigado pelo seu contacto — Site Name</mj-preview>
+	<mj-include path="../_partials/_head.mjml" />
+</mj-head>
+<mj-body>
+	<mj-wrapper mj-class="page-frame" css-class="page-frame">
+
+		<mj-include path="../_partials/_header.mjml" />
+
+		<mj-section mj-class="body-card" css-class="body-card">
+			<mj-column>
+				<mj-text mj-class="heading" align="center" padding="0 0 20px">Obrigado pelo seu contacto</mj-text>
+				<mj-text mj-class="intro-text" align="center">Olá %name%, recebemos a sua mensagem. Iremos analisá-la e entraremos em contacto consigo brevemente.</mj-text>
+				<mj-raw><tr><td class="message-quote">%message%</td></tr></mj-raw>
+				<mj-divider mj-class="field-divider" padding="20px 0 0" />
+				<mj-text mj-class="urgent-text">Se o assunto for urgente, pode contactar-nos diretamente através do <a href="tel:+351900000000" class="urgent-link">+351&zwnj; 900&zwnj; 000&zwnj; 000</a>.</mj-text>
+				<mj-button mj-class="cta-button" href="https://example.com/pt/">Visitar o site</mj-button>
+			</mj-column>
+		</mj-section>
+
+		<mj-include path="../_partials/_footer.mjml" />
+		<mj-include path="../_partials/_credit.mjml" />
+
+	</mj-wrapper>
+</mj-body>
+</mjml>

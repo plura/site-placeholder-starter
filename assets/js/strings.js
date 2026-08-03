@@ -31,7 +31,22 @@ const BASE = {
 // OPTIONAL (Tier 2): translations, as a delta against BASE — only keys that differ need
 // listing. Remove this whole block for a single-language site. To change the default
 // language, rewrite BASE in the new language and move the old copy down here.
-const OVERRIDES = {};
+const OVERRIDES = {
+    pt: {
+        submit:     'Enviar',
+        submitting: 'A enviar…',
+        success:    'Mensagem enviada. Entraremos em contacto em breve.',
+        error:      'Erro ao enviar. Tente novamente ou contacte-nos por email.',
+
+        // Must track the marker actually used in pt/index.html's labels — see BASE.
+        optionalSuffix: /\s*\(opcional\)\s*$/i,
+
+        // OPTIONAL: mailing list.
+        subscribeSuccess: 'Obrigado por subscrever.',
+        subscribeError:   'Não foi possível subscrever. Tente novamente.',
+        // /OPTIONAL
+    },
+};
 // /OPTIONAL
 
 // Normalizes 'en-GB' → 'en'. An unknown or absent lang falls through to BASE.

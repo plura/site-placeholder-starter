@@ -149,7 +149,18 @@ if (!$sent) {
 }
 
 // —— Auto-reply to submitter —————————————————————————————————————————————————
+// OPTIONAL (Tier 2): prefers a per-language reply template (contact-reply.pt.html) and falls
+// back to the default-language one. Unlike the notification above, this email goes to the
+// visitor, so it has to match the language they filled the form in — the notification goes to
+// the site owner, who has just the one language, and is deliberately left alone.
 $reply_template = __DIR__ . '/templates/contact-reply.html';
+if ($strings['_lang'] !== '') {
+    $localized = __DIR__ . "/templates/contact-reply.{$strings['_lang']}.html";
+    if (file_exists($localized)) {
+        $reply_template = $localized;
+    }
+}
+// /OPTIONAL
 send_mail(
     $config,
     $data['email'],

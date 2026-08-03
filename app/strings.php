@@ -33,11 +33,32 @@ $BASE = [
 // OPTIONAL (Tier 2): translations, as a delta against $BASE — only keys that differ need
 // listing. Remove this whole block for a single-language site. To change the default
 // language, rewrite $BASE in the new language and move the old copy down here.
-$OVERRIDES = [];
+$OVERRIDES = [
+    'pt' => [
+        'method_not_allowed' => 'Método não permitido.',
+        'config_error'       => 'Erro de configuração do servidor.',
+        'required_fields'    => 'Por favor preencha os campos obrigatórios.',
+        'invalid_email'      => 'Por favor introduza um endereço de email válido.',
+        'send_error'         => 'Erro ao enviar. Por favor tente novamente ou contacte-nos por email.',
+
+        'subject_notify' => '%s — novo contacto do site',
+        'subject_reply'  => '%s — recebemos o seu contacto',
+
+        // OPTIONAL: mailing list.
+        'mailchimp_not_configured' => 'A subscrição não está configurada corretamente.',
+        'subscribe_confirm'        => 'Obrigado por subscrever! Verifique o seu email para confirmar a subscrição.',
+        'already_subscribed'       => 'Já está subscrito!',
+        'generic_error'            => 'Ocorreu um erro. Por favor tente novamente mais tarde.',
+        // /OPTIONAL
+    ],
+];
 // /OPTIONAL
 
 // The form posts the language it was rendered in (see modal.js). Trimmed to a bare two-letter
 // code so 'en-GB' matches 'en'; anything unknown or absent falls through to $BASE.
 $lang = strtolower(substr((string) ($_POST['lang'] ?? ''), 0, 2));
 
-return array_merge($BASE, $OVERRIDES[$lang] ?? []);
+// '_lang' is the resolved code, not copy — submit.php needs it to pick a per-language mail
+// template, and normalizing it in two places would be one place too many. Prefixed to keep it
+// visibly apart from the string keys.
+return array_merge($BASE, $OVERRIDES[$lang] ?? [], ['_lang' => $lang]);

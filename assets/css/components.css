@@ -1,13 +1,18 @@
-/* OPTIONAL (2/2): manual toggle — remove alongside the #theme-toggle button + inline anti-FOUC
-   script in index.html, assets/js/theme.js and its import in main.js, and base.css's OPTIONAL
-   (2/2) block, for an auto-only (no manual override) dark/light site. Remove alongside
-   OPTIONAL (1/2) too (see base.css) for a single-theme site with no dark/light distinction. */
-/* ── Theme toggle ── */
-.theme-toggle {
+/* ── Page controls ──
+   Fixed top-right rail for the theme toggle and/or the language switch. Both are optional and
+   independently removable, so the rail and the shared circle styling live outside either one's
+   OPTIONAL block — positioning one relative to the other would leave the survivor misplaced
+   when the other is deleted. Remove this section only if both controls are gone. */
+.page-controls {
     position: fixed;
     top: var(--site-space-lg);
     right: var(--site-space-lg);
     z-index: 2;
+    display: flex;
+    gap: 8px;
+}
+
+:is(.theme-toggle, .lang-switch) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -21,11 +26,17 @@
     transition: border-color var(--site-transition), color var(--site-transition);
 }
 
-.theme-toggle:hover {
+:is(.theme-toggle, .lang-switch):hover {
     border-color: var(--site-color-accent);
     color: var(--site-color-accent);
 }
 
+/* OPTIONAL (2/2): manual toggle — remove alongside the #theme-toggle button + inline anti-FOUC
+   script in index.html, assets/js/theme.js and its import in main.js, and base.css's OPTIONAL
+   (2/2) block, for an auto-only (no manual override) dark/light site. Remove alongside
+   OPTIONAL (1/2) too (see base.css) for a single-theme site with no dark/light distinction.
+   The shared circle styling above stays — the language switch uses it too. */
+/* ── Theme toggle ── */
 .theme-toggle__icon--moon { display: none; }
 
 @media (prefers-color-scheme: light) {
@@ -35,6 +46,17 @@
 
 :root[data-theme="light"] .theme-toggle__icon--sun { display: none; }
 :root[data-theme="light"] .theme-toggle__icon--moon { display: block; }
+/* /OPTIONAL */
+
+/* OPTIONAL (Tier 2): language switch — remove alongside the .lang-switch anchors in
+   index.html and the whole pt/ directory for a single-language site. Shares the circle
+   styling above with the theme toggle; only the type treatment differs. */
+.lang-switch {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+}
 /* /OPTIONAL */
 
 /* ── Contact ── */

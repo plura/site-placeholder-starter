@@ -115,8 +115,9 @@
    [data-theme="light"] (set by #theme-toggle / assets/js/theme.js) explicit override power over
    the OS/browser preference. Remove alongside the toggle button + inline anti-FOUC script in
    index.html, assets/js/theme.js and its import in main.js, the .theme-toggle rules and the
-   [data-theme] select-SVG rule in components.css, if this project should auto-follow the
-   OS/browser preference only, with no manual override. */
+   [data-theme] select-SVG rule in components.css (leaving the shared .page-controls rail, which
+   the language switch also uses), if this project should auto-follow the OS/browser preference
+   only, with no manual override. */
 :root[data-theme="light"] {
     --site-bg:            var(--light-bg);
     --site-fg:            var(--light-fg);

@@ -1,5 +1,8 @@
 import STRINGS from './strings.js';
 
+// See the note in modal.js.
+const APP_BASE = document.documentElement.dataset.appBase ?? 'app/';
+
 // OPTIONAL: only needed if this project keeps the standalone mailing-list signup in index.html.
 // Guarded on #newsletter-form existing, so leaving this imported after deleting that markup
 // (rather than also removing the import) doesn't break the page.
@@ -19,7 +22,7 @@ if (form) {
         submitBtn.disabled = true;
 
         try {
-            const res  = await fetch('./app/subscribe.php', { method: 'POST', body: data });
+            const res  = await fetch(APP_BASE + 'subscribe.php', { method: 'POST', body: data });
             const json = await res.json();
 
             if (res.ok && json.success) {
