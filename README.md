@@ -241,10 +241,49 @@ see the global CLAUDE.md for the full writeup of both:
 - cPanel Git Version Control + a manually-triggered (`workflow_dispatch`, not `on: push`)
   GitHub Actions deploy, for hosts where that's set up (e.g. Buscardini).
 
-## i18n
+## Language
 
-Not built in here — buscardini has a working `t()` / `lang.php` dictionary pattern
-(English keys, `pt` as the default rendered language) worth reusing if/when a project
-actually needs a second language. Don't add translation infrastructure speculatively;
-it's cheap to add once a project commits to it, and premature dictionaries tend to guess
-wrong about the URL/routing strategy anyway.
+The starter ships in English. Copy lives in four places:
+
+| Where | What |
+| --- | --- |
+| `assets/js/strings.js` | Everything the JS renders — button states, form success/error |
+| `app/strings.php` | Everything the endpoints return, **including the two email subject lines** |
+| `index.html` | Page copy, inline (static HTML has no include mechanism to centralize it) |
+| `mail-templates/` | Email copy, inline — recompile after editing |
+
+Both strings files use the same shape: a `BASE` set holding the default-language copy, and an
+`OVERRIDES` map for translations that only lists keys which differ. Keys are semantic
+(`submit`), not the English source text used by gettext/`.po` — this copy gets rewritten every
+project, and source-string keys go stale the moment one does, leaving a dead key that silently
+falls back to the new English.
+
+### Changing the site's language
+
+1. `assets/js/strings.js` — translate `BASE`.
+2. `app/strings.php` — translate `$BASE`. Don't miss `subject_notify` / `subject_reply`: the
+   email subjects are built here, not in the templates.
+3. `index.html` — the copy, plus `<html lang>` and `og:locale`.
+4. `mail-templates/_partials/_fields.mjml` and both files in `mail-templates/contact/`, then
+   recompile (see "Compiling the MJML"). `app/templates/*.html` is what PHP actually loads, so
+   editing the MJML alone ships nothing.
+5. `site.webmanifest` — only if `name`/`short_name` are language-dependent.
+
+Three couplings that break silently:
+
+- **`optionalSuffix` in `strings.js` must match the optional-field marker in `index.html`'s
+  labels.** It strips `(optional)` before the label is posted as a field name; translate the
+  labels without it and the email shows "Phone (optional)" as a field name.
+- **The submit button's text in `index.html` must match `submit` in `strings.js`** — `modal.js`
+  resets the button to that value after a failed send.
+- **The two mail templates have different audiences.** `contact.mjml` goes to the site owner,
+  `contact-reply.mjml` to the visitor. A Portuguese client running an English site may well
+  want the notification left in Portuguese and only the reply translated.
+
+Leave alone: `+351` number formatting (including the `&zwnj;` treatment), `addressCountry`,
+the postal code format, `Europe/Lisbon` in `submit.php`, and its `d/m/Y` date format. Those
+track where the client is, not what language the site is in.
+
+Local dev: the page is static, so Live Server serves it as-is. `php -S localhost:8000` from the
+repo root only if you need to exercise the endpoints — note it ignores `.htaccess`, so
+`app/templates/` is readable locally but blocked in production.
