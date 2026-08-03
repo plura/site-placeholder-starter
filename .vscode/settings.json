@@ -1,4 +1,5 @@
 {
 	"mjml.allowIncludes": true,
-	"mjml.includePath": "."
+	"mjml.includePath": ".",
+	"liveServer.settings.port": 5501
 }
