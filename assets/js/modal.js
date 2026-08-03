@@ -1,3 +1,5 @@
+import STRINGS from './strings.js';
+
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const dialog   = document.getElementById('contact-dialog');
@@ -41,7 +43,7 @@ function closeModal() {
 dialog.addEventListener('close', () => {
     form.reset();
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Enviar';
+    submitBtn.textContent = STRINGS.submit;
     form.querySelectorAll('.form-success, .form-error').forEach(el => el.remove());
     form.querySelectorAll('.form-group, .btn-submit').forEach(el => el.style.display = '');
 });
@@ -67,12 +69,12 @@ form.addEventListener('submit', async function (e) {
     const labels = {};
     form.querySelectorAll('[name]').forEach(field => {
         const label = form.querySelector(`label[for="${field.id}"]`);
-        if (label) labels[field.name] = label.textContent.replace(/\s*\(opcional\)\s*$/i, '').trim();
+        if (label) labels[field.name] = label.textContent.replace(STRINGS.optionalSuffix, '').trim();
     });
     data.set('labels', JSON.stringify(labels));
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'A enviar…';
+    submitBtn.textContent = STRINGS.submitting;
 
     try {
         const res  = await fetch('./app/submit.php', { method: 'POST', body: data });
@@ -80,7 +82,7 @@ form.addEventListener('submit', async function (e) {
 
         if (res.ok && json.success) {
             form.querySelectorAll('.form-group, .btn-submit').forEach(el => el.style.display = 'none');
-            const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: 'Mensagem enviada. Entraremos em contacto em breve.' });
+            const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: STRINGS.success });
             form.appendChild(msg);
             setTimeout(closeModal, 2800);
         } else {
@@ -88,9 +90,9 @@ form.addEventListener('submit', async function (e) {
         }
     } catch {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Enviar';
+        submitBtn.textContent = STRINGS.submit;
         const err = form.querySelector('.form-error') || Object.assign(document.createElement('p'), { className: 'form-error' });
-        err.textContent = 'Erro ao enviar. Tente novamente ou contacte-nos por email.';
+        err.textContent = STRINGS.error;
         if (!form.contains(err)) submitBtn.before(err);
     }
 });

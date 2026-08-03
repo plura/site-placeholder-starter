@@ -1,3 +1,5 @@
+import STRINGS from './strings.js';
+
 // OPTIONAL: only needed if this project keeps the standalone mailing-list signup in index.html.
 // Guarded on #newsletter-form existing, so leaving this imported after deleting that markup
 // (rather than also removing the import) doesn't break the page.
@@ -19,7 +21,7 @@ if (form) {
 
             if (res.ok && json.success) {
                 form.querySelector('.newsletter__row').style.display = 'none';
-                const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: json.message || 'Obrigado por subscrever.' });
+                const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: json.message || STRINGS.subscribeSuccess });
                 form.appendChild(msg);
             } else {
                 throw new Error(json.message);
@@ -27,7 +29,7 @@ if (form) {
         } catch (err) {
             submitBtn.disabled = false;
             const errEl = form.querySelector('.form-error') || Object.assign(document.createElement('p'), { className: 'form-error' });
-            errEl.textContent = err.message || 'Não foi possível subscrever. Tente novamente.';
+            errEl.textContent = err.message || STRINGS.subscribeError;
             if (!form.contains(errEl)) form.appendChild(errEl);
         }
     });
