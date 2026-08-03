@@ -249,46 +249,82 @@ see the global CLAUDE.md for the full writeup of both:
 
 ## Language
 
-The starter ships in English. Copy lives in four places:
+The starter ships in English.
+
+### Two independent axes
+
+Language isn't one setting. **The site's language and the owner's language are separate**, and
+conflating them is the mistake to avoid:
+
+| | Follows | Files |
+| --- | --- | --- |
+| Page + auto-reply | **the visitor** | `index.html`, `pt/index.html`, `$BASE`/`$OVERRIDES` in `app/strings.php`, `contact-reply*.mjml` |
+| Notification email | **the site owner** | `contact.mjml`, `_partials/_fields.mjml`, `$OWNER` in `app/strings.php` |
+
+A Portuguese client running an English site gets an English page, English auto-replies to
+visitors, and a **Portuguese** notification — because they're the only one reading it. That's
+one template set to their language once at fork time, not a per-request variant.
+`_fields.mjml` is pulled in by `contact.mjml` alone, so it follows the owner too.
+
+The `%lang%` placeholder on the notification's date line shows which language version an
+enquiry came from — the owner's only cue as to which language to reply in. It renders as
+nothing on a single-language site.
+
+### Where the copy lives
 
 | Where | What |
 | --- | --- |
-| `assets/js/strings.js` | Everything the JS renders — button states, form success/error |
-| `app/strings.php` | Everything the endpoints return, **including the two email subject lines** |
-| `index.html` | Page copy, inline (static HTML has no include mechanism to centralize it) |
+| `index.html` / `pt/index.html` | All page copy, **including what the JS renders** — `data-submitting` and `data-network-error` attributes |
+| `app/strings.php` | Everything the endpoints return, **including both email subject lines** — `$BASE`/`$OVERRIDES` follow the visitor, `$OWNER` doesn't |
 | `mail-templates/` | Email copy, inline — recompile after editing |
 
-Both strings files use the same shape: a `BASE` set holding the default-language copy, and an
-`OVERRIDES` map for translations that only lists keys which differ. Keys are semantic
-(`submit`), not the English source text used by gettext/`.po` — this copy gets rewritten every
-project, and source-string keys go stale the moment one does, leaving a dead key that silently
-falls back to the new English.
+**There is no JS dictionary.** `modal.js` and `newsletter.js` take their copy from the markup:
+the idle button label is the button's own text, and the two strings with no natural home are
+`data-` attributes. Each language is a separate HTML file, so a page already *is* its language
+and there's nothing for JS to resolve. Every other message the user sees comes from the
+server's own response — the JS only supplies `data-network-error`, for when a request never
+completes and there is no response to read.
+
+`app/strings.php` is the one dictionary, because a single endpoint serves every language
+version. It holds a `$BASE` set plus an `$OVERRIDES` map listing only keys that differ. Keys
+are semantic (`sent`), not the English source text used by gettext/`.po` — this copy gets
+rewritten every project, and source-string keys go stale the moment one does.
 
 ### Changing the site's language
 
-1. `assets/js/strings.js` — translate `BASE`.
+1. `index.html` — the copy, the `data-submitting` / `data-network-error` attributes, plus
+   `<html lang>` and `og:locale`.
 2. `app/strings.php` — translate `$BASE`. Don't miss `subject_notify` / `subject_reply`: the
    email subjects are built here, not in the templates.
-3. `index.html` — the copy, plus `<html lang>` and `og:locale`.
-4. `mail-templates/_partials/_fields.mjml` and both files in `mail-templates/contact/`, then
-   recompile (see "Compiling the MJML"). `app/templates/*.html` is what PHP actually loads, so
-   editing the MJML alone ships nothing.
+3. `mail-templates/contact/contact-reply.mjml` — the visitor-facing auto-reply. Then recompile
+   (see "Compiling the MJML"); `app/templates/*.html` is what PHP loads, so editing the MJML
+   alone ships nothing.
+4. `mail-templates/contact/contact.mjml` + `_partials/_fields.mjml` — **only if the owner's
+   language is also changing.** See "Two independent axes" above.
 5. `site.webmanifest` — only if `name`/`short_name` are language-dependent.
-
-Three couplings that break silently:
-
-- **`optionalSuffix` in `strings.js` must match the optional-field marker in `index.html`'s
-  labels.** It strips `(optional)` before the label is posted as a field name; translate the
-  labels without it and the email shows "Phone (optional)" as a field name.
-- **The submit button's text in `index.html` must match `submit` in `strings.js`** — `modal.js`
-  resets the button to that value after a failed send.
-- **The two mail templates have different audiences.** `contact.mjml` goes to the site owner,
-  `contact-reply.mjml` to the visitor. A Portuguese client running an English site may well
-  want the notification left in Portuguese and only the reply translated.
 
 Leave alone: `+351` number formatting (including the `&zwnj;` treatment), `addressCountry`,
 the postal code format, `Europe/Lisbon` in `submit.php`, and its `d/m/Y` date format. Those
 track where the client is, not what language the site is in.
+
+### Portuguese notification copy
+
+For the common case of a Portuguese owner, the notification side is seven strings:
+
+| File | English | Portuguese |
+| --- | --- | --- |
+| `contact.mjml` | `<mj-title>New enquiry` | `Novo contacto` |
+| `contact.mjml` | `<mj-preview>New enquiry — Site Name` | `Novo contacto — Site Name` |
+| `contact.mjml` | heading `New enquiry` | `Novo contacto` |
+| `_fields.mjml` | `Name` | `Nome` |
+| `_fields.mjml` | `Phone` | `Telefone` |
+| `_fields.mjml` | `Message` | `Mensagem` |
+| `app/strings.php` | `$OWNER['subject_notify']` | `'%s — novo contacto do site'` |
+
+That last row is why `strings.php` has a separate `$OWNER` block. Everything in `$BASE` is
+resolved against the *visitor's* language; `$OWNER` is applied afterwards and can't be
+overridden, because the notification's subject has to match its body — which is in the owner's
+language regardless of which version the enquiry came from.
 
 Local dev: the page is static, so Live Server serves it as-is. `php -S localhost:8000` from the
 repo root only if you need to exercise the endpoints — note it ignores `.htaccess`, so
@@ -305,27 +341,28 @@ and should delete the whole tier.** It consists of:
   and language metadata are meant to differ.
 - The `.lang-switch` anchor in both pages, and the `.lang-switch` block in `components.css`.
 - `<link rel="alternate" hreflang>` in both pages, and the `xhtml:link` entries in `sitemap.xml`.
-- `OVERRIDES` in `assets/js/strings.js` and `$OVERRIDES` in `app/strings.php`.
+- `$OVERRIDES` in `app/strings.php`.
 - `mail-templates/contact/contact-reply.pt.mjml` → `app/templates/contact-reply.pt.html`, plus
   the marked block in `submit.php` that selects it.
 
-Leave `data-app-base` and `.page-controls` in place when removing the tier — both are correct
-for a single root-level page.
+Leave `data-app-base`, `.page-controls`, and the `%lang%` placeholder in place when removing the
+tier — all three are correct, and inert, for a single root-level page.
 
-**Adding a third language:** copy `pt/` to the new code, add its `OVERRIDES` block to both
-strings files, and add its `hreflang` line to *every* page and to the sitemap. Every version
-must list every version, itself included — a one-sided pairing is ignored outright.
+**Adding a third language:** copy `pt/` to the new code, add its `$OVERRIDES` block, and add its
+`hreflang` line to *every* page and to the sitemap. Every version must list every version, itself
+included — a one-sided pairing is ignored outright.
 
 ### Changing the default language
 
 Serving Portuguese at `/` and English at `/en/` is rearrangement, not deletion, and it touches
 more than the copy:
 
-1. **Both strings files** — `BASE`/`$BASE` take the new default language, `OVERRIDES` takes the
-   old one. Rename the override key (`pt` → `en`).
-2. **The pages** — swap the copy between `index.html` and `pt/index.html`, then rename the
-   directory (`pt/` → `en/`). Its `data-app-base="../app/"` is unchanged; the root page keeps
-   `app/`.
+1. **`app/strings.php`** — `$BASE` takes the new default language, `$OVERRIDES` takes the old
+   one. Rename the override key (`pt` → `en`). Leave `$OWNER` alone unless the *owner's*
+   language is changing too — it's a separate axis.
+2. **The pages** — swap the copy between `index.html` and `pt/index.html`, including the
+   `data-submitting` and `data-network-error` attributes, then rename the directory (`pt/` →
+   `en/`). Its `data-app-base="../app/"` is unchanged; the root page keeps `app/`.
 3. **Language metadata in both** — `<html lang>`, `og:locale`, `<link rel="canonical">`, and
    every `hreflang` href. `x-default` must point at whatever now sits at `/`.
 4. **`sitemap.xml`** — same `x-default` rule, and the `<loc>` values swap.
@@ -334,8 +371,7 @@ more than the copy:
    code and recompile both.
 6. **The switcher** — label, `href`, `hreflang`, `lang`, and `aria-label` in both pages.
 
-The trap in this direction is step 1: English key names with Portuguese values is fine, but if
-a key is *missing* from `OVERRIDES` it silently falls back to `BASE` — which is now Portuguese,
-so an untranslated English page renders a Portuguese string. Semantic keys mean a typo'd key
-gives `undefined` rather than the wrong language, but a genuinely absent one still falls back.
-Check both pages render end to end after the swap.
+The trap in this direction is step 1: English key names with Portuguese values is fine, but a key
+*missing* from `$OVERRIDES` silently falls back to `$BASE` — which is now Portuguese, so an
+untranslated English page would render a Portuguese string. Submit both forms end to end after
+the swap rather than eyeballing the pages; these strings only appear in responses.

@@ -14,7 +14,10 @@
 				<mj-text mj-class="heading" padding="0 0 20px">New enquiry</mj-text>
 			</mj-column>
 			<mj-column width="30%">
-				<mj-text mj-class="date-text" padding="0 0 20px">%date%</mj-text>
+				<!-- %lang% is the language version the enquiry came from, pre-formatted by
+				     submit.php (" · PT"). Empty on a single-language site, so this needs no
+				     Tier 2 marker — it simply renders as the date alone. -->
+				<mj-text mj-class="date-text" padding="0 0 20px">%date%%lang%</mj-text>
 			</mj-column>
 		</mj-section>
 

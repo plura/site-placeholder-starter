@@ -148,7 +148,9 @@
     <!-- OPTIONAL: mailing list signup — see the note in index.html. -->
     <div class="newsletter">
         <p class="newsletter__kicker">Fique a par das novidades</p>
-        <form id="newsletter-form" novalidate>
+        <!-- See the note in index.html. -->
+        <form id="newsletter-form" novalidate
+              data-network-error="Não foi possível subscrever. Tente novamente.">
             <div class="newsletter__row">
                 <label for="newsletter-email" class="sr-only">Email</label>
                 <input type="email" id="newsletter-email" name="email" placeholder="o.seu@email.com" required>
@@ -205,7 +207,8 @@
         </button>
         <h2 id="modal-title">Fique a par</h2>
         <p>Deixe os seus dados e entraremos em contacto assim que estivermos disponíveis.</p>
-        <form id="contact-form" novalidate>
+        <form id="contact-form" novalidate
+              data-network-error="Erro ao enviar. Tente novamente ou contacte-nos por email.">
             <div class="form-group">
                 <label for="name">Nome</label>
                 <input type="text" id="name" name="name" placeholder="O seu nome" required>
@@ -214,14 +217,12 @@
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="o.seu@email.com" required>
             </div>
-            <!-- The "(opcional)" marker must match OVERRIDES.pt.optionalSuffix in
-                 assets/js/strings.js — it is stripped before the label is posted as a field name. -->
             <div class="form-group">
-                <label for="phone">Telefone (opcional)</label>
+                <label for="phone">Telefone <span class="label-note">(opcional)</span></label>
                 <input type="tel" id="phone" name="phone" placeholder="+351 900 000 000">
             </div>
             <div class="form-group">
-                <label for="message">Mensagem (opcional)</label>
+                <label for="message">Mensagem <span class="label-note">(opcional)</span></label>
                 <textarea id="message" name="message" placeholder="Em que podemos ajudar?"></textarea>
             </div>
             <!-- OPTIONAL: newsletter opt-in — see the note in index.html. -->
@@ -231,7 +232,7 @@
             </label>
             <!-- /OPTIONAL -->
             <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
-            <button type="submit" class="btn-submit">Enviar</button>
+            <button type="submit" class="btn-submit" data-submitting="A enviar…">Enviar</button>
         </form>
     </div>
 </dialog>

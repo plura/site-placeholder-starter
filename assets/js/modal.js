@@ -1,5 +1,3 @@
-import STRINGS from './strings.js';
-
 // Set per page in <html data-app-base>, since a language version one directory down reaches
 // the endpoints by a different path than the one at the root. Falls back to the root layout.
 const APP_BASE = document.documentElement.dataset.appBase ?? 'app/';
@@ -11,6 +9,13 @@ const openBtn  = document.getElementById('open-modal');
 const closeBtn = document.getElementById('close-modal');
 const form     = document.getElementById('contact-form');
 const submitBtn = form.querySelector('[type="submit"]');
+
+// Copy comes from the markup, not a dictionary — each language is its own HTML file, so the
+// page already is its language and there is nothing for JS to resolve. The idle label is just
+// whatever the button ships with.
+const LABEL_SUBMIT     = submitBtn.textContent;
+const LABEL_SUBMITTING = submitBtn.dataset.submitting;
+const NETWORK_ERROR    = form.dataset.networkError;
 
 let opener = null;
 
@@ -47,7 +52,7 @@ function closeModal() {
 dialog.addEventListener('close', () => {
     form.reset();
     submitBtn.disabled = false;
-    submitBtn.textContent = STRINGS.submit;
+    submitBtn.textContent = LABEL_SUBMIT;
     form.querySelectorAll('.form-success, .form-error').forEach(el => el.remove());
     form.querySelectorAll('.form-group, .btn-submit').forEach(el => el.style.display = '');
 });
@@ -74,33 +79,47 @@ form.addEventListener('submit', async function (e) {
     //   const interest = form.querySelector('[name="interest"]');
     //   if (interest?.value) data.set('interest', interest.selectedOptions[0].text);
 
+    // Optional-field markers are stripped structurally, via .label-note, rather than by matching
+    // the marker's text — so translating the labels can't silently stop it working.
     const labels = {};
     form.querySelectorAll('[name]').forEach(field => {
         const label = form.querySelector(`label[for="${field.id}"]`);
-        if (label) labels[field.name] = label.textContent.replace(STRINGS.optionalSuffix, '').trim();
+        if (!label) return;
+        const clean = label.cloneNode(true);
+        clean.querySelector('.label-note')?.remove();
+        labels[field.name] = clean.textContent.trim();
     });
     data.set('labels', JSON.stringify(labels));
 
     submitBtn.disabled = true;
-    submitBtn.textContent = STRINGS.submitting;
+    submitBtn.textContent = LABEL_SUBMITTING;
+
+    // The server owns every message it can produce — validation, mail failure, success. The page
+    // supplies only NETWORK_ERROR, for when there is no response to read. Never surface a thrown
+    // error's own text: a failed fetch yields "Failed to fetch", which is not for users.
+    const fail = (message) => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = LABEL_SUBMIT;
+        const err = form.querySelector('.form-error') || Object.assign(document.createElement('p'), { className: 'form-error' });
+        err.textContent = message;
+        if (!form.contains(err)) submitBtn.before(err);
+    };
 
     try {
         const res  = await fetch(APP_BASE + 'submit.php', { method: 'POST', body: data });
-        const json = await res.json();
+        // Guarded so an HTML error page (a 500 from the host, say) falls through to NETWORK_ERROR
+        // rather than throwing on the parse.
+        const json = await res.json().catch(() => ({}));
 
         if (res.ok && json.success) {
             form.querySelectorAll('.form-group, .btn-submit').forEach(el => el.style.display = 'none');
-            const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: STRINGS.success });
+            const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: json.message ?? '' });
             form.appendChild(msg);
             setTimeout(closeModal, 2800);
         } else {
-            throw new Error(json.message);
+            fail(json.message || NETWORK_ERROR);
         }
     } catch {
-        submitBtn.disabled = false;
-        submitBtn.textContent = STRINGS.submit;
-        const err = form.querySelector('.form-error') || Object.assign(document.createElement('p'), { className: 'form-error' });
-        err.textContent = STRINGS.error;
-        if (!form.contains(err)) submitBtn.before(err);
+        fail(NETWORK_ERROR);
     }
 });

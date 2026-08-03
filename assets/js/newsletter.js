@@ -1,5 +1,3 @@
-import STRINGS from './strings.js';
-
 // See the note in modal.js.
 const APP_BASE = document.documentElement.dataset.appBase ?? 'app/';
 
@@ -11,6 +9,10 @@ const form = document.getElementById('newsletter-form');
 if (form) {
     const submitBtn = form.querySelector('[type="submit"]');
 
+    // See the note in modal.js — the only copy this module needs, since every other message
+    // comes from the server's own response.
+    const NETWORK_ERROR = form.dataset.networkError;
+
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
@@ -21,22 +23,26 @@ if (form) {
 
         submitBtn.disabled = true;
 
+        const fail = (message) => {
+            submitBtn.disabled = false;
+            const errEl = form.querySelector('.form-error') || Object.assign(document.createElement('p'), { className: 'form-error' });
+            errEl.textContent = message;
+            if (!form.contains(errEl)) form.appendChild(errEl);
+        };
+
         try {
             const res  = await fetch(APP_BASE + 'subscribe.php', { method: 'POST', body: data });
-            const json = await res.json();
+            const json = await res.json().catch(() => ({}));
 
             if (res.ok && json.success) {
                 form.querySelector('.newsletter__row').style.display = 'none';
-                const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: json.message || STRINGS.subscribeSuccess });
+                const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: json.message ?? '' });
                 form.appendChild(msg);
             } else {
-                throw new Error(json.message);
+                fail(json.message || NETWORK_ERROR);
             }
-        } catch (err) {
-            submitBtn.disabled = false;
-            const errEl = form.querySelector('.form-error') || Object.assign(document.createElement('p'), { className: 'form-error' });
-            errEl.textContent = err.message || STRINGS.subscribeError;
-            if (!form.contains(errEl)) form.appendChild(errEl);
+        } catch {
+            fail(NETWORK_ERROR);
         }
     });
 }

@@ -32,7 +32,8 @@ use PHPMailer\PHPMailer\Exception;
 
 // —— Honeypot ————————————————————————————————————————————————————————————————
 if (!empty($_POST['botcheck'])) {
-    echo json_encode(['success' => true]);
+    // Same response shape as a real success, so nothing signals that the honeypot fired.
+    echo json_encode(['success' => true, 'message' => $strings['sent']]);
     exit;
 }
 
@@ -51,11 +52,12 @@ if (!empty($_POST['labels']) && is_string($_POST['labels'])) {
     }
 }
 
-// 'newsletter' is a control flag (see the optional opt-in block near the bottom of this
-// file), not content — excluded here so it never leaks into the email body as a field.
+// 'newsletter' and 'lang' are control flags (see the optional opt-in block near the bottom of
+// this file, and app/strings.php), not content — excluded here so they never leak into the
+// email body as fields. 'lang' is surfaced deliberately via %lang% instead, see below.
 $data = [];
 foreach ($_POST as $key => $value) {
-    if ($key === 'botcheck' || $key === 'labels' || $key === 'newsletter' || !is_string($value)) {
+    if ($key === 'botcheck' || $key === 'labels' || $key === 'newsletter' || $key === 'lang' || !is_string($value)) {
         continue;
     }
     $data[$key] = strip_tags(trim($value));
@@ -77,7 +79,19 @@ if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
 $data['email'] = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
 
 // —— Build email body ———————————————————————————————————————————————————————
-function build_body(array $data, ?string $template_path, array $labels = []): string {
+/**
+ * Fills a mail template with the submitted data, falling back to a plain-text list when the
+ * template file is missing.
+ *
+ * @param array       $data          Submitted fields, keyed by input name.
+ * @param string|null $template_path Compiled template under app/templates/, or null for text.
+ * @param array       $labels        Human-readable field names posted by the form. Only used by
+ *                                   the plain-text fallback — the HTML templates carry their own.
+ * @param string      $lang_note     Pre-formatted language note substituted for %lang%, e.g.
+ *                                   " · PT". Empty on a single-language site, rendering nothing.
+ * @return string
+ */
+function build_body(array $data, ?string $template_path, array $labels = [], string $lang_note = ''): string {
     $template = $template_path ? @file_get_contents($template_path) : false;
 
     if ($template === false) {
@@ -91,7 +105,7 @@ function build_body(array $data, ?string $template_path, array $labels = []): st
         return implode("\n", $lines);
     }
 
-    $html = str_replace(['%year%', '%date%'], [date('Y'), date('d/m/Y H:i')], $template);
+    $html = str_replace(['%year%', '%date%', '%lang%'], [date('Y'), date('d/m/Y H:i'), $lang_note], $template);
     foreach ($data as $key => $value) {
         $html = str_replace('%' . $key . '%', nl2br(htmlspecialchars($value, ENT_QUOTES, 'UTF-8')), $html);
     }
@@ -130,13 +144,18 @@ function send_mail(array $cfg, string $to_email, string $to_name, string $subjec
 }
 
 // —— Notification to site owner ————————————————————————————————————————————
+// Appended to the notification's date line: the owner reads one language whatever version the
+// visitor used, so this is the only place they learn which language to reply in. Empty — and so
+// invisible — on a single-language site.
+$lang_note = $strings['_lang'] !== '' ? ' · ' . strtoupper($strings['_lang']) : '';
+
 $template = __DIR__ . '/templates/contact.html';
 $sent = send_mail(
     $config,
     $config['contact']['to_email'],
     $config['contact']['to_name'],
     sprintf($strings['subject_notify'], $config['contact']['site_name']),
-    build_body($data, $template, $labels),
+    build_body($data, $template, $labels, $lang_note),
     file_exists($template),
     $data['email'],
     $data['name']
@@ -187,4 +206,4 @@ if (!empty($_POST['newsletter'])) {
 }
 
 // —— Done ————————————————————————————————————————————————————————————————————
-echo json_encode(['success' => true]);
+echo json_encode(['success' => true, 'message' => $strings['sent']]);
