@@ -1,6 +1,4 @@
-// Set per page in <html data-app-base>, since a language version one directory down reaches
-// the endpoints by a different path than the one at the root. Falls back to the root layout.
-const APP_BASE = document.documentElement.dataset.appBase ?? 'app/';
+import { post } from './post.js';
 
 const FOCUSABLE ='a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -70,10 +68,6 @@ form.addEventListener('submit', async function (e) {
 
     const data = new FormData(form);
 
-    // Tells the endpoint which language to answer in (see app/strings.php). Inert on a
-    // single-language site, where strings.php just falls through to its base copy.
-    data.set('lang', document.documentElement.lang);
-
     // If a project adds a <select> whose posted value is a slug (not human-readable),
     // swap it for the selected option's visible text before submitting — e.g.:
     //   const interest = form.querySelector('[name="interest"]');
@@ -94,32 +88,21 @@ form.addEventListener('submit', async function (e) {
     submitBtn.disabled = true;
     submitBtn.textContent = LABEL_SUBMITTING;
 
-    // The server owns every message it can produce — validation, mail failure, success. The page
-    // supplies only NETWORK_ERROR, for when there is no response to read. Never surface a thrown
-    // error's own text: a failed fetch yields "Failed to fetch", which is not for users.
-    const fail = (message) => {
-        submitBtn.disabled = false;
-        submitBtn.textContent = LABEL_SUBMIT;
-        const err = form.querySelector('.form-error') || Object.assign(document.createElement('p'), { className: 'form-error' });
-        err.textContent = message;
-        if (!form.contains(err)) submitBtn.before(err);
-    };
+    const { ok, message } = await post('submit.php', data);
 
-    try {
-        const res  = await fetch(APP_BASE + 'submit.php', { method: 'POST', body: data });
-        // Guarded so an HTML error page (a 500 from the host, say) falls through to NETWORK_ERROR
-        // rather than throwing on the parse.
-        const json = await res.json().catch(() => ({}));
-
-        if (res.ok && json.success) {
-            form.querySelectorAll('.form-group, .btn-submit').forEach(el => el.style.display = 'none');
-            const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: json.message ?? '' });
-            form.appendChild(msg);
-            setTimeout(closeModal, 2800);
-        } else {
-            fail(json.message || NETWORK_ERROR);
-        }
-    } catch {
-        fail(NETWORK_ERROR);
+    if (ok) {
+        form.querySelectorAll('.form-group, .btn-submit').forEach(el => el.style.display = 'none');
+        const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: message });
+        form.appendChild(msg);
+        setTimeout(closeModal, 2800);
+        return;
     }
+
+    // The server owns every message it can produce — validation, mail failure, success. The page
+    // supplies only NETWORK_ERROR, for when there was no response to read at all.
+    submitBtn.disabled = false;
+    submitBtn.textContent = LABEL_SUBMIT;
+    const err = form.querySelector('.form-error') || Object.assign(document.createElement('p'), { className: 'form-error' });
+    err.textContent = message || NETWORK_ERROR;
+    if (!form.contains(err)) submitBtn.before(err);
 });

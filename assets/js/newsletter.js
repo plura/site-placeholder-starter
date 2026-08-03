@@ -1,5 +1,4 @@
-// See the note in modal.js.
-const APP_BASE = document.documentElement.dataset.appBase ?? 'app/';
+import { post } from './post.js';
 
 // OPTIONAL: only needed if this project keeps the standalone mailing-list signup in index.html.
 // Guarded on #newsletter-form existing, so leaving this imported after deleting that markup
@@ -18,31 +17,20 @@ if (form) {
 
         const data = new FormData(form);
 
-        // See the note in modal.js — tells the endpoint which language to answer in.
-        data.set('lang', document.documentElement.lang);
-
         submitBtn.disabled = true;
 
-        const fail = (message) => {
-            submitBtn.disabled = false;
-            const errEl = form.querySelector('.form-error') || Object.assign(document.createElement('p'), { className: 'form-error' });
-            errEl.textContent = message;
-            if (!form.contains(errEl)) form.appendChild(errEl);
-        };
+        const { ok, message } = await post('subscribe.php', data);
 
-        try {
-            const res  = await fetch(APP_BASE + 'subscribe.php', { method: 'POST', body: data });
-            const json = await res.json().catch(() => ({}));
-
-            if (res.ok && json.success) {
-                form.querySelector('.newsletter__row').style.display = 'none';
-                const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: json.message ?? '' });
-                form.appendChild(msg);
-            } else {
-                fail(json.message || NETWORK_ERROR);
-            }
-        } catch {
-            fail(NETWORK_ERROR);
+        if (ok) {
+            form.querySelector('.newsletter__row').style.display = 'none';
+            const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: message });
+            form.appendChild(msg);
+            return;
         }
+
+        submitBtn.disabled = false;
+        const errEl = form.querySelector('.form-error') || Object.assign(document.createElement('p'), { className: 'form-error' });
+        errEl.textContent = message || NETWORK_ERROR;
+        if (!form.contains(errEl)) form.appendChild(errEl);
     });
 }

@@ -25,7 +25,8 @@ require_once __DIR__ . '/lib/mailchimp.php';
 
 // —— Honeypot ————————————————————————————————————————————————————————————————
 if (!empty($_POST['botcheck'])) {
-    echo json_encode(['success' => true]);
+    // Same response shape as a real success, so nothing signals that the honeypot fired.
+    echo json_encode(['success' => true, 'message' => $strings['subscribe_confirm']]);
     exit;
 }
 

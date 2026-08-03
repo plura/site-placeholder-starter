@@ -113,7 +113,8 @@ Work through these questions before starting the "New project checklist" below:
 1. **Does this project want the contact form (modal)?** This is the starter's core feature —
    assumed present. If not needed at all, remove `#contact-dialog` from `index.html`,
    `assets/js/modal.js` (and its import in `main.js`), `app/submit.php`, and the
-   `mail-templates/contact/` + `app/templates/contact*.html` pair.
+   `mail-templates/contact/` + `app/templates/contact*.html` pair. `assets/js/post.js` is
+   shared with the newsletter form — delete it only if that's going too.
 2. **If yes — which fields?** Name + Email are the only two `submit.php` actually requires;
    Phone and Message are optional by default (see step 4 below for adding/removing rows).
 3. **Does this project want the mailing-list opt-in checkbox on the contact form?** An
@@ -124,7 +125,8 @@ Work through these questions before starting the "New project checklist" below:
    modal) single-email-field section on the page — lower friction than a checkbox buried in
    a longer form, for a passive "leave your email" ask. Same pattern used on the Buscardini
    site. To remove: delete the marked `.newsletter` block in `index.html`, its styles in
-   `components.css`, `assets/js/newsletter.js` and its import in `main.js`.
+   `components.css`, `assets/js/newsletter.js` and its import in `main.js`. `assets/js/post.js`
+   stays as long as the contact form does.
 5. **If keeping either mailing-list feature**, both use the **Mailchimp Marketing API**
    (double opt-in — Mailchimp sends its own confirmation email, this starter never does) via
    the shared `app/lib/mailchimp.php` helper. Fill in `mailchimp.api_key` / `mailchimp.list_id`
