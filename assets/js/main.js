@@ -6,6 +6,10 @@ const { lucide } = window;
 
 lucide.createIcons();
 
-// Project-specific entrance animations / canvas backgrounds (GSAP, particles, etc.)
-// are bespoke per client — add them as their own modules and wire them up here,
-// following the pattern of sibling sites built from this starter.
+// Project-specific entrance animations / canvas backgrounds (GSAP, particles, etc.) are
+// bespoke per client. They live in custom/ — see custom/README.md — and get wired up here:
+//
+//     import '../../custom/js/intro.js';
+//
+// Keeping them out of assets/ means a starter update never has to distinguish your code
+// from its own.

@@ -26,7 +26,9 @@ Macieira, and future ones) instead of re-deriving it each time.
 **Must customize per project:**
 - `assets/css/base.css` — brand colors, fonts, spacing scale (all under one `:root` block,
   everything else in `layout.css`/`components.css` references these variables by name). Colors
-  are dark/light-theme-reactive — see "Dark/light mode" below before editing them.
+  are dark/light-theme-reactive — see "Dark/light mode" below before editing them. The
+  webfonts themselves load via `<link>` tags in each page's `<head>`, so changing typeface
+  means editing those *and* the two `--site-font-` values here.
 - `index.html` — logo/wordmark, copy, contact details, JSON-LD business info, meta tags,
   contact form fields beyond the universal name/email/phone/message.
 - `mail-templates/_partials/_head.mjml` — brand colors for the email (kept intentionally
@@ -34,8 +36,9 @@ Macieira, and future ones) instead of re-deriving it each time.
 - `app/config.example.php` → `config.php` — SMTP credentials, `site_name` for email subjects.
 - Favicons (`assets/favicons/`) and `assets/images/og.png` — not included; see the spec below.
 - Bespoke entrance animations / canvas backgrounds, if wanted — these are genuinely
-  per-client art direction, not part of this starter. Add them as their own JS modules and
-  wire them up from `assets/js/main.js`.
+  per-client art direction, not part of this starter. They go in `custom/`, wired up from
+  `assets/js/main.js`; see `custom/README.md` for the convention and, more importantly, for
+  what does *not* belong there.
 
 ## Why the email's colors and fonts are separate from the website's
 
@@ -255,6 +258,32 @@ see the global CLAUDE.md for the full writeup of both:
 - Plain SFTP/FTPS sync (most shared hosts).
 - cPanel Git Version Control + a manually-triggered (`workflow_dispatch`, not `on: push`)
   GitHub Actions deploy, for hosts where that's set up (e.g. Buscardini).
+
+## Bringing a project up to date with the starter
+
+There is no update mechanism — a fork is a fork. Bringing one level again is a manual pass, and
+what that costs depends entirely on which file you're looking at. Measured against a real fork
+rather than guessed:
+
+| | Travels how | Why |
+| --- | --- | --- |
+| `app/*.php`, `app/lib/` | **Copy wholesale** | Projects diverge here by comments only (stripped `OPTIONAL` markers), never logic |
+| `assets/js/*.js` | **Copy, then re-check** | Usually identical; the exceptions are brand values in `theme.js` and added imports in `main.js` |
+| `assets/css/*.css` | **Merge by hand** | Brand tokens and stripped comments are interleaved through it |
+| `index.html`, `pt/index.html` | **Merge by hand** | Copy, logo markup and JSON-LD are the project's; only structural changes travel |
+| `robots.txt`, `sitemap.xml`, `site.webmanifest` | **Never** | Real domain and name — copying these back breaks the live site |
+| `app/config.php`, `app/strings.php` | **Never** | Credentials and project copy |
+| `custom/**` | **Never** | Not the starter's, by definition |
+
+Start from the fork-commit note at the top of the project's own README (step 1 of the checklist
+above) — `git log <hash>..HEAD` in this repo lists exactly what the project is missing, which is
+faster than diffing files and guessing what was deliberate.
+
+The reason this stays a manual pass: making `assets/` mechanically replaceable would mean
+brand values moving to an override file *and* projects no longer stripping the `OPTIONAL`
+comments they've acted on. That's a rewrite of how this starter is organized, to save a couple
+of easy merges a year. Not worth it at this scale — revisit if the number of live forks grows
+by an order of magnitude.
 
 ## Language
 
