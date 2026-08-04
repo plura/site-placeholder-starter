@@ -13,7 +13,7 @@
  * single-language project that deleted pt/ and for one that added a third language.
  *
  * It compares STRUCTURE, never content: which meta names exist, not what they say. Copy is
- * supposed to differ. Paths are normalized (pt/ reaches assets one level up) and HTML comments
+ * supposed to differ. Paths are normalized (pt/ reaches starter/assets one level up) and HTML comments
  * are stripped first, so a block commented out in both pages — Tier 2 while inactive — reads
  * as absent from both rather than as drift.
  *
@@ -28,7 +28,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 /**
  * Every language version present, found rather than hardcoded, so adding a third language is
  * covered without editing this file. A language directory is a two-letter name at the repo root
- * holding an index.html — which matches pt/, en/, fr/ and can't match app/, assets/ or custom/.
+ * holding an index.html — which matches pt/, en/, fr/ and can't match starter/app/, starter/assets/ or starter/custom/.
  *
  * @returns {Promise<string[]>} Directory names, e.g. ['pt'].
  */

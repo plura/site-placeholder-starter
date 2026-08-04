@@ -4,12 +4,12 @@ declare(strict_types=1);
 /**
  * Subscribes an email to a Mailchimp audience via the Marketing API, using double opt-in
  * (Mailchimp sends its own confirmation email — this starter never sends one itself).
- * Shared by app/subscribe.php (standalone signup) and app/submit.php's optional newsletter
+ * Shared by starter/app/subscribe.php (standalone signup) and starter/app/submit.php's optional newsletter
  * checkbox. To swap in a different ESP, this is the one function to replace.
  *
- * @param array  $config  Parsed app/config.php.
+ * @param array  $config  Parsed starter/app/config.php.
  * @param string $email   Address to subscribe; assumed already validated by the caller.
- * @param array  $strings Resolved copy from app/strings.php — the returned messages are
+ * @param array  $strings Resolved copy from starter/app/strings.php — the returned messages are
  *                        shown to the user, so they have to come from the caller's language.
  * @return array{success: bool, message: string}
  */

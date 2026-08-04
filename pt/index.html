@@ -8,12 +8,12 @@
     here, or the two versions drift. Only the copy, the paths, and the language metadata
     below are meant to differ.
 
-    Paths are one level deeper than the root page — hence ../assets, ../site.webmanifest,
-    and data-app-base="../app/".
+    Paths are one level deeper than the root page — hence ../starter/assets, ../site.webmanifest,
+    and data-app-base="../starter/app/".
 
     Remove this whole directory for a single-language site; see the README.
 -->
-<html lang="pt" data-app-base="../app/">
+<html lang="pt" data-app-base="../starter/app/">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,8 +52,8 @@
     <!-- /OPTIONAL -->
 
     <!-- Favicons — see README for the asset spec (sizes, formats) -->
-    <link rel="icon" type="image/png" sizes="96x96" href="../assets/favicons/favicon-96x96.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../starter/assets/favicons/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../starter/assets/favicons/apple-touch-icon.png">
     <link rel="manifest" href="../site.webmanifest">
 
     <!-- Open Graph -->
@@ -63,7 +63,7 @@
     <meta property="og:title"       content="Site Name | Descrição numa linha">
     <meta property="og:description" content="Descrição de uma a duas frases, igual à descrição do JSON-LD abaixo.">
     <meta property="og:locale"      content="pt_PT">
-    <meta property="og:image"       content="https://example.com/assets/images/og.png">
+    <meta property="og:image"       content="https://example.com/starter/assets/images/og.png">
     <meta property="og:image:width"  content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt"    content="Site Name">
@@ -72,7 +72,7 @@
     <meta name="twitter:card"        content="summary_large_image">
     <meta name="twitter:title"       content="Site Name | Descrição numa linha">
     <meta name="twitter:description" content="Descrição de uma a duas frases, igual à descrição do JSON-LD abaixo.">
-    <meta name="twitter:image"       content="https://example.com/assets/images/og.png">
+    <meta name="twitter:image"       content="https://example.com/starter/assets/images/og.png">
     <meta name="twitter:image:alt"   content="Site Name">
 
     <!--
@@ -85,7 +85,7 @@
         "@type": "LocalBusiness",
         "name": "Site Name",
         "url": "https://example.com/pt/",
-        "image": "https://example.com/assets/images/og.png",
+        "image": "https://example.com/starter/assets/images/og.png",
         "description": "Descrição de uma a duas frases, igual à meta description acima.",
         "telephone": "+351900000000",
         "email": "info@example.com",
@@ -109,9 +109,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cardo&family=Outfit:wght@300;400&display=swap">
 
-    <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/css/layout.css">
-    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../starter/assets/css/base.css">
+    <link rel="stylesheet" href="../starter/assets/css/layout.css">
+    <link rel="stylesheet" href="../starter/assets/css/components.css">
 </head>
 <body>
 
@@ -146,7 +146,7 @@
 
     <!--
         Logo placeholder — replace with the client's actual logo mark/wordmark and any
-        entrance animation (see assets/js/main.js for where bespoke animation modules hook in).
+        entrance animation (see starter/assets/js/main.js for where bespoke animation modules hook in).
     -->
     <div class="site-logo">
         <p class="site-logo__name">Site Name</p>
@@ -191,13 +191,13 @@
 
         <div class="socials">
             <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
-                <span class="social-icon" style="mask-image: url('../assets/icons/instagram.svg')"></span>
+                <span class="social-icon" style="mask-image: url('../starter/assets/icons/instagram.svg')"></span>
             </a>
             <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">
-                <span class="social-icon" style="mask-image: url('../assets/icons/facebook.svg')"></span>
+                <span class="social-icon" style="mask-image: url('../starter/assets/icons/facebook.svg')"></span>
             </a>
             <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn">
-                <span class="social-icon" style="mask-image: url('../assets/icons/linkedin.svg')"></span>
+                <span class="social-icon" style="mask-image: url('../starter/assets/icons/linkedin.svg')"></span>
             </a>
         </div>
 
@@ -248,6 +248,6 @@
 </dialog>
 
 <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
-<script type="module" src="../assets/js/main.js"></script>
+<script type="module" src="../starter/assets/js/main.js"></script>
 </body>
 </html>

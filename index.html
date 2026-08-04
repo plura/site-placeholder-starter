@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- data-app-base: where the PHP endpoints sit relative to THIS page. Read by modal.js and
      newsletter.js, which are shared by every language version and so cannot hardcode a depth. -->
-<html lang="en" data-app-base="app/">
+<html lang="en" data-app-base="starter/app/">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,11 +23,11 @@
     <meta name="theme-color" content="#1a1a1a">
 
     <!-- OPTIONAL (2/2): manual toggle — remove this script (and #theme-toggle below,
-         assets/js/theme.js + its import in main.js, and the OPTIONAL (2/2) blocks in
+         starter/assets/js/theme.js + its import in main.js, and the OPTIONAL (2/2) blocks in
          base.css/components.css) for an auto-only (no manual override) dark/light site — the
          OPTIONAL (1/2) blocks alone already make the site auto-follow the OS/browser
          preference with no JS at all. Remove both tiers for a single-theme site.
-         Applies a stored light/dark override (see assets/js/theme.js) before first paint, so
+         Applies a stored light/dark override (see starter/assets/js/theme.js) before first paint, so
          there's no flash of the wrong theme. Deliberately does nothing when no override is
          stored — the CSS's own @media (prefers-color-scheme) handles following the system
          setting live in that case; this script only needs to step in when a manual choice
@@ -46,8 +46,8 @@
     <!-- /OPTIONAL -->
 
     <!-- Favicons — see README for the asset spec (sizes, formats) -->
-    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicons/favicon-96x96.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="starter/assets/favicons/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="starter/assets/favicons/apple-touch-icon.png">
     <link rel="manifest" href="site.webmanifest">
 
     <!-- Open Graph -->
@@ -57,7 +57,7 @@
     <meta property="og:title"       content="Site Name | One-line Description">
     <meta property="og:description" content="One to two sentence description matching the JSON-LD description below.">
     <meta property="og:locale"      content="en_GB">
-    <meta property="og:image"       content="https://example.com/assets/images/og.png">
+    <meta property="og:image"       content="https://example.com/starter/assets/images/og.png">
     <meta property="og:image:width"  content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt"    content="Site Name">
@@ -66,7 +66,7 @@
     <meta name="twitter:card"        content="summary_large_image">
     <meta name="twitter:title"       content="Site Name | One-line Description">
     <meta name="twitter:description" content="One to two sentence description matching the JSON-LD description below.">
-    <meta name="twitter:image"       content="https://example.com/assets/images/og.png">
+    <meta name="twitter:image"       content="https://example.com/starter/assets/images/og.png">
     <meta name="twitter:image:alt"   content="Site Name">
 
     <!--
@@ -82,7 +82,7 @@
         "@type": "LocalBusiness",
         "name": "Site Name",
         "url": "https://example.com/",
-        "image": "https://example.com/assets/images/og.png",
+        "image": "https://example.com/starter/assets/images/og.png",
         "description": "One to two sentence description matching the meta description above.",
         "telephone": "+351900000000",
         "email": "info@example.com",
@@ -110,9 +110,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cardo&family=Outfit:wght@300;400&display=swap">
 
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/layout.css">
-    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="starter/assets/css/base.css">
+    <link rel="stylesheet" href="starter/assets/css/layout.css">
+    <link rel="stylesheet" href="starter/assets/css/components.css">
 </head>
 <body>
 
@@ -148,7 +148,7 @@
 
     <!--
         Logo placeholder — replace with the client's actual logo mark/wordmark and any
-        entrance animation (see assets/js/main.js for where bespoke animation modules hook in).
+        entrance animation (see starter/assets/js/main.js for where bespoke animation modules hook in).
     -->
     <div class="site-logo">
         <p class="site-logo__name">Site Name</p>
@@ -159,8 +159,8 @@
 
     <!-- OPTIONAL: mailing list signup, separate from the contact form — a lower-friction inline
          ask (no modal) for a single-field "leave your email" action. Remove this whole block
-         (and its styles in components.css, assets/js/newsletter.js + its import in main.js,
-         and app/subscribe.php + app/lib/mailchimp.php) if this project has no mailing list. -->
+         (and its styles in components.css, starter/assets/js/newsletter.js + its import in main.js,
+         and starter/app/subscribe.php + starter/app/lib/mailchimp.php) if this project has no mailing list. -->
     <div class="newsletter">
         <p class="newsletter__kicker">Stay up to date</p>
         <!-- data-network-error: shown only when the request never completes (offline, server
@@ -198,13 +198,13 @@
 
         <div class="socials">
             <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
-                <span class="social-icon" style="mask-image: url('assets/icons/instagram.svg')"></span>
+                <span class="social-icon" style="mask-image: url('starter/assets/icons/instagram.svg')"></span>
             </a>
             <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">
-                <span class="social-icon" style="mask-image: url('assets/icons/facebook.svg')"></span>
+                <span class="social-icon" style="mask-image: url('starter/assets/icons/facebook.svg')"></span>
             </a>
             <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn">
-                <span class="social-icon" style="mask-image: url('assets/icons/linkedin.svg')"></span>
+                <span class="social-icon" style="mask-image: url('starter/assets/icons/linkedin.svg')"></span>
             </a>
         </div>
 
@@ -244,7 +244,7 @@
                 <label for="message">Message <span class="label-note">(optional)</span></label>
                 <textarea id="message" name="message" placeholder="How can we help?"></textarea>
             </div>
-            <!-- OPTIONAL: newsletter opt-in — also subscribes the submitter via app/submit.php's
+            <!-- OPTIONAL: newsletter opt-in — also subscribes the submitter via starter/app/submit.php's
                  optional block. Remove this label if this project has no mailing list. -->
             <label class="form-check">
                 <input type="checkbox" name="newsletter" value="1">
@@ -258,6 +258,6 @@
 </dialog>
 
 <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
-<script type="module" src="assets/js/main.js"></script>
+<script type="module" src="starter/assets/js/main.js"></script>
 </body>
 </html>

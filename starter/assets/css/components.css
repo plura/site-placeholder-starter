@@ -32,7 +32,7 @@
 }
 
 /* OPTIONAL (2/2): manual toggle — remove alongside the #theme-toggle button + inline anti-FOUC
-   script in index.html, assets/js/theme.js and its import in main.js, and base.css's OPTIONAL
+   script in index.html, starter/assets/js/theme.js and its import in main.js, and base.css's OPTIONAL
    (2/2) block, for an auto-only (no manual override) dark/light site. Remove alongside
    OPTIONAL (1/2) too (see base.css) for a single-theme site with no dark/light distinction.
    The shared circle styling above stays — the language switch uses it too. */
@@ -339,7 +339,7 @@ dialog p {
 }
 
 /* OPTIONAL: standalone mailing-list signup — remove alongside the .newsletter block in
-   index.html (and assets/js/newsletter.js) if this project has no mailing list. */
+   index.html (and starter/assets/js/newsletter.js) if this project has no mailing list. */
 .newsletter {
     width: 100%;
     max-width: 320px;

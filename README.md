@@ -12,19 +12,19 @@ Macieira, and future ones) instead of re-deriving it each time.
 ## What's genuinely reusable vs. what you must customize
 
 **Copy as-is, rarely needs changes:**
-- `app/submit.php` — field-agnostic: it loops raw POST data with no hardcoded field list,
+- `starter/app/submit.php` — field-agnostic: it loops raw POST data with no hardcoded field list,
   and reads human-readable labels from a `labels` JSON field the frontend builds live from
-  the form's own `<label for="...">` elements (see `assets/js/modal.js`). Adding a field to
+  the form's own `<label for="...">` elements (see `starter/assets/js/modal.js`). Adding a field to
   the contact form (e.g. a company name) requires zero changes here. The one exception is
   `newsletter` — a reserved field name for the optional mailing-list opt-in checkbox (see
   "Optional features" below), which is deliberately excluded from the generic loop.
-- `app/lib/phpmailer/` — vendored PHPMailer, never modified.
+- `starter/app/lib/phpmailer/` — vendored PHPMailer, never modified.
 - The MJML **structural** patterns in `mail-templates/_partials/` — the responsive
   side-by-side/stacked field layout, the message quote-block, the full-bleed frame
   background. See "Mail template gotchas" below before changing these.
 
 **Must customize per project:**
-- `assets/css/base.css` — brand colors, fonts, spacing scale (all under one `:root` block,
+- `starter/assets/css/base.css` — brand colors, fonts, spacing scale (all under one `:root` block,
   everything else in `layout.css`/`components.css` references these variables by name). Colors
   are dark/light-theme-reactive — see "Dark/light mode" below before editing them. The
   webfonts themselves load via `<link>` tags in each page's `<head>`, so changing typeface
@@ -33,11 +33,11 @@ Macieira, and future ones) instead of re-deriving it each time.
   contact form fields beyond the universal name/email/phone/message.
 - `mail-templates/_partials/_head.mjml` — brand colors for the email (kept intentionally
   separate from the website's own CSS variables — see below).
-- `app/config.example.php` → `config.php` — SMTP credentials, `site_name` for email subjects.
-- Favicons (`assets/favicons/`) and `assets/images/og.png` — not included; see the spec below.
+- `starter/app/config.example.php` → `config.php` — SMTP credentials, `site_name` for email subjects.
+- Favicons (`starter/assets/favicons/`) and `starter/assets/images/og.png` — not included; see the spec below.
 - Bespoke entrance animations / canvas backgrounds, if wanted — these are genuinely
-  per-client art direction, not part of this starter. They go in `custom/`, wired up from
-  `assets/js/main.js`; see `custom/README.md` for the convention and, more importantly, for
+  per-client art direction, not part of this starter. They go in `starter/custom/`, wired up from
+  `starter/assets/js/main.js`; see `starter/custom/README.md` for the convention and, more importantly, for
   what does *not* belong there.
 
 ## Why the email's colors and fonts are separate from the website's
@@ -49,10 +49,10 @@ almost always wants its own, usually lighter, palette regardless of the site's t
 both when customizing a project; don't assume one implies the other. In the starter's default
 placeholder palette, this already lines up more than it might look at a glance: the frame/card
 colors (`#eeeeee`/`#ffffff`) closely mirror the website's own light-theme tokens
-(`--light-bg`/`--light-surface` in `assets/css/base.css`), and the accent blue (`#4a90d9`) is
+(`--light-bg`/`--light-surface` in `starter/assets/css/base.css`), and the accent blue (`#4a90d9`) is
 an exact match with `--site-color-accent` — not a coincidence, kept in sync deliberately.
 
-Fonts are separate for the same reliability reason, not shared with `assets/css/base.css`'s
+Fonts are separate for the same reliability reason, not shared with `starter/assets/css/base.css`'s
 `--site-font-serif`/`--site-font-sans` (Cardo/Outfit, loaded via Google Fonts): most mail
 clients strip external font loading entirely, so `_head.mjml` uses system font stacks instead
 (`Georgia, 'Times New Roman', serif` for headings, `Helvetica Neue, Helvetica, Arial,
@@ -68,13 +68,13 @@ buttons) already carries the brand identity independent of the exact typeface.
 ## Dark/light mode
 
 The site follows the visitor's OS/browser preference (`prefers-color-scheme`) by default, with
-a manual toggle (top-right corner, `#theme-toggle` / `assets/js/theme.js`) that overrides it and
+a manual toggle (top-right corner, `#theme-toggle` / `starter/assets/js/theme.js`) that overrides it and
 persists the choice in `localStorage`. The contact modal re-themes too (a dark card in dark
 mode), not just the page canvas — it doesn't stay fixed-light the way the email templates
 deliberately do (see above); the website's modal is fully within our own CSS, so there's no
 equivalent mail-client-dark-mode-mangling constraint forcing it to stay light-only.
 
-- **Two independent color axes** in `assets/css/base.css`: **page** tokens (`--site-bg`,
+- **Two independent color axes** in `starter/assets/css/base.css`: **page** tokens (`--site-bg`,
   `--site-fg`, `--site-muted`, `--site-border`) style the canvas; **surface** tokens
   (`--site-surface`, `--site-surface-fg`, `--site-surface-muted`, `--site-surface-label`) style
   the modal card. Kept separate because the modal doesn't always reuse the page's exact
@@ -115,34 +115,34 @@ Work through these questions before starting the "New project checklist" below:
 
 1. **Does this project want the contact form (modal)?** This is the starter's core feature —
    assumed present. If not needed at all, remove `#contact-dialog` from `index.html`,
-   `assets/js/modal.js` (and its import in `main.js`), `app/submit.php`, and the
-   `mail-templates/contact/` + `app/templates/contact*.html` pair. `assets/js/post.js` is
+   `starter/assets/js/modal.js` (and its import in `main.js`), `starter/app/submit.php`, and the
+   `mail-templates/contact/` + `starter/app/templates/contact*.html` pair. `starter/assets/js/post.js` is
    shared with the newsletter form — delete it only if that's going too.
 2. **If yes — which fields?** Name + Email are the only two `submit.php` actually requires;
    Phone and Message are optional by default (see step 4 below for adding/removing rows).
 3. **Does this project want the mailing-list opt-in checkbox on the contact form?** An
    optional checkbox (`name="newsletter"`) that, when checked, also subscribes the submitter
    via Mailchimp on successful contact submission. To remove: delete the marked block in
-   `index.html`'s `#contact-form` and the marked block near the end of `app/submit.php`.
+   `index.html`'s `#contact-form` and the marked block near the end of `starter/app/submit.php`.
 4. **Does this project want the standalone mailing-list signup?** A separate, inline (not
    modal) single-email-field section on the page — lower friction than a checkbox buried in
    a longer form, for a passive "leave your email" ask. Same pattern used on the Buscardini
    site. To remove: delete the marked `.newsletter` block in `index.html`, its styles in
-   `components.css`, `assets/js/newsletter.js` and its import in `main.js`. `assets/js/post.js`
+   `components.css`, `starter/assets/js/newsletter.js` and its import in `main.js`. `starter/assets/js/post.js`
    stays as long as the contact form does.
 5. **If keeping either mailing-list feature**, both use the **Mailchimp Marketing API**
    (double opt-in — Mailchimp sends its own confirmation email, this starter never does) via
-   the shared `app/lib/mailchimp.php` helper. Fill in `mailchimp.api_key` / `mailchimp.list_id`
+   the shared `starter/app/lib/mailchimp.php` helper. Fill in `mailchimp.api_key` / `mailchimp.list_id`
    in `config.php`. If neither mailing-list feature survives step 3/4, also delete
-   `app/subscribe.php`, `app/lib/mailchimp.php`, and the `mailchimp` block in
+   `starter/app/subscribe.php`, `starter/app/lib/mailchimp.php`, and the `mailchimp` block in
    `config.example.php`/`config.php`. If a project needs a different ESP than Mailchimp,
-   that's a rewrite of the one function in `app/lib/mailchimp.php`, not a new architecture.
+   that's a rewrite of the one function in `starter/app/lib/mailchimp.php`, not a new architecture.
 6. **Does this project want dark/light mode at all?** See "Dark/light mode" above for the full
    mechanism. Two independently removable tiers, marked `OPTIONAL (1/2)` and `OPTIONAL (2/2)`:
    - Keep both for the default: auto-follows the OS/browser preference, with a manual toggle
      button that overrides it and persists the choice.
    - Keep only `OPTIONAL (1/2)` (delete every `OPTIONAL (2/2)` block, `#theme-toggle` in
-     `index.html`, and `assets/js/theme.js` + its import) for auto-only — no toggle button, no
+     `index.html`, and `starter/assets/js/theme.js` + its import) for auto-only — no toggle button, no
      JS at all, purely `prefers-color-scheme`-driven.
    - Delete both tiers entirely for a single (dark) theme — `--site-*` already resolves to
      `--dark-*` unconditionally, so nothing else needs to change once the switching blocks are
@@ -166,12 +166,12 @@ Work through these questions before starting the "New project checklist" below:
    validated against: `plura/site-sandramacieira` and `plura/site-preventionlab`.
 2. **Decide the two languages before touching any copy** — they're independent, and getting
    this wrong means redoing work rather than adjusting it (see "Language" below):
-   - What language does the **site** serve? Sets `$BASE` in `app/strings.php`, `index.html`,
+   - What language does the **site** serve? Sets `$BASE` in `starter/app/strings.php`, `index.html`,
      and — if a second language is kept — whether Tier 2's directory is `pt/` or `en/`.
-   - What language does the **owner** read? Sets `$OWNER` in `app/strings.php` and the three
+   - What language does the **owner** read? Sets `$OWNER` in `starter/app/strings.php` and the three
      chrome strings in `contact.mjml`. A Portuguese client with an English site is normal.
 3. Decide on "Optional features" above and delete what's not needed.
-4. `assets/css/base.css` — replace the color/font values, keep the variable names.
+4. `starter/assets/css/base.css` — replace the color/font values, keep the variable names.
 5. `index.html` — replace all placeholder text, URLs, JSON-LD fields (fill in `@type`,
    address, phone, socials — don't invent `openingHours`/`geo`/`priceRange` without real
    verified values), meta tags, favicon `<link>` paths.
@@ -181,21 +181,21 @@ Work through these questions before starting the "New project checklist" below:
    labels from the form's own `<label>` elements.
 7. `mail-templates/_partials/_head.mjml` — replace the placeholder color palette (see the
    comment at the top of the file) and swap the header logo (`_header.mjml`) for a real
-   `<mj-image>` once a public-facing logo PNG exists (never point it at `app/templates/` —
+   `<mj-image>` once a public-facing logo PNG exists (never point it at `starter/app/templates/` —
    that's `.htaccess`-locked and unreachable by email clients; put it under
-   `assets/images/mail/`).
-8. Compile the MJML (see below), then `cp app/config.example.php app/config.php` and fill
+   `starter/assets/images/mail/`).
+8. Compile the MJML (see below), then `cp starter/app/config.example.php starter/app/config.php` and fill
    in real SMTP credentials (and Mailchimp keys, if keeping either mailing-list feature).
-9. Generate favicons and `assets/images/og.png` — see specs below.
+9. Generate favicons and `starter/assets/images/og.png` — see specs below.
 10. Copy `.vscode/sftp.json.example` → `sftp.json`, fill in real host/credentials.
 11. Update `robots.txt` / `sitemap.xml` / `site.webmanifest` with the real domain.
 
 ## Compiling the MJML
 
 ```
-npx mjml mail-templates/contact/contact.mjml -o app/templates/contact.html --config.allowIncludes true --config.includePath . --config.minify true
-npx mjml mail-templates/contact/contact-reply.mjml -o app/templates/contact-reply.html --config.allowIncludes true --config.includePath . --config.minify true
-npx mjml mail-templates/contact/contact-reply.pt.mjml -o app/templates/contact-reply.pt.html --config.allowIncludes true --config.includePath . --config.minify true
+npx mjml mail-templates/contact/contact.mjml -o starter/app/templates/contact.html --config.allowIncludes true --config.includePath . --config.minify true
+npx mjml mail-templates/contact/contact-reply.mjml -o starter/app/templates/contact-reply.html --config.allowIncludes true --config.includePath . --config.minify true
+npx mjml mail-templates/contact/contact-reply.pt.mjml -o starter/app/templates/contact-reply.pt.html --config.allowIncludes true --config.includePath . --config.minify true
 ```
 
 Run from the repo root, after any `mail-templates/` edit. The third line is Tier 2 only — drop
@@ -237,7 +237,7 @@ it (and its source file) for a single-language site.
   path covered by an `.htaccess: Deny from all`; email clients fetch it externally.
 - VS Code's MJML preview extension is not a reliable proxy for the real compiled output —
   it appears to use its own, less complete rendering engine. If something looks broken only
-  in that preview, verify against the actual compiled `app/templates/*.html` (open directly
+  in that preview, verify against the actual compiled `starter/app/templates/*.html` (open directly
   in a browser, or send a real test email) before treating it as a bug.
 
 ## Favicon spec
@@ -246,10 +246,10 @@ Design as just the icon/mark alone (not a full wordmark — illegible at 16–32
 
 | File | Size | Notes |
 |---|---|---|
-| `assets/favicons/favicon-96x96.png` | 96×96 | transparent OK |
-| `assets/favicons/apple-touch-icon.png` | 180×180 | **solid background, no transparency, no pre-rounded corners** — iOS rounds it automatically |
-| `assets/favicons/favicon-192.png` | 192×192 | Android/PWA |
-| `assets/favicons/favicon-512.png` | 512×512 | Android/PWA |
+| `starter/assets/favicons/favicon-96x96.png` | 96×96 | transparent OK |
+| `starter/assets/favicons/apple-touch-icon.png` | 180×180 | **solid background, no transparency, no pre-rounded corners** — iOS rounds it automatically |
+| `starter/assets/favicons/favicon-192.png` | 192×192 | Android/PWA |
+| `starter/assets/favicons/favicon-512.png` | 512×512 | Android/PWA |
 
 A `favicon.svg` is a nice-to-have (crisp at any size in supporting browsers) but optional.
 
@@ -269,19 +269,19 @@ rather than guessed:
 
 | | Travels how | Why |
 | --- | --- | --- |
-| `app/*.php`, `app/lib/` | **Copy wholesale** | Projects diverge here by comments only (stripped `OPTIONAL` markers), never logic |
-| `assets/js/*.js` | **Copy, then re-check** | Usually identical; the exceptions are brand values in `theme.js` and added imports in `main.js` |
-| `assets/css/*.css` | **Merge by hand** | Brand tokens and stripped comments are interleaved through it |
+| `starter/app/*.php`, `starter/app/lib/` | **Copy wholesale** | Projects diverge here by comments only (stripped `OPTIONAL` markers), never logic |
+| `starter/assets/js/*.js` | **Copy, then re-check** | Usually identical; the exceptions are brand values in `theme.js` and added imports in `main.js` |
+| `starter/assets/css/*.css` | **Merge by hand** | Brand tokens and stripped comments are interleaved through it |
 | `index.html`, `pt/index.html` | **Merge by hand** | Copy, logo markup and JSON-LD are the project's; only structural changes travel |
 | `robots.txt`, `sitemap.xml`, `site.webmanifest` | **Never** | Real domain and name — copying these back breaks the live site |
-| `app/config.php`, `app/strings.php` | **Never** | Credentials and project copy |
-| `custom/**` | **Never** | Not the starter's, by definition |
+| `starter/app/config.php`, `starter/app/strings.php` | **Never** | Credentials and project copy |
+| `starter/custom/**` | **Never** | Not the starter's, by definition |
 
 Start from the fork-commit note at the top of the project's own README (step 1 of the checklist
 above) — `git log <hash>..HEAD` in this repo lists exactly what the project is missing, which is
 faster than diffing files and guessing what was deliberate.
 
-The reason this stays a manual pass: making `assets/` mechanically replaceable would mean
+The reason this stays a manual pass: making `starter/assets/` mechanically replaceable would mean
 brand values moving to an override file *and* projects no longer stripping the `OPTIONAL`
 comments they've acted on. That's a rewrite of how this starter is organized, to save a couple
 of easy merges a year. Not worth it at this scale — revisit if the number of live forks grows
@@ -298,8 +298,8 @@ conflating them is the mistake to avoid:
 
 | | Follows | Files |
 | --- | --- | --- |
-| Page + auto-reply | **the visitor** | `index.html`, `pt/index.html`, `$BASE`/`$OVERRIDES` in `app/strings.php`, `contact-reply*.mjml` |
-| Notification email | **the site owner** | `contact.mjml`, `_partials/_fields.mjml`, `$OWNER` in `app/strings.php` |
+| Page + auto-reply | **the visitor** | `index.html`, `pt/index.html`, `$BASE`/`$OVERRIDES` in `starter/app/strings.php`, `contact-reply*.mjml` |
+| Notification email | **the site owner** | `contact.mjml`, `_partials/_fields.mjml`, `$OWNER` in `starter/app/strings.php` |
 
 A Portuguese client running an English site gets an English page, English auto-replies to
 visitors, and a **Portuguese** notification — because they're the only one reading it. That's
@@ -315,7 +315,7 @@ nothing on a single-language site.
 | Where | What |
 | --- | --- |
 | `index.html` / `pt/index.html` | All page copy, **including what the JS renders** — `data-submitting` and `data-network-error` attributes |
-| `app/strings.php` | Everything the endpoints return, **including both email subject lines** — `$BASE`/`$OVERRIDES` follow the visitor, `$OWNER` doesn't |
+| `starter/app/strings.php` | Everything the endpoints return, **including both email subject lines** — `$BASE`/`$OVERRIDES` follow the visitor, `$OWNER` doesn't |
 | `mail-templates/` | Email copy, inline — recompile after editing |
 
 **There is no JS dictionary.** `modal.js` and `newsletter.js` take their copy from the markup:
@@ -325,7 +325,7 @@ and there's nothing for JS to resolve. Every other message the user sees comes f
 server's own response — the JS only supplies `data-network-error`, for when a request never
 completes and there is no response to read.
 
-`app/strings.php` is the one dictionary, because a single endpoint serves every language
+`starter/app/strings.php` is the one dictionary, because a single endpoint serves every language
 version. It holds a `$BASE` set plus an `$OVERRIDES` map listing only keys that differ. Keys
 are semantic (`sent`), not the English source text used by gettext/`.po` — this copy gets
 rewritten every project, and source-string keys go stale the moment one does.
@@ -334,10 +334,10 @@ rewritten every project, and source-string keys go stale the moment one does.
 
 1. `index.html` — the copy, the `data-submitting` / `data-network-error` attributes, plus
    `<html lang>` and `og:locale`.
-2. `app/strings.php` — translate `$BASE`. Don't miss `subject_notify` / `subject_reply`: the
+2. `starter/app/strings.php` — translate `$BASE`. Don't miss `subject_notify` / `subject_reply`: the
    email subjects are built here, not in the templates.
 3. `mail-templates/contact/contact-reply.mjml` — the visitor-facing auto-reply. Then recompile
-   (see "Compiling the MJML"); `app/templates/*.html` is what PHP loads, so editing the MJML
+   (see "Compiling the MJML"); `starter/app/templates/*.html` is what PHP loads, so editing the MJML
    alone ships nothing.
 4. `mail-templates/contact/contact.mjml` + `_partials/_fields.mjml` — **only if the owner's
    language is also changing.** See "Two independent axes" above.
@@ -359,7 +359,7 @@ For the common case of a Portuguese owner, the notification side is seven string
 | `_fields.mjml` | `Name` | `Nome` |
 | `_fields.mjml` | `Phone` | `Telefone` |
 | `_fields.mjml` | `Message` | `Mensagem` |
-| `app/strings.php` | `$OWNER['subject_notify']` | `'%s — novo contacto do site'` |
+| `starter/app/strings.php` | `$OWNER['subject_notify']` | `'%s — novo contacto do site'` |
 
 That last row is why `strings.php` has a separate `$OWNER` block. Everything in `$BASE` is
 resolved against the *visitor's* language; `$OWNER` is applied afterwards and can't be
@@ -368,7 +368,7 @@ language regardless of which version the enquiry came from.
 
 Local dev: the page is static, so Live Server serves it as-is. `php -S localhost:8000` from the
 repo root only if you need to exercise the endpoints — note it ignores `.htaccess`, so
-`app/templates/` is readable locally but blocked in production.
+`starter/app/templates/` is readable locally but blocked in production.
 
 ### The second language (Tier 2)
 
@@ -383,7 +383,7 @@ and declared in `hreflang` and the sitemap, and Google would index it. So the fa
 forgetting is silence, not a broken page on a client's domain.
 
 The parts that ship **live** are inert without a second language and cost nothing:
-`data-app-base`, `.page-controls`, `%lang%`, `$OVERRIDES` in `app/strings.php`, and
+`data-app-base`, `.page-controls`, `%lang%`, `$OVERRIDES` in `starter/app/strings.php`, and
 `contact-reply.pt.*` (only ever selected when a form posts `lang=pt`).
 
 #### Activating it
@@ -395,7 +395,7 @@ The parts that ship **live** are inert without a second language and cost nothin
 4. `sitemap.xml` — swap the live single-URL `<urlset>` for the commented multilingual one.
 5. Replace the real domain throughout — the `hreflang` hrefs, the canonicals, and the sitemap
    all ship pointing at `example.com`.
-6. Translate `pt/index.html`'s copy, and check `$OVERRIDES['pt']` in `app/strings.php` covers
+6. Translate `pt/index.html`'s copy, and check `$OVERRIDES['pt']` in `starter/app/strings.php` covers
    every key.
 
 Then run `node tools/check-pages.mjs` (below) and submit both forms.
@@ -434,12 +434,12 @@ build step or a template engine — but it makes it visible, which is the honest
 Serving Portuguese at `/` and English at `/en/` is rearrangement, not deletion, and it touches
 more than the copy:
 
-1. **`app/strings.php`** — `$BASE` takes the new default language, `$OVERRIDES` takes the old
+1. **`starter/app/strings.php`** — `$BASE` takes the new default language, `$OVERRIDES` takes the old
    one. Rename the override key (`pt` → `en`). Leave `$OWNER` alone unless the *owner's*
    language is changing too — it's a separate axis.
 2. **The pages** — swap the copy between `index.html` and `pt/index.html`, including the
    `data-submitting` and `data-network-error` attributes, then rename the directory (`pt/` →
-   `en/`). Its `data-app-base="../app/"` is unchanged; the root page keeps `app/`.
+   `en/`). Its `data-app-base="../starter/app/"` is unchanged; the root page keeps `starter/app/`.
 3. **Language metadata in both** — `<html lang>`, `og:locale`, `<link rel="canonical">`, and
    every `hreflang` href. `x-default` must point at whatever now sits at `/`.
 4. **`sitemap.xml`** — same `x-default` rule, and the `<loc>` values swap.

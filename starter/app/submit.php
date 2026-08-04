@@ -53,7 +53,7 @@ if (!empty($_POST['labels']) && is_string($_POST['labels'])) {
 }
 
 // 'newsletter' and 'lang' are control flags (see the optional opt-in block near the bottom of
-// this file, and app/strings.php), not content — excluded here so they never leak into the
+// this file, and starter/app/strings.php), not content — excluded here so they never leak into the
 // email body as fields. 'lang' is surfaced deliberately via %lang% instead, see below.
 $data = [];
 foreach ($_POST as $key => $value) {
@@ -84,7 +84,7 @@ $data['email'] = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
  * template file is missing.
  *
  * @param array       $data          Submitted fields, keyed by input name.
- * @param string|null $template_path Compiled template under app/templates/, or null for text.
+ * @param string|null $template_path Compiled template under starter/app/templates/, or null for text.
  * @param array       $labels        Human-readable field names posted by the form, substituted
  *                                   for %label_<field>%. Falls back to the field's own name.
  * @param string      $lang_note     Pre-formatted language note substituted for %lang%, e.g.

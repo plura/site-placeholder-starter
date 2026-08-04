@@ -1,6 +1,6 @@
 <?php
 // OPTIONAL: only needed if this project uses the mailing-list signup. Safe to delete this
-// file (along with app/lib/mailchimp.php, the mailchimp config block, and the frontend
+// file (along with starter/app/lib/mailchimp.php, the mailchimp config block, and the frontend
 // pieces listed in the README) if the project doesn't need it.
 declare(strict_types=1);
 

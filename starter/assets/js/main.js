@@ -7,9 +7,9 @@ const { lucide } = window;
 lucide.createIcons();
 
 // Project-specific entrance animations / canvas backgrounds (GSAP, particles, etc.) are
-// bespoke per client. They live in custom/ — see custom/README.md — and get wired up here:
+// bespoke per client. They live in starter/custom/ — see starter/custom/README.md — and get wired up here:
 //
-//     import '../../custom/js/intro.js';
+//     import '../../starter/custom/js/intro.js';
 //
-// Keeping them out of assets/ means a starter update never has to distinguish your code
+// Keeping them out of starter/assets/ means a starter update never has to distinguish your code
 // from its own.

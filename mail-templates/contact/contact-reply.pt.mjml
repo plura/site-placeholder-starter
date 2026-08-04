@@ -6,7 +6,7 @@
 	Only the reply is translated. contact.mjml (the notification) goes to the site owner, who
 	reads one language regardless of which version the visitor used.
 
-	Compiles to app/templates/contact-reply.pt.html — see the README for the command.
+	Compiles to starter/app/templates/contact-reply.pt.html — see the README for the command.
 -->
 <mjml>
 <mj-head>

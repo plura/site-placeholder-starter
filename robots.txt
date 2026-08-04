@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /app/
+Disallow: /starter/app/
 
 Sitemap: https://example.com/sitemap.xml
