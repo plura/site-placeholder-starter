@@ -2,7 +2,7 @@
 <!-- OPTIONAL (Tier 2): the multilingual form is commented out below and ships INACTIVE. To
      activate, replace this whole <urlset> with the commented block — every language version is
      listed, and each entry repeats the full set of alternates including itself, the same rule
-     as the hreflang tags in the pages. See "Activating the second language" in the README. -->
+     as the hreflang tags in the pages. See "Activating it" in docs/language.md. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://example.com/</loc>

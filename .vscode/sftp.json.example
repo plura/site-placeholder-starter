@@ -14,6 +14,6 @@
         "syncOption": {
             "delete": true
         },
-        "ignore": [".gitkeep", ".git", ".gitignore", ".claude", ".vscode", "*.code-workspace", "config.example.php", "mail-templates", "README.md", "tools"]
+        "ignore": [".gitkeep", ".git", ".gitignore", ".claude", ".vscode", "*.code-workspace", "config.example.php", "mail-templates", "README.md", "tools", "docs"]
     }
 ]

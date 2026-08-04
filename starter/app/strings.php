@@ -64,7 +64,7 @@ $OVERRIDES = [
 // goes to the site owner, who reads one language whichever version the visitor used. Set this to
 // the OWNER's language, which on a bilingual site — or an English site with a Portuguese client —
 // is not necessarily the site's. Applied last so a translation can never override it.
-// Its body counterpart is contact.mjml + _partials/_fields.mjml; see the README.
+// Its body counterpart is contact.mjml + _partials/_fields.mjml; see docs/language.md.
 $OWNER = [
     'subject_notify' => '%s — new enquiry from the website',
 ];
