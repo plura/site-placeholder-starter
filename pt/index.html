@@ -19,15 +19,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site Name | Descrição numa linha</title>
     <meta name="description" content="Site Name — descrição de uma a duas frases, igual à descrição do JSON-LD abaixo.">
-    <meta name="robots" content="index, follow">
+    <!-- noindex while Tier 2 is inactive: nothing links here and nothing declares it, so a
+         forgotten copy of this page can't be indexed with placeholder copy still on it. Switch
+         to "index, follow" as step 1 of activating the second language — see the README. -->
+    <meta name="robots" content="noindex">
     <link rel="canonical" href="https://example.com/pt/">
 
-    <!-- OPTIONAL (Tier 2): language alternates. Must list exactly the same set as the root
-         page, itself included — a one-sided pairing is ignored outright. -->
+    <!-- OPTIONAL (Tier 2): language alternates — INACTIVE, ships commented out. Must list
+         exactly the same set as the root page, itself included; a one-sided pairing is
+         ignored outright.
     <link rel="alternate" hreflang="en"        href="https://example.com/">
     <link rel="alternate" hreflang="pt"        href="https://example.com/pt/">
     <link rel="alternate" hreflang="x-default" href="https://example.com/">
-    <!-- /OPTIONAL -->
+    -->
 
     <meta name="theme-color" content="#1a1a1a">
 
@@ -123,9 +127,10 @@
     </button>
     <!-- /OPTIONAL -->
 
-    <!-- OPTIONAL (Tier 2): language switch — points back at the root page. -->
+    <!-- OPTIONAL (Tier 2): language switch — INACTIVE, ships commented out. Points back at the
+         root page; uncomment together with its counterpart in index.html.
     <a class="lang-switch" href="../" hreflang="en" lang="en" aria-label="View in English">EN</a>
-    <!-- /OPTIONAL -->
+    -->
 </div>
 
 <div class="page">

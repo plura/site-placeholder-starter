@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- OPTIONAL (Tier 2): every language version is listed, and each entry repeats the full set of
-     alternates including itself — same rule as the hreflang tags in the pages themselves.
-     For a single-language site, drop the xhtml namespace, the second <url>, and every
-     <xhtml:link>. -->
+<!-- OPTIONAL (Tier 2): the multilingual form is commented out below and ships INACTIVE. To
+     activate, replace this whole <urlset> with the commented block — every language version is
+     listed, and each entry repeats the full set of alternates including itself, the same rule
+     as the hreflang tags in the pages. See "Activating the second language" in the README. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://example.com/</loc>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+    </url>
+</urlset>
+<!--
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
@@ -22,3 +30,4 @@
         <priority>1.0</priority>
     </url>
 </urlset>
+-->

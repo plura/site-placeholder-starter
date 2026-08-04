@@ -10,13 +10,15 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://example.com/">
 
-    <!-- OPTIONAL (Tier 2): language alternates. Every language version lists every version,
-         itself included, and all of them must agree — a one-sided pairing is ignored outright.
-         x-default names the version served to unmatched locales. Remove alongside pt/. -->
+    <!-- OPTIONAL (Tier 2): language alternates — INACTIVE, ships commented out. Uncomment to
+         publish the Portuguese version; see "Activating the second language" in the README for
+         the rest of the checklist. Every version must list every version including itself — a
+         one-sided pairing is ignored outright — and x-default names the version served to
+         locales matching none of the others.
     <link rel="alternate" hreflang="en"        href="https://example.com/">
     <link rel="alternate" hreflang="pt"        href="https://example.com/pt/">
     <link rel="alternate" hreflang="x-default" href="https://example.com/">
-    <!-- /OPTIONAL -->
+    -->
 
     <meta name="theme-color" content="#1a1a1a">
 
@@ -126,11 +128,11 @@
     </button>
     <!-- /OPTIONAL -->
 
-    <!-- OPTIONAL (Tier 2): language switch. A real link, not a JS button, so crawlers follow it
-         and it reinforces the hreflang pairing in <head>. Labelled with the language you get by
-         clicking, not the one you're on. Remove alongside pt/ and the hreflang tags. -->
+    <!-- OPTIONAL (Tier 2): language switch — INACTIVE, ships commented out. Uncomment together
+         with the hreflang tags in <head>. A real link rather than a JS button, so crawlers
+         follow it; labelled with the language you get by clicking, not the one you're on.
     <a class="lang-switch" href="pt/" hreflang="pt" lang="pt" aria-label="Ver em português">PT</a>
-    <!-- /OPTIONAL -->
+    -->
 </div>
 
 <div class="page">

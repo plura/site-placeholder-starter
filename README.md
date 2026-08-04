@@ -147,10 +147,12 @@ Work through these questions before starting the "New project checklist" below:
    - Delete both tiers entirely for a single (dark) theme — `--site-*` already resolves to
      `--dark-*` unconditionally, so nothing else needs to change once the switching blocks are
      gone.
-7. **Does this project want a second language?** Ships on, with `pt/` as a worked example
-   alongside the English root page. Most projects are single-language and should delete the
-   whole tier — see "The second language" under "Language" below for the file list, and for
-   the separate procedure when the default language should be Portuguese rather than English.
+7. **Does this project want a second language?** Ships **built but inactive** — `pt/` exists as
+   a working Portuguese page, but it's `noindex` and nothing links to or declares it, so a
+   single-language project can simply ignore it. Unlike the other optional features, forgetting
+   this one is harmless rather than harmful, which is why it isn't on by default. See "The
+   second language" under "Language" below for the activation checklist, the removal steps if
+   you're sure, and the separate procedure for making Portuguese the default rather than English.
 
 ## New project checklist
 
@@ -370,25 +372,62 @@ repo root only if you need to exercise the endpoints — note it ignores `.htacc
 
 ### The second language (Tier 2)
 
-Ships on, with Portuguese at `/pt/` as a worked example. **Most projects are single-language
-and should delete the whole tier.** It consists of:
+**Ships built but inactive.** `pt/` exists as a working Portuguese page, and everything that
+would make it *public* — the switcher, the `hreflang` tags, the sitemap entries — ships
+commented out, with `pt/index.html` set to `noindex`.
 
-- `pt/` — a full copy of the root page. Static HTML has no include mechanism, so the `<head>`
-  is duplicated wholesale. **Any structural change to `index.html` has to be mirrored there**
-  (favicons, meta, the theme script, form fields, JSON-LD) or the two drift. Only copy, paths,
-  and language metadata are meant to differ.
-- The `.lang-switch` anchor in both pages, and the `.lang-switch` block in `components.css`.
-- `<link rel="alternate" hreflang>` in both pages, and the `xhtml:link` entries in `sitemap.xml`.
-- `$OVERRIDES` in `app/strings.php`.
-- `mail-templates/contact/contact-reply.pt.mjml` → `app/templates/contact-reply.pt.html`, plus
-  the marked block in `submit.php` that selects it.
+This one is deliberately not "on by default, delete if unwanted" like the other optional
+features. Dark mode and the mailing list are harmless if left in: they work. A forgotten Tier 2
+is not — it would publish a page of `Site Name` placeholder copy, linked by a visible switcher
+and declared in `hreflang` and the sitemap, and Google would index it. So the failure mode of
+forgetting is silence, not a broken page on a client's domain.
 
-Leave `data-app-base`, `.page-controls`, and the `%lang%` placeholder in place when removing the
-tier — all three are correct, and inert, for a single root-level page.
+The parts that ship **live** are inert without a second language and cost nothing:
+`data-app-base`, `.page-controls`, `%lang%`, `$OVERRIDES` in `app/strings.php`, and
+`contact-reply.pt.*` (only ever selected when a form posts `lang=pt`).
+
+#### Activating it
+
+1. `pt/index.html` — `<meta name="robots">` from `noindex` to `index, follow`.
+2. Uncomment the `hreflang` block in **both** pages' `<head>`. Every version must list every
+   version including itself; a one-sided pairing is ignored outright.
+3. Uncomment the `.lang-switch` anchor in **both** pages.
+4. `sitemap.xml` — swap the live single-URL `<urlset>` for the commented multilingual one.
+5. Replace the real domain throughout — the `hreflang` hrefs, the canonicals, and the sitemap
+   all ship pointing at `example.com`.
+6. Translate `pt/index.html`'s copy, and check `$OVERRIDES['pt']` in `app/strings.php` covers
+   every key.
+
+Then run `node tools/check-pages.mjs` (below) and submit both forms.
+
+#### Removing it
+
+Delete `pt/`, the commented blocks in `index.html` and `sitemap.xml`, `$OVERRIDES`, the
+`.lang-switch` rule in `components.css`, and `mail-templates/contact/contact-reply.pt.mjml` plus
+its compiled output. Leave `data-app-base`, `.page-controls`, and `%lang%` — all three are
+correct for a single root-level page.
+
+Only worth doing if you're certain the project will never want a second language. Left alone it
+publishes nothing.
+
+#### Keeping the two pages in step
+
+Static HTML has no include mechanism, so `pt/index.html` duplicates the root page's entire
+`<head>` and form markup. Nothing enforces that they stay aligned — add a favicon link or a form
+field to one and the other silently falls behind.
+
+```
+node tools/check-pages.mjs
+```
+
+Compares structure, never content: which `<meta>` names exist, not what they say. Paths are
+normalized for `pt/`'s extra directory level, and commented-out blocks are ignored, so an
+inactive Tier 2 reads as absent from both rather than as drift. Exits non-zero on drift, so it
+can gate a pre-commit hook. It can't *prevent* the duplication going stale — that would need a
+build step or a template engine — but it makes it visible, which is the honest ceiling here.
 
 **Adding a third language:** copy `pt/` to the new code, add its `$OVERRIDES` block, and add its
-`hreflang` line to *every* page and to the sitemap. Every version must list every version, itself
-included — a one-sided pairing is ignored outright.
+`hreflang` line to *every* page and to the sitemap.
 
 ### Changing the default language
 
