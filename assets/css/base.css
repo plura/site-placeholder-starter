@@ -2,9 +2,13 @@
 	BRAND CUSTOMIZATION: swap the color/font values below for the client's actual brand.
 	Keep the variable NAMES as-is — layout.css/components.css/logo.css (once added) all
 	reference these names, not literal values, so a rebrand is just editing this one block.
-	Replace the Google Fonts @import (or remove it) with whatever the client's fonts are.
+
+	The webfonts themselves are loaded by <link> tags in each page's <head>, not by an
+	@import here: @import serializes the request chain (the browser has to fetch and parse
+	this file before it even discovers the font URL), while a <link> starts immediately and
+	can be paired with preconnect. Changing fonts means editing those tags and the two
+	--site-font- values below.
 */
-@import url('https://fonts.googleapis.com/css2?family=Cardo&family=Outfit:wght@300;400&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
