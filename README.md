@@ -261,6 +261,25 @@ see the global CLAUDE.md for the full writeup of both:
 - cPanel Git Version Control + a manually-triggered (`workflow_dispatch`, not `on: push`)
   GitHub Actions deploy, where the host supports it.
 
+## Projects built from this
+
+The propagation list. Each project's own README records the commit it forked from, but that
+answers "where did this come from" — not "who needs this change", which is the direction that
+matters when something lands here.
+
+| Project | Repo | Uses |
+| --- | --- | --- |
+| Sandra Macieira | [site-sandramacieira](https://github.com/plura/site-sandramacieira) | Full — pages, PHP endpoints, mail templates, both languages |
+| Prevention Lab | [site-preventionlab](https://github.com/plura/site-preventionlab) | Full |
+| Cristina Mesquita | [site-cristinamesquita](https://github.com/plura/site-cristinamesquita) | Conventions only — the CSS token architecture and layout structure, no PHP layer |
+| Buscardini | [site-buscardini](https://github.com/plura/site-buscardini) | Not yet — predates this starter (`process/`, `mail-template/`); planned migration |
+
+"Conventions only" matters when deciding what to propagate: a change to `strings.php` or the
+mail templates simply doesn't apply there, while a change to `base.css`'s token structure does.
+
+Deliberately **not** tracking how current each project is. Existence changes rarely; sync status
+changes constantly, and a stale "caught up as of…" column is worse than no column.
+
 ## Bringing a project up to date with the starter
 
 There is no update mechanism — a fork is a fork. Bringing one level again is a manual pass, and
