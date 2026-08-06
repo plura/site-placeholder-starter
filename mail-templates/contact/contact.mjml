@@ -21,6 +21,8 @@
 			</mj-column>
 		</mj-section>
 
+		<!-- Shared with contact-reply(.pt).mjml, so the visitor's own copy always matches
+		     exactly what this notification shows — see the note there. -->
 		<mj-include path="_partials/_fields.mjml" />
 
 		<mj-include path="../_partials/_footer.mjml" />
