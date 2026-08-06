@@ -176,7 +176,7 @@ Work through these questions before starting the "New project checklist" below:
    address, phone, socials — don't invent `openingHours`/`geo`/`priceRange` without real
    verified values), meta tags, favicon `<link>` paths.
 6. Add real contact-form fields if needed beyond name/email/phone/message — copy a row+divider
-   pair in `mail-templates/_partials/_fields.mjml` and rename both placeholders to the field's
+   pair in `mail-templates/contact/_partials/_fields.mjml` and rename both placeholders to the field's
    `name`. No `submit.php` changes, and no label text to keep in sync — the email takes its
    labels from the form's own `<label>` elements.
 7. `mail-templates/_partials/_head.mjml` — replace the placeholder color palette (see the

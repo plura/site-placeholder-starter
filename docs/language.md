@@ -10,7 +10,7 @@ conflating them is the mistake to avoid:
 | | Follows | Files |
 | --- | --- | --- |
 | Page + auto-reply | **the visitor** | `index.html`, `pt/index.html`, `$BASE`/`$OVERRIDES` in `starter/app/strings.php`, `contact-reply*.mjml` |
-| Notification email | **the site owner** | `contact.mjml`, `_partials/_fields.mjml`, `$OWNER` in `starter/app/strings.php` |
+| Notification email | **the site owner** | `contact.mjml`, `contact/_partials/_fields.mjml`, `$OWNER` in `starter/app/strings.php` |
 
 A Portuguese client running an English site gets an English page, English auto-replies to
 visitors, and a **Portuguese** notification — because they're the only one reading it. That's
@@ -50,7 +50,7 @@ rewritten every project, and source-string keys go stale the moment one does.
 3. `mail-templates/contact/contact-reply.mjml` — the visitor-facing auto-reply. Then recompile
    (see "Compiling the MJML" in the [README](../README.md)); `starter/app/templates/*.html` is what PHP loads, so editing the MJML
    alone ships nothing.
-4. `mail-templates/contact/contact.mjml` + `_partials/_fields.mjml` — **only if the owner's
+4. `mail-templates/contact/contact.mjml` + `contact/_partials/_fields.mjml` — **only if the owner's
    language is also changing.** See "Two independent axes" above.
 5. `site.webmanifest` — only if `name`/`short_name` are language-dependent.
 

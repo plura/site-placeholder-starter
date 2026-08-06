@@ -21,7 +21,7 @@
 			</mj-column>
 		</mj-section>
 
-		<mj-include path="../_partials/_fields.mjml" />
+		<mj-include path="_partials/_fields.mjml" />
 
 		<mj-include path="../_partials/_footer.mjml" />
 		<mj-include path="../_partials/_credit.mjml" />
