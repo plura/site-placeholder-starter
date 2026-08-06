@@ -251,6 +251,14 @@
                 <span>I'd also like to receive news by email</span>
             </label>
             <!-- /OPTIONAL -->
+            <!-- Identifies this form in the notification email's kicker (%form_type% in
+                 contact.mjml/contact-reply.mjml) — useful once a project has more than one
+                 contact-shaped form. Value is in the OWNER's language, not the visitor's: the
+                 owner reads one language regardless of which page the enquiry came from, same
+                 as contact.mjml's own chrome strings. Keep this identical in pt/index.html;
+                 translate it only if the owner's language changes — see "Portuguese
+                 notification copy" in docs/language.md. -->
+            <input type="hidden" name="form_type" value="Contact form">
             <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
             <button type="submit" class="btn-submit" data-submitting="Sending…">Send</button>
         </form>

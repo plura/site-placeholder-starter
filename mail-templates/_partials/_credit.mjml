@@ -1,5 +1,8 @@
 <mj-section mj-class="credit-pad" css-class="credit-pad">
 	<mj-column>
-		<mj-text mj-class="credit-text">&copy; %year% Site Name &mdash; powered by <a href="https://plura.pt" class="credit-link">Plura&trade;</a></mj-text>
+		<!-- Two statements, two lines: the client's copyright and the builder's credit. Stacking
+		     them makes desktop and mobile identical, where one line reflows only on narrow screens. -->
+		<mj-text mj-class="credit-text">&copy; %year% {{CLIENT_NAME}}</mj-text>
+		<mj-text mj-class="credit-text" padding="8px 0 0">powered by <a href="https://plura.pt" class="credit-link">Plura&trade;</a></mj-text>
 	</mj-column>
 </mj-section>

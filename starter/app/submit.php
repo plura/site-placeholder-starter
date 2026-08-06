@@ -52,12 +52,13 @@ if (!empty($_POST['labels']) && is_string($_POST['labels'])) {
     }
 }
 
-// 'newsletter' and 'lang' are control flags (see the optional opt-in block near the bottom of
-// this file, and starter/app/strings.php), not content — excluded here so they never leak into the
-// email body as fields. 'lang' is surfaced deliberately via %lang% instead, see below.
+// 'newsletter', 'lang' and 'form_type' are control flags (see the optional opt-in block near the
+// bottom of this file, starter/app/strings.php, and the notification kicker below), not content —
+// excluded here so they never leak into the email body as ordinary fields. Both feed into
+// %kicker% deliberately instead, see build_kicker() below.
 $data = [];
 foreach ($_POST as $key => $value) {
-    if ($key === 'botcheck' || $key === 'labels' || $key === 'newsletter' || $key === 'lang' || !is_string($value)) {
+    if ($key === 'botcheck' || $key === 'labels' || $key === 'newsletter' || $key === 'lang' || $key === 'form_type' || !is_string($value)) {
         continue;
     }
     $data[$key] = strip_tags(trim($value));
@@ -87,11 +88,12 @@ $data['email'] = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
  * @param string|null $template_path Compiled template under starter/app/templates/, or null for text.
  * @param array       $labels        Human-readable field names posted by the form, substituted
  *                                   for %label_<field>%. Falls back to the field's own name.
- * @param string      $lang_note     Pre-formatted language note substituted for %lang%, e.g.
- *                                   " · PT". Empty on a single-language site, rendering nothing.
+ * @param string      $kicker        Pre-built kicker line substituted for %kicker%, e.g.
+ *                                   "Contact form · 06/08/2026 14:32 · PT". Built by
+ *                                   build_kicker() below from whichever parts apply to this send.
  * @return string
  */
-function build_body(array $data, ?string $template_path, array $labels = [], string $lang_note = ''): string {
+function build_body(array $data, ?string $template_path, array $labels = [], string $kicker = ''): string {
     $template = $template_path ? @file_get_contents($template_path) : false;
 
     if ($template === false) {
@@ -106,9 +108,8 @@ function build_body(array $data, ?string $template_path, array $labels = [], str
     }
 
     $pairs = [
-        '%year%' => date('Y'),
-        '%date%' => date('d/m/Y H:i'),
-        '%lang%' => $lang_note,
+        '%year%'   => date('Y'),
+        '%kicker%' => $kicker,
     ];
 
     foreach ($data as $key => $value) {
@@ -122,6 +123,20 @@ function build_body(array $data, ?string $template_path, array $labels = [], str
     // strtr(), not str_replace(): it substitutes in a single pass, so a submitted value that
     // happens to contain a %placeholder% can't be re-substituted by a later replacement.
     return strtr($template, $pairs);
+}
+
+/**
+ * Joins the kicker's parts (form type, date, language) with a middle dot, dropping any that are
+ * empty. A single implode replaces having each part carry its own conditional leading/trailing
+ * separator — the earlier approach only worked because form type was always first and language
+ * always last; this one has no position-dependent rules to keep in sync if a part is ever added,
+ * removed, or reordered.
+ *
+ * @param string[] $parts
+ * @return string
+ */
+function build_kicker(array $parts): string {
+    return implode(' · ', array_filter($parts, fn(string $part): bool => $part !== ''));
 }
 
 function send_mail(array $cfg, string $to_email, string $to_name, string $subject, string $body, bool $is_html, string $reply_email = '', string $reply_name = ''): bool {
@@ -156,10 +171,19 @@ function send_mail(array $cfg, string $to_email, string $to_name, string $subjec
 }
 
 // —— Notification to site owner ————————————————————————————————————————————
-// Appended to the notification's date line: the owner reads one language whatever version the
-// visitor used, so this is the only place they learn which language to reply in. Empty — and so
-// invisible — on a single-language site.
-$lang_note = $strings['_lang'] !== '' ? ' · ' . strtoupper($strings['_lang']) : '';
+// Shared by both kickers below, so the notification and the reply report the exact same instant
+// rather than two independent date() calls a few milliseconds apart.
+$date = date('d/m/Y H:i');
+
+// Which language version the enquiry came from — the owner's only cue as to which language to
+// reply in. Empty on a single-language site, and build_kicker() drops it rather than leaving an
+// orphaned separator.
+$lang = $strings['_lang'] !== '' ? strtoupper($strings['_lang']) : '';
+
+// A plain hidden field on the contact form (see index.html), not part of the generic per-field
+// loop above — its value is fixed in the OWNER's language, which is why it's only ever passed
+// into the notification's kicker below, never the reply's.
+$form_type = htmlspecialchars(trim((string) ($_POST['form_type'] ?? '')), ENT_QUOTES, 'UTF-8');
 
 $template = __DIR__ . '/templates/contact.html';
 $sent = send_mail(
@@ -167,7 +191,7 @@ $sent = send_mail(
     $config['contact']['to_email'],
     $config['contact']['to_name'],
     sprintf($strings['subject_notify'], $config['contact']['site_name']),
-    build_body($data, $template, $labels, $lang_note),
+    build_body($data, $template, $labels, build_kicker([$form_type, $date, $lang])),
     file_exists($template),
     $data['email'],
     $data['name']
@@ -192,12 +216,14 @@ if ($strings['_lang'] !== '') {
     }
 }
 // /OPTIONAL
+// No form-type or language part here: form-type is fixed in the owner's language (see above),
+// and language is redundant to the person who just submitted the form in it.
 send_mail(
     $config,
     $data['email'],
     $data['name'],
     sprintf($strings['subject_reply'], $config['contact']['site_name']),
-    build_body($data, $reply_template, $labels),
+    build_body($data, $reply_template, $labels, build_kicker([$date])),
     file_exists($reply_template),
     $config['contact']['to_email'],
     $config['contact']['to_name']

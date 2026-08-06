@@ -1,10 +1,11 @@
 <!--
-	Text-based placeholder header — works with zero image assets, but is already a live link to
-	the site, like a wordmark conventionally is. Once the client has a logo PNG ready (must be
-	publicly hosted, e.g. starter/assets/images/mail/logo.png — never under
+	Text-based placeholder header — works with zero image assets. Once the client has a logo PNG
+	ready (must be publicly hosted, e.g. starter/assets/images/mail/logo.png — never under
 	starter/app/templates/, which is .htaccess-locked and unreachable by email clients), swap the
-	mj-text below for:
-		<mj-image mj-class="logo-image" src="https://example.com/starter/assets/images/mail/logo.png" alt="Site Name" href="https://example.com/" />
+	mj-text below for an mj-image using mj-class="logo-image" css-class="logo-fallback", src set
+	to the logo token, alt to the name token, href to the url token (see _tokens.json for exact
+	names — not spelled out literally here: that token is otherwise unused while this file ships
+	text-first, and build-guard.js would flag its own documentation as an unreplaced token).
 
 	Shared byte-for-byte across contact.mjml and both contact-reply(.pt).mjml, so the href always
 	points at the site root regardless of which language template sends it — not the visitor's
@@ -13,14 +14,6 @@
 -->
 <mj-section mj-class="header-pad">
 	<mj-column>
-		<mj-text mj-class="footer-name" padding="32px 0 28px">
-			<a href="https://example.com/" class="header-link">Site Name</a>
-		</mj-text>
-	</mj-column>
-</mj-section>
-
-<mj-section mj-class="header-pad">
-	<mj-column>
-		<mj-divider mj-class="accent-divider" />
+		<mj-text mj-class="wordmark" padding="0 0 24px"><a href="{{CLIENT_URL}}" class="header-link">{{CLIENT_NAME}}</a></mj-text>
 	</mj-column>
 </mj-section>

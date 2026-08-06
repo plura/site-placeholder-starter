@@ -1,7 +1,9 @@
 <mjml>
 <mj-head>
-	<mj-title>Thanks for getting in touch</mj-title>
-	<mj-preview>Thanks for getting in touch — Site Name</mj-preview>
+	<mj-title>Message received</mj-title>
+	<!-- Written from the visitor's side. Never reuse contact.mjml's preview here: that one is
+	     addressed to the site owner and would read oddly to the person who just wrote in. -->
+	<mj-preview>Thanks for getting in touch. Here is a copy of what you sent.</mj-preview>
 	<mj-include path="../_partials/_head.mjml" />
 </mj-head>
 <mj-body>
@@ -9,33 +11,34 @@
 
 		<mj-include path="../_partials/_header.mjml" />
 
-		<mj-section mj-class="card-top" css-class="card-top">
+		<!--
+			Differs from contact.mjml by exactly two things: this heading string, and the
+			intro-text block below it. Everything else, including the _fields.mjml include, is
+			identical, which is what guarantees this copy matches the notification.
+
+			Copy stays person-neutral: this starter ships to businesses, collectives and
+			one-person studios alike, so no "we" and no "I" — write from the reader's side
+			("Message received" / "you'll hear back"), not the sender's. No em dashes.
+		-->
+		<mj-section mj-class="card-body" css-class="card-body" padding="34px 38px 28px">
 			<mj-column>
-				<mj-text mj-class="heading" align="center" padding="0 0 20px">Thanks for getting in touch</mj-text>
-				<mj-text mj-class="intro-text" align="center">Hi %name%, we've received your message. We'll take a look and get back to you shortly.</mj-text>
+				<!-- No form-type field in this kicker, unlike contact.mjml's: its value is
+				     fixed in the OWNER's language (see the hidden field's comment in
+				     index.html), so showing it to the visitor would mix a stray owner-language
+				     word into what's otherwise entirely their own. -->
+				<mj-include path="_partials/_kicker.mjml" />
+				<mj-text mj-class="heading" padding="0">Message received</mj-text>
+				<mj-text mj-class="intro-text" padding="16px 0 0">
+					Thanks, <strong>%name%</strong>. You&rsquo;ll hear back as soon as possible.
+					Below is a copy of what you sent.
+				</mj-text>
 			</mj-column>
 		</mj-section>
 
-		<mj-section mj-class="card-row" css-class="card-row">
-			<mj-column>
-				<mj-divider mj-class="field-divider" padding="20px 0 0" />
-				<mj-text mj-class="urgent-text">If it's urgent, you can reach us directly on <a href="tel:+351900000000" class="urgent-link">+351&zwnj; 900&zwnj; 000&zwnj; 000</a>.</mj-text>
-				<mj-button mj-class="cta-button" href="https://example.com/">Visit the site</mj-button>
-			</mj-column>
-		</mj-section>
-
-		<mj-section mj-class="card-row" css-class="card-row">
-			<mj-column>
-				<mj-text mj-class="message-label-text" padding="24px 0 4px">Your submission</mj-text>
-			</mj-column>
-		</mj-section>
-
-		<!-- Same partial contact.mjml uses for the site owner's copy, so what the visitor sees
-		     here always matches exactly what was received — one source of field labels, not a
-		     second one to keep in sync by hand. -->
 		<mj-include path="_partials/_fields.mjml" />
 
 		<mj-include path="../_partials/_footer.mjml" />
+
 		<mj-include path="../_partials/_credit.mjml" />
 
 	</mj-wrapper>

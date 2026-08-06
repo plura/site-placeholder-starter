@@ -1,0 +1,165 @@
+{
+	"_note": "Build-time tokens. Replace all of these BEFORE running the MJML compile (see docs/mail-templates.md). Runtime %field% placeholders are NOT listed here and must never be replaced — submit.php fills those on every send.",
+	"_colour_rules": {
+		"principle": "Structure is neutral, accent is branded. Small elements (a 3px rule, link text) can take a client's colour at full strength because their contrast demands are low. Large text-bearing fills cannot.",
+		"hue_follows_value_does_not": "BRAND_DARK may take the client's HUE but never their VALUE. Clamp lightness to 12-18% and saturation to 10-25%, so contrast against BRAND_DARK_MUTED is guaranteed by construction rather than checked per client.",
+		"accent_floor": "BRAND_ACCENT must clear 4.5:1 against BRAND_SURFACE. It colours link text as well as the flag, so a pale brand colour is a legibility failure, not just a weak-looking rule.",
+		"footer_text_floor": "BRAND_DARK_MUTED must clear 4.5:1 against BRAND_DARK. Recheck whenever BRAND_DARK changes.",
+		"count_discipline": "BRAND_ACCENT appears exactly twice (flag, clickable values). BRAND_DARK appears exactly twice and always as the same value (card border, footer band). Adding a third occurrence of either dilutes both."
+	},
+	"_runtime_placeholders": [
+		"%name%",
+		"%email%",
+		"%phone%",
+		"%message%",
+		"%label_name%",
+		"%label_email%",
+		"%label_phone%",
+		"%label_message%",
+		"%kicker%",
+		"%year%"
+	],
+	"_kicker_note": "%kicker% is the one placeholder submit.php doesn't build straight from POST data — build_kicker() joins the form-type field (a plain hidden <input name=\"form_type\"> on the contact form, index.html/pt/index.html), the date, and the language code with a middle dot, dropping whichever parts don't apply (form-type and language are both omitted for the reply build — form-type's value is fixed in the OWNER's language, so it can't appear in a visitor-facing email; language is redundant to whoever just submitted the form in it). Used identically by all three templates via contact/_partials/_kicker.mjml.",
+	"client": {
+		"CLIENT_NAME": {
+			"required": true,
+			"example": "Acme Studio",
+			"used_in": [
+				"_header.mjml",
+				"_footer.mjml",
+				"_credit.mjml",
+				"contact.mjml"
+			],
+			"note": "Wordmark text, footer name, credit line, notification preview text."
+		},
+		"CLIENT_URL": {
+			"required": true,
+			"example": "https://acmestudio.com/",
+			"used_in": [
+				"_header.mjml",
+				"_footer.mjml"
+			],
+			"note": "Site root, not a page — same value regardless of which language template sends the email. See the comment in _header.mjml for why."
+		},
+		"CLIENT_LOGO_URL": {
+			"required": false,
+			"example": "https://acmestudio.com/assets/images/mail/logo.png",
+			"used_in": [
+				"_header.mjml"
+			],
+			"note": "Only once the client has a logo PNG. Until then _header.mjml ships a text wordmark that needs no image asset — see the swap comment at the top of that file. Must be publicly reachable, never under starter/app/templates/ (.htaccess-locked)."
+		},
+		"CLIENT_EMAIL": {
+			"required": true,
+			"example": "hello@acmestudio.com",
+			"used_in": [
+				"_footer.mjml"
+			]
+		},
+		"CLIENT_PHONE": {
+			"required": false,
+			"example": "+351 210 000 000",
+			"used_in": [
+				"_footer.mjml"
+			],
+			"note": "Display form, with spaces. CLIENT_PHONE_RAW is derived from this, not asked separately."
+		},
+		"CLIENT_PHONE_RAW": {
+			"required": false,
+			"derived": true,
+			"example": "+351210000000",
+			"used_in": [
+				"_footer.mjml"
+			],
+			"note": "DO NOT ASK THE CLIENT FOR THIS. Derive it at build time from CLIENT_PHONE by stripping everything except digits and a leading +. Asking for the same number twice in two formats is a papercut in the instantiation flow, and a hand-typed second copy is a chance to get it wrong."
+		},
+		"CLIENT_ADDRESS": {
+			"required": false,
+			"example": "123 Example Street, 1200-000 Lisbon",
+			"used_in": [
+				"_footer.mjml"
+			]
+		},
+		"CLIENT_MAP_URL": {
+			"required": false,
+			"example": "https://maps.app.goo.gl/example",
+			"used_in": [
+				"_footer.mjml"
+			]
+		},
+		"CLIENT_INSTAGRAM": {
+			"required": false,
+			"example": "https://www.instagram.com/acmestudio",
+			"used_in": [
+				"_footer.mjml"
+			],
+			"note": "Delete the whole <a> if the client has no account — an empty href is worse than no link."
+		},
+		"CLIENT_FACEBOOK": {
+			"required": false,
+			"example": "https://www.facebook.com/acmestudio",
+			"used_in": [
+				"_footer.mjml"
+			]
+		},
+		"CLIENT_LINKEDIN": {
+			"required": false,
+			"example": "https://www.linkedin.com/company/acmestudio",
+			"used_in": [
+				"_footer.mjml"
+			]
+		}
+	},
+	"brand": {
+		"BRAND_FONT": {
+			"default": "Arial, Helvetica, sans-serif",
+			"note": "Email-safe stacks only. No web fonts — most mail clients strip external font loading entirely."
+		},
+		"BRAND_FONT_HEADING": {
+			"default": "Arial, Helvetica, sans-serif",
+			"note": "Only affects the heading. Set to \"Georgia, 'Times New Roman', serif\" for editorial or creative clients."
+		},
+		"BRAND_ACCENT": {
+			"default": "#3d5a80",
+			"note": "THE per-client colour: the accent flag and clickable values. Everything structural (border, footer band) stays neutral across all clients — see BRAND_DARK. Must clear 4.5:1 against BRAND_SURFACE, because this token also colours link text, not just the 3px rule."
+		},
+		"BRAND_INK": {
+			"default": "#1a1a1a"
+		},
+		"BRAND_MUTED": {
+			"default": "#6f6f6f",
+			"note": "All four field labels, kicker, credit."
+		},
+		"BRAND_SURFACE": {
+			"default": "#ffffff"
+		},
+		"BRAND_FRAME": {
+			"default": "#f4f3f1",
+			"note": "Set to #ffffff for a flat, frameless look — the card border still defines the card."
+		},
+		"BRAND_TINT": {
+			"default": "#f1efec",
+			"note": "Field divider hairlines only."
+		},
+		"BRAND_DARK": {
+			"default": "#2b2926",
+			"note": "Card border AND footer band — must be the same value. That identity is the design. NOT the raw brand colour: this fill carries light text, so an arbitrary brand hue fails contrast. If you want it to feel client-specific, derive it — take the brand's hue, clamp lightness to 12-18% and saturation to 10-25% (navy brand -> #1e2530, terracotta -> #2e211b). Same hue as the client, contrast guaranteed by construction. Leave at #2b2926 when the client has no colour scheme."
+		},
+		"BRAND_DARK_MUTED": {
+			"default": "#a49e97",
+			"note": "Footer copy. Must clear 4.5:1 against BRAND_DARK."
+		},
+		"BRAND_DARK_RULE": {
+			"default": "#4a443d",
+			"note": "40px hairline inside the footer band."
+		},
+		"BRAND_RADIUS": {
+			"default": "14px",
+			"note": "Card corners. 0px for a hard-edged corporate feel. Outlook squares these regardless."
+		},
+		"BRAND_RADIUS_INNER": {
+			"default": "13px",
+			"note": "Always BRAND_RADIUS minus 1px. footer-band's own bottom corners sit just inside card-body's 1px border, so they read as one continuous curve rather than two concentric ones — see 'Mail template gotchas' in docs/mail-templates.md for why there's no single wrapper carrying the border across both."
+		}
+	}
+}

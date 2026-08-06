@@ -1,5 +1,7 @@
 app/config.php
+mail-templates/tokens.json
 .vscode/sftp.json
 node_modules/
 .DS_Store
 *.code-workspace
+claude-design-mail-template/

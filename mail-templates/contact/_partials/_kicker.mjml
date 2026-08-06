@@ -1,0 +1,9 @@
+<!--
+	Shared by all three templates — contact.mjml and both contact-reply(.pt).mjml. %kicker% is
+	fully pre-built by submit.php's build_kicker() — form type, date, and language joined with a
+	middle dot, dropping whichever parts don't apply to a given send (the reply build never gets
+	a form-type or language part; either can be empty on a single-language site). Nothing to get
+	wrong here: the template just prints the one placeholder.
+-->
+<mj-divider mj-class="accent-flag" />
+<mj-text mj-class="kicker">%kicker%</mj-text>

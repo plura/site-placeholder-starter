@@ -1,7 +1,7 @@
 <!--
 	OPTIONAL (Tier 2): Portuguese auto-reply. A full copy of contact-reply.mjml — MJML has no
 	string-injection mechanism, so a translated template means a translated file. Structural
-	changes to contact-reply.mjml must be mirrored here; only the copy and the CTA href differ.
+	changes to contact-reply.mjml must be mirrored here; only the copy differs.
 
 	Only the reply is translated. contact.mjml (the notification) goes to the site owner, who
 	reads one language regardless of which version the visitor used.
@@ -10,8 +10,8 @@
 -->
 <mjml>
 <mj-head>
-	<mj-title>Obrigado pelo seu contacto</mj-title>
-	<mj-preview>Obrigado pelo seu contacto — Site Name</mj-preview>
+	<mj-title>Mensagem recebida</mj-title>
+	<mj-preview>Obrigado pelo contacto. Aqui fica uma c&oacute;pia do que enviou.</mj-preview>
 	<mj-include path="../_partials/_head.mjml" />
 </mj-head>
 <mj-body>
@@ -19,24 +19,14 @@
 
 		<mj-include path="../_partials/_header.mjml" />
 
-		<mj-section mj-class="card-top" css-class="card-top">
+		<mj-section mj-class="card-body" css-class="card-body" padding="34px 38px 28px">
 			<mj-column>
-				<mj-text mj-class="heading" align="center" padding="0 0 20px">Obrigado pelo seu contacto</mj-text>
-				<mj-text mj-class="intro-text" align="center">Olá %name%, recebemos a sua mensagem. Iremos analisá-la e entraremos em contacto consigo brevemente.</mj-text>
-			</mj-column>
-		</mj-section>
-
-		<mj-section mj-class="card-row" css-class="card-row">
-			<mj-column>
-				<mj-divider mj-class="field-divider" padding="20px 0 0" />
-				<mj-text mj-class="urgent-text">Se o assunto for urgente, pode contactar-nos diretamente através do <a href="tel:+351900000000" class="urgent-link">+351&zwnj; 900&zwnj; 000&zwnj; 000</a>.</mj-text>
-				<mj-button mj-class="cta-button" href="https://example.com/pt/">Visitar o site</mj-button>
-			</mj-column>
-		</mj-section>
-
-		<mj-section mj-class="card-row" css-class="card-row">
-			<mj-column>
-				<mj-text mj-class="message-label-text" padding="24px 0 4px">O que nos enviou</mj-text>
+				<mj-include path="_partials/_kicker.mjml" />
+				<mj-text mj-class="heading" padding="0">Mensagem recebida</mj-text>
+				<mj-text mj-class="intro-text" padding="16px 0 0">
+					Obrigado, <strong>%name%</strong>. Ter&aacute; uma resposta assim que poss&iacute;vel.
+					Abaixo fica uma c&oacute;pia do que enviou.
+				</mj-text>
 			</mj-column>
 		</mj-section>
 
@@ -45,6 +35,7 @@
 		<mj-include path="_partials/_fields.mjml" />
 
 		<mj-include path="../_partials/_footer.mjml" />
+
 		<mj-include path="../_partials/_credit.mjml" />
 
 	</mj-wrapper>

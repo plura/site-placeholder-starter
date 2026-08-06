@@ -1,18 +1,37 @@
-<!-- Replace the placeholder contact details, address, and social links below with the client's real values. -->
-<mj-section mj-class="footer-pad" css-class="footer-pad">
-	<mj-column mj-class="footer-column">
-		<mj-text mj-class="footer-name" padding="0 0 20px">Site Name</mj-text>
-		<mj-text mj-class="footer-text" padding="0 0 20px">
-			<a href="mailto:info@example.com" class="footer-link">info&zwnj;@example&zwnj;.com</a><br />
-			<a href="tel:+351900000000" class="footer-link">+351&zwnj; 900&zwnj; 000&zwnj; 000</a><br />
-			<a href="https://maps.app.goo.gl/" class="footer-link">Address line, Postal Code City</a>
+<!--
+	Attached inside the card wrapper, not on the frame. Its background is also the card's border
+	color — that identity is the design, so change BRAND_DARK in _head.mjml and both move
+	together. The band carries the card's bottom corners itself (BRAND_RADIUS_INNER), because
+	overflow:hidden is not reliable in email clients. No box-shadow anywhere in this template:
+	support is under 50% and absent in Outlook and Gmail, so the border is the only thing
+	defining the card.
+
+	Two hand-edits a token swap can't do, because an empty value leaves a dead link that looks
+	broken rather than just absent:
+	  - No CLIENT_INSTAGRAM/FACEBOOK/LINKEDIN? Delete that whole <a> and its separator, not just
+	    the href.
+	  - No CLIENT_MAP_URL? Unwrap the address <a> to plain text instead of a link to nowhere.
+-->
+<mj-section mj-class="footer-band" css-class="footer-band">
+	<mj-column>
+		<mj-text mj-class="footer-name">
+			<a href="{{CLIENT_URL}}" class="footer-name-link">{{CLIENT_NAME}}</a>
 		</mj-text>
-		<mj-text mj-class="footer-text" padding="0">
-			<a href="https://www.instagram.com/" class="footer-link">Instagram</a>
+		<mj-text mj-class="footer-text">
+			<a href="mailto:{{CLIENT_EMAIL}}" class="footer-link">{{CLIENT_EMAIL}}</a>
 			&nbsp;&middot;&nbsp;
-			<a href="https://www.facebook.com/" class="footer-link">Facebook</a>
+			<a href="tel:{{CLIENT_PHONE_RAW}}" class="footer-link">{{CLIENT_PHONE}}</a>
+		</mj-text>
+		<mj-text mj-class="footer-text" padding="7px 0 0">
+			<a href="{{CLIENT_MAP_URL}}" class="footer-link">{{CLIENT_ADDRESS}}</a>
+		</mj-text>
+		<mj-divider mj-class="footer-rule" />
+		<mj-text mj-class="footer-social">
+			<a href="{{CLIENT_INSTAGRAM}}" class="footer-link">Instagram</a>
 			&nbsp;&middot;&nbsp;
-			<a href="https://www.linkedin.com/" class="footer-link">LinkedIn</a>
+			<a href="{{CLIENT_FACEBOOK}}" class="footer-link">Facebook</a>
+			&nbsp;&middot;&nbsp;
+			<a href="{{CLIENT_LINKEDIN}}" class="footer-link">LinkedIn</a>
 		</mj-text>
 	</mj-column>
 </mj-section>

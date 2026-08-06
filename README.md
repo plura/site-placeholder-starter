@@ -20,8 +20,9 @@ invented once. Use it as the base for new projects instead of re-deriving it eac
   "Optional features" below), which is deliberately excluded from the generic loop.
 - `starter/app/lib/phpmailer/` — vendored PHPMailer, never modified.
 - The MJML **structural** patterns in `mail-templates/_partials/` — the responsive
-  side-by-side/stacked field layout, the message quote-block, the full-bleed frame
-  background. See "Mail template gotchas" below before changing these.
+  side-by-side/stacked field grid, the card's border/radius construction, the full-bleed frame
+  background. See "Mail template gotchas" in [docs/mail-templates.md](docs/mail-templates.md)
+  before changing these.
 
 **Must customize per project:**
 - `starter/assets/css/base.css` — brand colors, fonts, spacing scale (all under one `:root` block,
@@ -31,8 +32,9 @@ invented once. Use it as the base for new projects instead of re-deriving it eac
   means editing those *and* the two `--site-font-` values here.
 - `index.html` — logo/wordmark, copy, contact details, JSON-LD business info, meta tags,
   contact form fields beyond the universal name/email/phone/message.
-- `mail-templates/_partials/_head.mjml` — brand colors for the email (kept intentionally
-  separate from the website's own CSS variables — see below).
+- `mail-templates/_tokens.json` — every `{{CLIENT_*}}`/`{{BRAND_*}}` build-time token used across
+  `mail-templates/`, with defaults and notes. Brand colors for the email are kept intentionally
+  separate from the website's own CSS variables — see below.
 - `starter/app/config.example.php` → `config.php` — SMTP credentials, `site_name` for email subjects.
 - Favicons (`starter/assets/favicons/`) and `starter/assets/images/og.png` — not included; see the spec below.
 - Bespoke entrance animations / canvas backgrounds, if wanted — these are genuinely
@@ -40,30 +42,22 @@ invented once. Use it as the base for new projects instead of re-deriving it eac
   `starter/assets/js/main.js`; see `starter/custom/README.md` for the convention and, more importantly, for
   what does *not* belong there.
 
-## Why the email's colors and fonts are separate from the website's
+## Mail templates
 
-The website CSS and the MJML email templates each have their own color tokens, deliberately
-not shared. A client's actual site may be light or dark themed, but light-background email
-cards read more reliably across mail clients that mangle dark-mode email — so the email
-almost always wants its own, usually lighter, palette regardless of the site's theme. Set
-both when customizing a project; don't assume one implies the other. In the starter's default
-placeholder palette, this already lines up more than it might look at a glance: the frame/card
-colors (`#eeeeee`/`#ffffff`) closely mirror the website's own light-theme tokens
-(`--light-bg`/`--light-surface` in `starter/assets/css/base.css`), and the accent blue (`#4a90d9`) is
-an exact match with `--site-color-accent` — not a coincidence, kept in sync deliberately.
+The MJML email templates have their own color/font tokens, deliberately separate from the
+website's own CSS, and their own compile step (`npm run build:mail`). Two things worth knowing
+before touching `mail-templates/`, both covered in **[docs/mail-templates.md](docs/mail-templates.md)**:
 
-Fonts are separate for the same reliability reason, not shared with `starter/assets/css/base.css`'s
-`--site-font-serif`/`--site-font-sans` (Cardo/Outfit, loaded via Google Fonts): most mail
-clients strip external font loading entirely, so `_head.mjml` uses system font stacks instead
-(`Georgia, 'Times New Roman', serif` for headings, `Helvetica Neue, Helvetica, Arial,
-sans-serif` for body text) — these render identically everywhere with zero load risk. They're
-not a personality match for Cardo/Outfit (more neutral/classic than delicate-serif/
-light-geometric-sans), and that's an intentional tradeoff, not an oversight: web-safe
-alternatives closer to Cardo/Outfit's character (e.g. Baskerville, Century Gothic) have
-materially worse Outlook/Windows support, trading real rendering reliability for a closer but
-riskier aesthetic match. Don't try to load the website's Google Fonts into the email to "fix"
-this — the structural language (uppercase tracked labels, thin dividers, solid uppercase
-buttons) already carries the brand identity independent of the exact typeface.
+- **Colors and fonts don't follow the website's.** Light-background email cards read more
+  reliably than dark ones across mail clients that mangle dark-mode email, so the email keeps
+  its own, usually lighter, palette and web-safe font stacks regardless of the site's theme.
+- **A handful of MJML quirks cost real debugging time if you don't know them going in** —
+  `mj-class` vs `css-class`, `mj-wrapper`'s one-wrapper-per-page limit, a token/HTML-comment
+  collision that fools `build-guard.js`, and more.
+
+`docs/mail-templates.md` has the full picture: the color/font rationale, the complete compile
+pipeline (`tools/build-mail.mjs`, `tokens.json` vs `tokens.example.json`, `build-guard.js`), and
+every MJML gotcha found so far.
 
 ## Dark/light mode
 
@@ -168,8 +162,10 @@ Work through these questions before starting the "New project checklist" below:
    this wrong means redoing work rather than adjusting it (see "Language" below):
    - What language does the **site** serve? Sets `$BASE` in `starter/app/strings.php`, `index.html`,
      and — if a second language is kept — whether Tier 2's directory is `pt/` or `en/`.
-   - What language does the **owner** read? Sets `$OWNER` in `starter/app/strings.php` and the three
-     chrome strings in `contact.mjml`. A Portuguese client with an English site is normal.
+   - What language does the **owner** read? Sets `$OWNER` in `starter/app/strings.php`, the
+     chrome strings in `contact.mjml`, and the `form_type` hidden field's value in **both**
+     `index.html` and `pt/index.html` (same value in both — see "Portuguese notification copy"
+     in [docs/language.md](docs/language.md)). A Portuguese client with an English site is normal.
 3. Decide on "Optional features" above and delete what's not needed.
 4. `starter/assets/css/base.css` — replace the color/font values, keep the variable names.
 5. `index.html` — replace all placeholder text, URLs, JSON-LD fields (fill in `@type`,
@@ -179,66 +175,20 @@ Work through these questions before starting the "New project checklist" below:
    pair in `mail-templates/contact/_partials/_fields.mjml` and rename both placeholders to the field's
    `name`. No `submit.php` changes, and no label text to keep in sync — the email takes its
    labels from the form's own `<label>` elements.
-7. `mail-templates/_partials/_head.mjml` — replace the placeholder color palette (see the
-   comment at the top of the file) and swap the header logo (`_header.mjml`) for a real
-   `<mj-image>` once a public-facing logo PNG exists (never point it at `starter/app/templates/` —
-   that's `.htaccess`-locked and unreachable by email clients; put it under
-   `starter/assets/images/mail/`).
-8. Compile the MJML (see below), then `cp starter/app/config.example.php starter/app/config.php` and fill
-   in real SMTP credentials (and Mailchimp keys, if keeping either mailing-list feature).
+7. `cp mail-templates/tokens.example.json mail-templates/tokens.json` (gitignored, same pattern
+   as `config.example.php` → `config.php`) and fill in the client's real `{{CLIENT_*}}`/
+   `{{BRAND_*}}` values — see `mail-templates/_tokens.json` for the full list, defaults, and
+   rules (contrast floors, the derived `CLIENT_PHONE_RAW`). Swap the header wordmark
+   (`_header.mjml`) for a real `<mj-image>` once a public-facing logo PNG exists (never point it
+   at `starter/app/templates/` — that's `.htaccess`-locked and unreachable by email clients; put
+   it under `starter/assets/images/mail/`).
+8. `npm install`, then `npm run build:mail` — replaces the tokens, compiles the MJML, and runs
+   `build-guard.js`, all in one step (see [docs/mail-templates.md](docs/mail-templates.md)). Then
+   `cp starter/app/config.example.php starter/app/config.php` and fill in real SMTP credentials
+   (and Mailchimp keys, if keeping either mailing-list feature).
 9. Generate favicons and `starter/assets/images/og.png` — see specs below.
 10. Copy `.vscode/sftp.json.example` → `sftp.json`, fill in real host/credentials.
 11. Update `robots.txt` / `sitemap.xml` / `site.webmanifest` with the real domain.
-
-## Compiling the MJML
-
-```
-npx mjml mail-templates/contact/contact.mjml -o starter/app/templates/contact.html --config.allowIncludes true --config.includePath . --config.minify true
-npx mjml mail-templates/contact/contact-reply.mjml -o starter/app/templates/contact-reply.html --config.allowIncludes true --config.includePath . --config.minify true
-npx mjml mail-templates/contact/contact-reply.pt.mjml -o starter/app/templates/contact-reply.pt.html --config.allowIncludes true --config.includePath . --config.minify true
-```
-
-Run from the repo root, after any `mail-templates/` edit. The third line is Tier 2 only — drop
-it (and its source file) for a single-language site.
-
-## Mail template gotchas (cost real debugging time — read before changing structure)
-
-- `mj-class="x"` (pulls real attribute values from `<mj-class name="x">` in `_head.mjml`) is
-  **not** the same as `css-class="x"` (just stamps a literal, unstyled HTML class name).
-  Using the wrong one silently drops every color/padding/size with no error.
-- A mobile media-query override on a section only works if it targets
-  `.classname > table > tbody > tr > td` — MJML puts `css-class` on the outer `max-width`
-  div, but the real padding lives on a nested `<td>` one level down.
-- `mj-text` does **not** support `background-color`/`border-left` (only section/column/button
-  do). The message quote-block uses a real CSS class (`<mj-style inline="inline">`) on a raw
-  HTML `<td>` for this reason.
-- Raw HTML spliced via `<mj-raw>` into an existing column must be a bare `<tr><td>` — never
-  a full `<table>`. A column's content shares one `<tbody>`, and `<table>` is not a valid
-  direct child of `<tbody>`; browsers "fix" this via foster parenting, silently relocating
-  the content and breaking the layout around it. If a block needs its own independent
-  column grid (different width ratios than sibling rows), use `<mj-table>` instead — it
-  properly wraps its content in an isolated `<tr><td><table>...</table></td></tr>`.
-- Similarly, `mj-section` cannot nest inside `mj-column` — for a genuinely responsive
-  side-by-side/stacked field layout, each field is its own top-level `mj-section` with two
-  `mj-column`s (30%/70%), not a shared raw HTML table. MJML's own column system compiles to
-  real `<div>`s with CSS-class-based widths (no legacy `width=` HTML attribute to conflict
-  with a mobile override) and already auto-generates the mobile-first stacking media query —
-  this is far more reliable across real clients (Gmail's app especially) than any hand-rolled
-  `display:block` table-cell trick.
-- `mj-wrapper`/`mj-section` `background-color` only bleeds as wide as its nearest
-  width-constrained ancestor allows. For a true full-bleed page background regardless of
-  viewport width, set `background-color` on `<mj-body>` itself (via `mj-attributes`) — that's
-  the one thing that paints the real, unconstrained `<body>` tag.
-- Gmail's mobile **app** is known to be inconsistent about honoring
-  `<meta name="color-scheme" content="light">` / `supported-color-schemes` — it may still
-  auto-dark-mode-invert the email. An unofficial `data-ogsc`/`data-ogsb` override trick
-  exists but has been a deliberate skip so far (unofficial, inconsistent, real markup cost).
-- Any image referenced by URL in an email (logo, etc.) must be public — never point it at a
-  path covered by an `.htaccess: Deny from all`; email clients fetch it externally.
-- VS Code's MJML preview extension is not a reliable proxy for the real compiled output —
-  it appears to use its own, less complete rendering engine. If something looks broken only
-  in that preview, verify against the actual compiled `starter/app/templates/*.html` (open directly
-  in a browser, or send a real test email) before treating it as a bug.
 
 ## Favicon spec
 

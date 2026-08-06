@@ -1,57 +1,58 @@
 <!--
-	Universal minimum field set: name, email, phone, message. Both halves of every row are
-	placeholders — for a field named FIELD, the label cell takes its <label> text as posted by
-	the contact form, and the value cell takes what was typed. Nothing here needs to match the
-	form by hand, and the labels arrive in whatever language the visitor's page was in.
-
-	To add a project-specific field (a select dropdown, etc.), copy one of the row+divider pairs
-	below and rename both placeholders to the field's name attribute. No submit.php changes.
+	Universal minimum field set. Both halves of every row are runtime placeholders: for a field
+	named FIELD, %label_FIELD% is the form's own <label> text and %FIELD% is what was typed.
+	To add a field, copy one row + divider pair and rename both placeholders. No submit.php change.
+	The message is the last row of the same 28/72 grid, not a separate block. One grid, four pairs.
+	These are mj-sections, so this file is included at mj-wrapper level, never inside an mj-column.
+	Columns stack under 480px; f-label / f-value / m-label retune that spacing.
 -->
-<mj-section mj-class="card-row" css-class="card-row">
-	<mj-column width="30%">
-		<mj-text mj-class="field-label-text">%label_name%</mj-text>
+<mj-section mj-class="field-row" css-class="field-row">
+	<mj-column width="28%">
+		<mj-text mj-class="field-label-text" css-class="f-label">%label_name%</mj-text>
 	</mj-column>
-	<mj-column width="70%">
-		<mj-text mj-class="field-value-text">%name%</mj-text>
+	<mj-column width="72%">
+		<mj-text mj-class="field-value-text" css-class="f-value">%name%</mj-text>
 	</mj-column>
 </mj-section>
-<mj-section mj-class="card-row" css-class="card-row">
+<mj-section mj-class="field-row" css-class="field-row">
 	<mj-column>
 		<mj-divider mj-class="field-divider" />
 	</mj-column>
 </mj-section>
 
-<mj-section mj-class="card-row" css-class="card-row">
-	<mj-column width="30%">
-		<mj-text mj-class="field-label-text">%label_email%</mj-text>
+<mj-section mj-class="field-row" css-class="field-row">
+	<mj-column width="28%">
+		<mj-text mj-class="field-label-text" css-class="f-label">%label_email%</mj-text>
 	</mj-column>
-	<mj-column width="70%">
-		<mj-text mj-class="field-value-text">%email%</mj-text>
+	<mj-column width="72%">
+		<mj-text mj-class="field-value-text" css-class="f-value"><a href="mailto:%email%" class="value-link">%email%</a></mj-text>
 	</mj-column>
 </mj-section>
-<mj-section mj-class="card-row" css-class="card-row">
+<mj-section mj-class="field-row" css-class="field-row">
 	<mj-column>
 		<mj-divider mj-class="field-divider" />
 	</mj-column>
 </mj-section>
 
-<mj-section mj-class="card-row" css-class="card-row">
-	<mj-column width="30%">
-		<mj-text mj-class="field-label-text">%label_phone%</mj-text>
+<mj-section mj-class="field-row" css-class="field-row">
+	<mj-column width="28%">
+		<mj-text mj-class="field-label-text" css-class="f-label">%label_phone%</mj-text>
 	</mj-column>
-	<mj-column width="70%">
-		<mj-text mj-class="field-value-text">%phone%</mj-text>
+	<mj-column width="72%">
+		<mj-text mj-class="field-value-text" css-class="f-value"><a href="tel:%phone%" class="value-link">%phone%</a></mj-text>
 	</mj-column>
 </mj-section>
-<mj-section mj-class="card-row" css-class="card-row">
+<mj-section mj-class="field-row" css-class="field-row">
 	<mj-column>
-		<mj-divider mj-class="field-divider" />
+		<mj-divider mj-class="field-divider" padding="0 0 22px" />
 	</mj-column>
 </mj-section>
 
-<mj-section mj-class="card-bottom" css-class="card-bottom">
-	<mj-column>
-		<mj-text mj-class="message-label-text">%label_message%</mj-text>
-		<mj-raw><tr><td class="message-quote">%message%</td></tr></mj-raw>
+<mj-section mj-class="field-row-last" css-class="field-row-last">
+	<mj-column width="28%">
+		<mj-text mj-class="message-label-text" css-class="m-label">%label_message%</mj-text>
+	</mj-column>
+	<mj-column width="72%">
+		<mj-text mj-class="message-text">%message%</mj-text>
 	</mj-column>
 </mj-section>

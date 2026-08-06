@@ -48,8 +48,8 @@ rewritten every project, and source-string keys go stale the moment one does.
 2. `starter/app/strings.php` — translate `$BASE`. Don't miss `subject_notify` / `subject_reply`: the
    email subjects are built here, not in the templates.
 3. `mail-templates/contact/contact-reply.mjml` — the visitor-facing auto-reply. Then recompile
-   (see "Compiling the MJML" in the [README](../README.md)); `starter/app/templates/*.html` is what PHP loads, so editing the MJML
-   alone ships nothing.
+   (see "Compiling the MJML" in [mail-templates.md](mail-templates.md)); `starter/app/templates/*.html`
+   is what PHP loads, so editing the MJML alone ships nothing.
 4. `mail-templates/contact/contact.mjml` + `contact/_partials/_fields.mjml` — **only if the owner's
    language is also changing.** See "Two independent axes" above.
 5. `site.webmanifest` — only if `name`/`short_name` are language-dependent.
@@ -60,17 +60,24 @@ track where the client is, not what language the site is in.
 
 ## Portuguese notification copy
 
-For the common case of a Portuguese owner, the notification side is seven strings:
+For the common case of a Portuguese owner, the notification side is these strings:
 
 | File | English | Portuguese |
 | --- | --- | --- |
 | `contact.mjml` | `<mj-title>New enquiry` | `Novo contacto` |
-| `contact.mjml` | `<mj-preview>New enquiry — Site Name` | `Novo contacto — Site Name` |
+| `contact.mjml` | `<mj-preview>New enquiry from %name% via {{CLIENT_NAME}}` | `Novo contacto de %name% via {{CLIENT_NAME}}` |
 | `contact.mjml` | heading `New enquiry` | `Novo contacto` |
-| `_fields.mjml` | `Name` | `Nome` |
-| `_fields.mjml` | `Phone` | `Telefone` |
-| `_fields.mjml` | `Message` | `Mensagem` |
+| `index.html` **and** `pt/index.html` | hidden field `value="Contact form"` | `value="Formulário de contacto"` — same value in **both** files; it's owner-language, not visitor-language, see the comment on that field |
 | `starter/app/strings.php` | `$OWNER['subject_notify']` | `'%s — novo contacto do site'` |
+
+`_fields.mjml`'s own labels (`%label_name%` etc.) are **not** in this list — they're runtime
+placeholders filled from the submitting page's own `<label>` text, so they already follow
+whichever page the enquiry came from, in that page's language. There's a real gap here: if the
+owner's language and the site's language differ, the owner receives correctly-Portuguese chrome
+but visitor-language field labels (English, if the site is English) inside the same email. Fixing
+that would mean sourcing owner-facing labels from `strings.php`'s `$OWNER` block instead of the
+page, which is a bigger change than this starter makes today — worth knowing about, not
+something to silently work around per-project.
 
 That last row is why `strings.php` has a separate `$OWNER` block. Everything in `$BASE` is
 resolved against the *visitor's* language; `$OWNER` is applied afterwards and can't be
