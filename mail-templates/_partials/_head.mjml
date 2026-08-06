@@ -45,6 +45,7 @@
 </mj-attributes>
 
 <mj-style inline="inline">
+	.header-link { color: #111111; text-decoration: none; }
 	.footer-link { color: #767676; text-decoration: none; }
 	.credit-link { color: #999999; text-decoration: none; font-weight: bold; }
 	.urgent-link { color: #111111; font-weight: bold; text-decoration: underline; text-decoration-color: #4a90d9; }

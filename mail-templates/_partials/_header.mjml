@@ -1,13 +1,21 @@
 <!--
-	Text-based placeholder header — works with zero image assets. Once the client has a
-	logo PNG ready (must be publicly hosted, e.g. starter/assets/images/mail/logo.png — never under
+	Text-based placeholder header — works with zero image assets, but is already a live link to
+	the site, like a wordmark conventionally is. Once the client has a logo PNG ready (must be
+	publicly hosted, e.g. starter/assets/images/mail/logo.png — never under
 	starter/app/templates/, which is .htaccess-locked and unreachable by email clients), swap the
-	mj-text below for something like:
+	mj-text below for:
 		<mj-image mj-class="logo-image" src="https://example.com/starter/assets/images/mail/logo.png" alt="Site Name" href="https://example.com/" />
+
+	Shared byte-for-byte across contact.mjml and both contact-reply(.pt).mjml, so the href always
+	points at the site root regardless of which language template sends it — not the visitor's
+	own language version. If a project ever needs per-language destinations here, this stops
+	being a candidate for _partials/ and moves into contact/_partials/, like _fields.mjml did.
 -->
 <mj-section mj-class="header-pad">
 	<mj-column>
-		<mj-text mj-class="footer-name" padding="32px 0 28px">Site Name</mj-text>
+		<mj-text mj-class="footer-name" padding="32px 0 28px">
+			<a href="https://example.com/" class="header-link">Site Name</a>
+		</mj-text>
 	</mj-column>
 </mj-section>
 
