@@ -33,8 +33,11 @@ return [
         // empty, so inferring it would let a half-finished second provider quietly take over.
         'provider' => 'brevo',
 
-        // Brevo:     Profile -> SMTP & API -> API Keys (v3). List ID is the number in the URL
-        //            when the list is open, or the ID column in Contacts -> Lists.
+        // Convention when creating the list: folder "Website", list "Signups".
+        //
+        // Brevo:     Profile -> SMTP & API -> API Keys (v3). Brevo requires a folder. List ID is
+        //            the number in the URL when the list is open, or the ID column in
+        //            Contacts -> Lists.
         // Mailchimp: Account -> Extras -> API keys. The key must keep its datacenter suffix
         //            (abc123def-us21) — the API hostname is built from it. List ID is the
         //            Audience ID under Audience -> Settings -> Audience name and defaults.
