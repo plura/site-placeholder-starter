@@ -116,7 +116,7 @@ Work through these questions before starting the "New project checklist" below:
    Phone and Message are optional by default (see step 4 below for adding/removing rows).
 3. **Does this project want the mailing-list opt-in checkbox on the contact form?** An
    optional checkbox (`name="newsletter"`) that, when checked, also subscribes the submitter
-   via Mailchimp on successful contact submission. To remove: delete the marked block in
+   to the mailing list on successful contact submission. To remove: delete the marked block in
    `index.html`'s `#contact-form` and the marked block near the end of `starter/app/submit.php`.
 4. **Does this project want the standalone mailing-list signup?** A separate, inline (not
    modal) single-email-field section on the page — lower friction than a checkbox buried in
@@ -124,13 +124,26 @@ Work through these questions before starting the "New project checklist" below:
    site. To remove: delete the marked `.newsletter` block in `index.html`, its styles in
    `components.css`, `starter/assets/js/newsletter.js` and its import in `main.js`. `starter/assets/js/post.js`
    stays as long as the contact form does.
-5. **If keeping either mailing-list feature**, both use the **Mailchimp Marketing API**
-   (double opt-in — Mailchimp sends its own confirmation email, this starter never does) via
-   the shared `starter/app/lib/mailchimp.php` helper. Fill in `mailchimp.api_key` / `mailchimp.list_id`
-   in `config.php`. If neither mailing-list feature survives step 3/4, also delete
-   `starter/app/subscribe.php`, `starter/app/lib/mailchimp.php`, and the `mailchimp` block in
-   `config.example.php`/`config.php`. If a project needs a different ESP than Mailchimp,
-   that's a rewrite of the one function in `starter/app/lib/mailchimp.php`, not a new architecture.
+5. **If keeping either mailing-list feature**, both go through `newsletter_subscribe()` in
+   `starter/app/lib/newsletter.php`, which dispatches to the provider named in `config.php`'s
+   `newsletter.provider` — **`brevo`** or **`mailchimp`**, implemented in `lib/newsletter/`.
+   Fill in `newsletter.api_key` / `newsletter.list_id` too.
+
+   The kit only *adds addresses to the list*; it never sends campaigns. Those are the client's
+   to run in the provider's own tools, so the deciding factor is usually whichever provider the
+   client already uses. Brevo is the default: EU-hosted, which is an easier conversation for a
+   client in a regulated sector than a US-based processor.
+
+   **Double opt-in differs and the shipped copy assumes it doesn't happen.** Mailchimp always
+   double opt-ins (`status: 'pending'`, it sends its own confirmation email). Brevo only does
+   once a DOI template is configured in the account — the API call here doesn't trigger one. So
+   `subscribe_confirm` in `strings.php` deliberately says just "Thanks for subscribing."; add
+   the "check your inbox" line only once the project's provider actually sends a confirmation.
+
+   If neither mailing-list feature survives step 3/4, also delete `starter/app/subscribe.php`,
+   `starter/app/lib/newsletter.php`, the whole `starter/app/lib/newsletter/` folder, and the
+   `newsletter` block in `config.example.php`/`config.php`. Adding a third provider is one file
+   in `lib/newsletter/` plus one `case` in the dispatcher — nothing else changes.
 6. **Does this project want dark/light mode at all?** See "Dark/light mode" above for the full
    mechanism. Two independently removable tiers, marked `OPTIONAL (1/2)` and `OPTIONAL (2/2)`:
    - Keep both for the default: auto-follows the OS/browser preference, with a manual toggle
@@ -187,7 +200,7 @@ Work through these questions before starting the "New project checklist" below:
 8. `npm install`, then `npm run build:mail` — replaces the tokens, compiles the MJML, and runs
    `build-guard.js`, all in one step (see [docs/mail-templates.md](docs/mail-templates.md)). Then
    `cp starter/app/config.example.php starter/app/config.php` and fill in real SMTP credentials
-   (and Mailchimp keys, if keeping either mailing-list feature).
+   (and the `newsletter` provider/keys, if keeping either mailing-list feature).
 9. Generate favicons and `starter/assets/images/og.png` — see specs below.
 10. Copy `.vscode/sftp.json.example` → `sftp.json`, fill in real host/credentials.
 11. Update `robots.txt` / `sitemap.xml` / `site.webmanifest` with the real domain.

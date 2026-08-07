@@ -21,10 +21,24 @@ return [
     ],
 
     // OPTIONAL — only needed for the mailing-list signup (standalone form and/or the contact
-    // form's newsletter checkbox). Leave both empty and remove the newsletter feature (see
-    // README) if this project doesn't need it.
-    'mailchimp' => [
-        'api_key' => '', // includes the datacenter suffix, e.g. abc123def-us21
-        'list_id' => '', // Audience/List ID
+    // form's newsletter checkbox). Leave empty and remove the newsletter feature (see README) if
+    // this project doesn't need it.
+    //
+    // The kit only puts addresses on the list; it never sends campaigns. Those are the client's
+    // to run in the provider's own tools, which is the main reason to pick one provider over
+    // another — whichever the client already uses, or would rather learn.
+    'newsletter' => [
+        // 'brevo' or 'mailchimp'. Named explicitly rather than guessed from which credentials are
+        // filled in: this file starts as a copy of this example with every field present but
+        // empty, so inferring it would let a half-finished second provider quietly take over.
+        'provider' => 'brevo',
+
+        // Brevo:     Profile -> SMTP & API -> API Keys (v3). List ID is the number in the URL
+        //            when the list is open, or the ID column in Contacts -> Lists.
+        // Mailchimp: Account -> Extras -> API keys. The key must keep its datacenter suffix
+        //            (abc123def-us21) — the API hostname is built from it. List ID is the
+        //            Audience ID under Audience -> Settings -> Audience name and defaults.
+        'api_key' => '',
+        'list_id' => '',
     ],
 ];

@@ -231,13 +231,13 @@ send_mail(
 
 // —— OPTIONAL: newsletter opt-in checkbox ————————————————————————————————————
 // Only fires if the contact form includes a `newsletter` checkbox (see index.html) and it
-// was checked. Best-effort: a Mailchimp failure here doesn't fail the contact submission
+// was checked. Best-effort: a newsletter-provider failure here doesn't fail the contact submission
 // itself, since the notification/reply emails have already sent successfully by this point.
 // Safe to delete this block (and the checkbox in index.html) if this project has no
 // newsletter, or delete the newsletter feature's other pieces per the README.
 if (!empty($_POST['newsletter'])) {
-    require_once __DIR__ . '/lib/mailchimp.php';
-    $optin = mailchimp_subscribe($config, $data['email'], $strings);
+    require_once __DIR__ . '/lib/newsletter.php';
+    $optin = newsletter_subscribe($config, $data['email'], $strings);
     if (!$optin['success']) {
         error_log('Newsletter opt-in via contact form failed: ' . $optin['message']);
     }

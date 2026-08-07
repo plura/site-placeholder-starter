@@ -1,6 +1,6 @@
 <?php
 // OPTIONAL: only needed if this project uses the mailing-list signup. Safe to delete this
-// file (along with starter/app/lib/mailchimp.php, the mailchimp config block, and the frontend
+// file (along with starter/app/lib/newsletter.php and lib/newsletter/, the newsletter config block, and the frontend
 // pieces listed in the README) if the project doesn't need it.
 declare(strict_types=1);
 
@@ -21,7 +21,7 @@ if (!file_exists(__DIR__ . '/config.php')) {
 }
 $config = require __DIR__ . '/config.php';
 
-require_once __DIR__ . '/lib/mailchimp.php';
+require_once __DIR__ . '/lib/newsletter.php';
 
 // —— Honeypot ————————————————————————————————————————————————————————————————
 if (!empty($_POST['botcheck'])) {
@@ -40,7 +40,7 @@ if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 $email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
-$result = mailchimp_subscribe($config, $email, $strings);
+$result = newsletter_subscribe($config, $email, $strings);
 
 http_response_code($result['success'] ? 200 : 500);
 echo json_encode($result);

@@ -29,10 +29,14 @@ $BASE = [
     'subject_reply'  => '%s — we received your message',
 
     // OPTIONAL: mailing list — remove these four if this project has no newsletter.
-    'mailchimp_not_configured' => 'Subscriptions are not configured correctly.',
-    'subscribe_confirm'        => 'Thanks for subscribing! Check your inbox to confirm.',
-    'already_subscribed'       => 'You are already subscribed.',
-    'generic_error'            => 'Something went wrong. Please try again later.',
+    'newsletter_not_configured' => 'Subscriptions are not configured correctly.',
+    // Deliberately says nothing about confirming by email: Mailchimp always double opt-ins, but
+    // Brevo only does once a DOI template is set up in the account, and this ships defaulting to
+    // Brevo. Add "Check your inbox to confirm." once the project's provider actually sends one —
+    // promising a confirmation that never arrives is worse than not mentioning it.
+    'subscribe_confirm'         => 'Thanks for subscribing.',
+    'already_subscribed'        => 'You are already subscribed.',
+    'generic_error'             => 'Something went wrong. Please try again later.',
     // /OPTIONAL
 ];
 
@@ -50,11 +54,12 @@ $OVERRIDES = [
 
         'subject_reply'  => '%s — recebemos o seu contacto',
 
-        // OPTIONAL: mailing list.
-        'mailchimp_not_configured' => 'A subscrição não está configurada corretamente.',
-        'subscribe_confirm'        => 'Obrigado por subscrever! Verifique o seu email para confirmar a subscrição.',
-        'already_subscribed'       => 'Já está subscrito!',
-        'generic_error'            => 'Ocorreu um erro. Por favor tente novamente mais tarde.',
+        // OPTIONAL: mailing list. See the note on subscribe_confirm in $BASE — this one drops the
+        // confirmation instruction for the same reason.
+        'newsletter_not_configured' => 'A subscrição não está configurada corretamente.',
+        'subscribe_confirm'         => 'Obrigado por subscrever.',
+        'already_subscribed'        => 'Já está subscrito!',
+        'generic_error'             => 'Ocorreu um erro. Por favor tente novamente mais tarde.',
         // /OPTIONAL
     ],
 ];
