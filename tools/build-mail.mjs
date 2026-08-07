@@ -14,9 +14,9 @@
  * fill it in, same pattern as config.example.php -> config.php.
  *
  * mail-templates/ itself is never written to — tokens are replaced in a throwaway temp copy, so
- * the sources stay pristine and every fork recompiles from its own tokens.json rather than
+ * the sources stay pristine and every installation recompiles from its own tokens.json rather than
  * accumulating hand-edits in place, which is what would make future starter updates (copying
- * mail-templates/ wholesale into an already-customized fork) turn into a diff-and-merge exercise.
+ * mail-templates/ wholesale into an already-customized installation) turn into a diff-and-merge exercise.
  *
  * There is no way to preview mail-templates/*.mjml directly, in a browser or in the VS Code MJML
  * extension — the source deliberately has no color/font values, only tokens, so it has nothing

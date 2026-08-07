@@ -1,7 +1,7 @@
 # starter/custom/
 
 The slot the starter sets aside for code it doesn't ship. Nothing in here comes from the starter
-itself — it's empty on a fresh fork, and this file is the only thing in it.
+itself — it's empty on a fresh installation, and this file is the only thing in it.
 
 The point is sorting, not isolation. When a starter update lands you need to know which files to
 compare against the starter and which to ignore outright. `starter/app/` and `starter/assets/`
@@ -35,8 +35,8 @@ Changes to files the starter owns. These stay where they are:
 | Endpoint copy | `starter/app/strings.php` |
 | Removed optional features | Deleted in place, per the main README |
 
-Those are edits and deletions, and no folder catches them. That's what the fork-commit note at
-the top of the project README is for — `git diff <fork-hash>` shows what changed, and this
+Those are edits and deletions, and no folder catches them. That's what the starter-commit note at
+the top of the project README is for — `git diff <starter-hash>` shows what changed, and this
 folder shows what was never the starter's.
 
 ## Wiring it up

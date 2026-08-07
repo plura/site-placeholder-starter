@@ -13,7 +13,7 @@ declare(strict_types=1);
  * point their address is gone.
  *
  * It deliberately does NOT fail when config.php is absent entirely. That's the documented state
- * of a fresh fork, and it fails loudly on its own the moment any endpoint is hit ("Server
+ * of a fresh installation, and it fails loudly on its own the moment any endpoint is hit ("Server
  * configuration error"). The subtle case is a config.php that looks complete because the contact
  * half is filled in and the newsletter half isn't.
  *
@@ -25,7 +25,7 @@ $config = $root . '/starter/app/config.php';
 
 if (!file_exists($config)) {
     echo "No starter/app/config.php yet — nothing to check.\n";
-    echo "(Expected on a fresh fork; copy config.example.php and fill it in before deploying.)\n";
+    echo "(Expected on a fresh installation; copy config.example.php and fill it in before deploying.)\n";
     exit(0);
 }
 

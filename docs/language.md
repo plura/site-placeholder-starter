@@ -14,7 +14,7 @@ conflating them is the mistake to avoid:
 
 A Portuguese client running an English site gets an English page, English auto-replies to
 visitors, and a **Portuguese** notification — because they're the only one reading it. That's
-one template set to their language once at fork time, not a per-request variant.
+one template set to their language once at install time, not a per-request variant.
 
 **`contact/_partials/_fields.mjml` sits on neither axis** — it has no language of its own.
 Every label in it is a `%label_FIELD%` placeholder filled from the submitting form's own

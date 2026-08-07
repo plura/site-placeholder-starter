@@ -14,7 +14,7 @@ invented once.
 1. **Copy this whole repo** as the new client repo (or its `placeholder/` subfolder, if the
    project also has a WordPress `theme/`/`plugin/` per the Plura lean repo structure). Note this
    starter's commit (`git log -1 --format="%H %ad" --date=short`) and record it in the new
-   project's README — see [docs/forks.md](docs/forks.md) for that note's format and what else
+   project's README — see [docs/installations.md](docs/installations.md) for its format and what else
    belongs there.
 2. **Decide the two languages before touching any copy.** They're independent, and getting it
    wrong means redoing work rather than adjusting it. What language does the **site** serve, and
@@ -145,7 +145,7 @@ A `favicon.svg` is a nice-to-have but optional.
 | [mail-templates.md](docs/mail-templates.md) | The compile pipeline, tokens, and the MJML gotchas that cost real debugging time |
 | [touchpoints.md](docs/touchpoints.md) | Every place a client value hides — a social account touches six, the site name twenty-five |
 | [theming.md](docs/theming.md) | The dark/light token architecture and switching precedence |
-| [forks.md](docs/forks.md) | Which projects use this, what their READMEs should say, applying a change, porting one back up to date |
+| [installations.md](docs/installations.md) | Which projects use this, what their READMEs should say, applying a change, porting one back up to date |
 
 ## Conventions
 
@@ -158,7 +158,7 @@ be automated" — it's **"what does the executor need written down."** Which mea
 - **Every instruction names all the files it touches.** Most mistakes here are doing four fifths
   of the right thing.
 - **Anything checkable is checked**, not left to memory.
-- **What can't be checked is mapped** — `touchpoints.md`, the travels-how table in `forks.md`.
+- **What can't be checked is mapped** — `touchpoints.md`, the travels-how table in `installations.md`.
 
 Adding to this repo: if a change touches more than one file, say so **in the inline comment at
 the site of the work** — not only in a doc someone has to know to open.
