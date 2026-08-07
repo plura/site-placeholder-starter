@@ -156,8 +156,10 @@ Work through these questions before starting the "New project checklist" below:
    (`git log -1 --format="%H %ad" --date=short`) and add a line near the top of the new
    project's own README: "Forked from site-placeholder-starter at commit `<hash>` (`<date>`)."
    Cheap now, saves real reconstruction work later if this starter changes and the new project
-   ever wants to check what it might be missing. That note is the lineage record — each fork
-   tracks what it came from, so this repo never has to keep a list of its own descendants.
+   ever wants to check what it might be missing. Then add that project to "Projects built from
+   this" above — the note records where the fork came from, the list records who needs telling
+   when something changes here, and neither substitutes for the other. See "What a project's own
+   README should say" for what else belongs in it, and what deliberately doesn't.
 2. **Decide the two languages before touching any copy** — they're independent, and getting
    this wrong means redoing work rather than adjusting it (see "Language" below):
    - What language does the **site** serve? Sets `$BASE` in `starter/app/strings.php`, `index.html`,
@@ -229,6 +231,30 @@ mail templates simply doesn't apply there, while a change to `base.css`'s token 
 
 Deliberately **not** tracking how current each project is. Existence changes rarely; sync status
 changes constantly, and a stale "caught up as of…" column is worse than no column.
+
+## What a project's own README should say
+
+Record the **decisions**, not the mechanism. A fork's README starts going stale the moment it
+explains how something in here works — this repo changes, that copy doesn't, and nothing tells
+you they've diverged. `plura/site-sandramacieira` is the working example of the shape below.
+
+**Do include:**
+
+- The fork note from step 1 of the checklist, with links **pinned to the ported commit** rather
+  than a branch — branch links move once work merges upstream, so `/tree/<hash>#readme` keeps
+  pointing at the docs that were actually true when the port happened.
+- One line saying how the layout maps (e.g. "the starter's repo root is our `placeholder/`").
+- A **Divergences** section: which optional features were removed, the site/owner language
+  decision and whether Tier 2 is active, what's in `starter/custom/`, any file deliberately
+  deleted rather than left as empty tokens, and any place the project inverts a starter default
+  — with the reason, so the next person doesn't "fix" it back.
+
+**Don't include:** how the language system works, the compile commands, the optional-features
+tree, the mail-template gotchas, or a directory listing of `starter/`. All of that lives here
+and changes here. Link to it.
+
+The test: **would a reader who already knows this starter be surprised?** If not, it doesn't
+belong in the project's README.
 
 ## Bringing a project up to date with the starter
 
