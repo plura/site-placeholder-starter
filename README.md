@@ -9,6 +9,31 @@ Extracted from the Prevention Lab and Buscardini projects after building the sam
 independently in both — the shapes here were converged on twice before being pulled out, not
 invented once. Use it as the base for new projects instead of re-deriving it each time.
 
+## How this repo is written
+
+**This starter has everything by default.** A project is the starter minus what it didn't need,
+which makes this repo the reference for what "complete" looks like — and means most of the work
+in a fork is *subtracting correctly*, then later adding something back.
+
+So the documentation here is written for whoever executes that, agent or human. The useful
+question is never "can this be automated" — much of it can't, because adapting a block to a
+project's own language and branding takes judgement. It's **"what does the executor need written
+down."** Three things follow:
+
+- **Every instruction names its full blast radius.** The `OPTIONAL` markers don't say "delete this
+  block", they list every other file that has to change with it. Most mistakes here aren't doing
+  the wrong thing, they're doing four fifths of the right thing.
+- **Anything mechanically checkable is checked** — `npm run check:pages`, `check:config`, and
+  `build-guard.js` in the mail build. A rule nobody can verify is a rule that quietly rots; these
+  fail loudly instead of relying on someone remembering.
+- **What can't be checked is mapped.** [docs/touchpoints.md](docs/touchpoints.md) lists every place
+  each client value hides — a social account touches six, the site name twenty-five. "Bringing a
+  project up to date" below does the same for porting changes into an existing fork.
+
+When adding to this repo, hold to that: if a change touches more than one file, say so **where
+someone will be standing when they need it** — the inline comment at the site of the work, not
+only in a doc they'd have to know to open.
+
 ## What's genuinely reusable vs. what you must customize
 
 **Copy as-is, rarely needs changes:**
@@ -105,6 +130,11 @@ rest — every optional block is delimited with a matching marker (`<!-- OPTIONA
 comment in PHP/JS, or a whole-file comment for files that are optional in their entirety) so
 removal is a clean, complete delete rather than guesswork about what else goes with it.
 
+Remove each feature in **its own commit**, separate from other customization — that keeps
+`git revert` available if the client changes their mind. Read these instructions backwards to add
+one back, and see [docs/touchpoints.md](docs/touchpoints.md) for what still has to be adapted
+once the structure is in place.
+
 Work through these questions before starting the "New project checklist" below:
 
 1. **Does this project want the contact form (modal)?** This is the starter's core feature —
@@ -185,7 +215,10 @@ Work through these questions before starting the "New project checklist" below:
 4. `starter/assets/css/base.css` — replace the color/font values, keep the variable names.
 5. `index.html` — replace all placeholder text, URLs, JSON-LD fields (fill in `@type`,
    address, phone, socials — don't invent `openingHours`/`geo`/`priceRange` without real
-   verified values), meta tags, favicon `<link>` paths.
+   verified values), meta tags, favicon `<link>` paths. **Work from
+   [docs/touchpoints.md](docs/touchpoints.md)**: none of these values live in one place — the
+   site name alone appears eleven times per page, and the JSON-LD copies render nothing, so
+   they're the ones that get missed.
 6. Add real contact-form fields if needed beyond name/email/phone/message — copy a row+divider
    pair in `mail-templates/contact/_partials/_fields.mjml` and rename both placeholders to the field's
    `name`. No `submit.php` changes, and no label text to keep in sync — the email takes its
