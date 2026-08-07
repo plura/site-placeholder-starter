@@ -226,6 +226,16 @@ see the global CLAUDE.md for the full writeup of both:
 - cPanel Git Version Control + a manually-triggered (`workflow_dispatch`, not `on: push`)
   GitHub Actions deploy, where the host supports it.
 
+**Before the first sync, run `npm run check:config`.** It fails if the markup offers a feature
+`config.php` can't serve — a contact form with no SMTP, or a newsletter signup whose provider or
+credentials are blank. That state is invisible locally, because the page looks finished; it only
+surfaces when a real visitor submits and gets an error, and their address is gone by then. The
+fix is either filling the credentials in or removing the feature from the markup — **never
+shipping the half-configured middle**, which is what the check exists to make impossible.
+
+It's deliberately quiet when `config.php` doesn't exist at all: that's the normal state of a
+fresh fork, and it announces itself the moment any endpoint is hit.
+
 ## Projects built from this
 
 The propagation list. Each project's own README records the commit it forked from, but that

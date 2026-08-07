@@ -3,6 +3,7 @@
 	"private": true,
 	"scripts": {
 		"build:mail": "node tools/build-mail.mjs",
-		"check:pages": "node tools/check-pages.mjs"
+		"check:pages": "node tools/check-pages.mjs",
+		"check:config": "php tools/check-config.php"
 	}
 }
