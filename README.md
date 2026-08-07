@@ -7,369 +7,158 @@ MJML-authored HTML email templates.
 
 Extracted from the Prevention Lab and Buscardini projects after building the same pattern
 independently in both — the shapes here were converged on twice before being pulled out, not
-invented once. Use it as the base for new projects instead of re-deriving it each time.
+invented once.
 
-## How this repo is written
+## Quick start
 
-**This starter has everything by default.** A project is the starter minus what it didn't need,
-which makes this repo the reference for what "complete" looks like — and means most of the work
-in a fork is *subtracting correctly*, then later adding something back.
+1. **Copy this whole repo** as the new client repo (or its `placeholder/` subfolder, if the
+   project also has a WordPress `theme/`/`plugin/` per the Plura lean repo structure). Note this
+   starter's commit (`git log -1 --format="%H %ad" --date=short`) and record it in the new
+   project's README — see [docs/forks.md](docs/forks.md) for that note's format and what else
+   belongs there.
+2. **Decide the two languages before touching any copy.** They're independent, and getting it
+   wrong means redoing work rather than adjusting it. What language does the **site** serve, and
+   what language does the **owner** read? A Portuguese client with an English site is normal —
+   see [docs/language.md](docs/language.md).
+3. **Decide on "Optional features"** below and delete what's not needed.
+4. **`starter/assets/css/base.css`** — replace the color/font values, keep the variable names.
+   Webfonts load via `<link>` in each page's `<head>`, so a typeface change means editing those
+   *and* the two `--site-font-` values.
+5. **`index.html`** — replace all placeholder text, URLs, JSON-LD, meta tags. Work from
+   [docs/touchpoints.md](docs/touchpoints.md): none of these live in one place, and the JSON-LD
+   copies render nothing, so they're the ones that get missed.
+6. **Contact-form fields**, if you need more than name/email/phone/message — copy a row+divider
+   pair in `mail-templates/contact/_partials/_fields.mjml` and rename both placeholders. No
+   `submit.php` change, and no label text to keep in sync.
+7. **`cp mail-templates/tokens.example.json mail-templates/tokens.json`** and fill in the
+   client's real values. See `mail-templates/_tokens.json` for the full list and rules.
+8. **`npm install && npm run build:mail`**, then `cp starter/app/config.example.php
+   starter/app/config.php` and fill in SMTP credentials (and the `newsletter` block, if keeping
+   a mailing list).
+9. **Generate favicons** and `starter/assets/images/og.png` — see [Favicon spec](#favicon-spec).
+10. **`cp .vscode/sftp.json.example .vscode/sftp.json`**, fill in host/credentials.
+11. **Update `robots.txt` / `sitemap.xml` / `site.webmanifest`** with the real domain.
 
-So the documentation here is written for whoever executes that, agent or human. The useful
-question is never "can this be automated" — much of it can't, because adapting a block to a
-project's own language and branding takes judgement. It's **"what does the executor need written
-down."** Three things follow:
+## Structure
 
-- **Every instruction names its full blast radius.** The `OPTIONAL` markers don't say "delete this
-  block", they list every other file that has to change with it. Most mistakes here aren't doing
-  the wrong thing, they're doing four fifths of the right thing.
-- **Anything mechanically checkable is checked** — `npm run check:pages`, `check:config`, and
-  `build-guard.js` in the mail build. A rule nobody can verify is a rule that quietly rots; these
-  fail loudly instead of relying on someone remembering.
-- **What can't be checked is mapped.** [docs/touchpoints.md](docs/touchpoints.md) lists every place
-  each client value hides — a social account touches six, the site name twenty-five. "Bringing a
-  project up to date" below does the same for porting changes into an existing fork.
+```
+index.html              the page
+pt/index.html           second language — ships built but inactive
+starter/                everything the browser loads
+  app/                  PHP endpoints, templates, config
+  assets/               css, js, icons, favicons
+  custom/               project-specific code; never the starter's
+mail-templates/         MJML source (not deployed)
+tools/                  build + checks (not deployed)
+docs/                   the rest of this documentation
+```
 
-When adding to this repo, hold to that: if a change touches more than one file, say so **where
-someone will be standing when they need it** — the inline comment at the site of the work, not
-only in a doc they'd have to know to open.
+`starter/` is wrapped so the placeholder can share a webroot with something else — the real site
+under development, a staging copy — without either claiming `assets/` or `app/`.
 
-## What's genuinely reusable vs. what you must customize
+**Copy as-is:** `starter/app/submit.php` (field-agnostic — it loops raw POST with no hardcoded
+field list, and takes labels from the form's own `<label>` elements), `starter/app/lib/phpmailer/`,
+and the MJML structural patterns in `mail-templates/_partials/`.
 
-**Copy as-is, rarely needs changes:**
-- `starter/app/submit.php` — field-agnostic: it loops raw POST data with no hardcoded field list,
-  and reads human-readable labels from a `labels` JSON field the frontend builds live from
-  the form's own `<label for="...">` elements (see `starter/assets/js/modal.js`). Adding a field to
-  the contact form (e.g. a company name) requires zero changes here. The one exception is
-  `newsletter` — a reserved field name for the optional mailing-list opt-in checkbox (see
-  "Optional features" below), which is deliberately excluded from the generic loop.
-- `starter/app/lib/phpmailer/` — vendored PHPMailer, never modified.
-- The MJML **structural** patterns in `mail-templates/_partials/` — the responsive
-  side-by-side/stacked field grid, the card's border/radius construction, the full-bleed frame
-  background. See "Mail template gotchas" in [docs/mail-templates.md](docs/mail-templates.md)
-  before changing these.
-
-**Must customize per project:**
-- `starter/assets/css/base.css` — brand colors, fonts, spacing scale (all under one `:root` block,
-  everything else in `layout.css`/`components.css` references these variables by name). Colors
-  are dark/light-theme-reactive — see "Dark/light mode" below before editing them. The
-  webfonts themselves load via `<link>` tags in each page's `<head>`, so changing typeface
-  means editing those *and* the two `--site-font-` values here.
-- `index.html` — logo/wordmark, copy, contact details, JSON-LD business info, meta tags,
-  contact form fields beyond the universal name/email/phone/message.
-- `mail-templates/_tokens.json` — every `{{CLIENT_*}}`/`{{BRAND_*}}` build-time token used across
-  `mail-templates/`, with defaults and notes. Brand colors for the email are kept intentionally
-  separate from the website's own CSS variables — see below.
-- `starter/app/config.example.php` → `config.php` — SMTP credentials, `site_name` for email subjects.
-- Favicons (`starter/assets/favicons/`) and `starter/assets/images/og.png` — not included; see the spec below.
-- Bespoke entrance animations / canvas backgrounds, if wanted — these are genuinely
-  per-client art direction, not part of this starter. They go in `starter/custom/`, wired up from
-  `starter/assets/js/main.js`; see `starter/custom/README.md` for the convention and, more importantly, for
-  what does *not* belong there.
-
-## Mail templates
-
-The MJML email templates have their own color/font tokens, deliberately separate from the
-website's own CSS, and their own compile step (`npm run build:mail`). Two things worth knowing
-before touching `mail-templates/`, both covered in **[docs/mail-templates.md](docs/mail-templates.md)**:
-
-- **Colors and fonts don't follow the website's.** Light-background email cards read more
-  reliably than dark ones across mail clients that mangle dark-mode email, so the email keeps
-  its own, usually lighter, palette and web-safe font stacks regardless of the site's theme.
-- **A handful of MJML quirks cost real debugging time if you don't know them going in** —
-  `mj-class` vs `css-class`, `mj-wrapper`'s one-wrapper-per-page limit, a token/HTML-comment
-  collision that fools `build-guard.js`, and more.
-
-`docs/mail-templates.md` has the full picture: the color/font rationale, the complete compile
-pipeline (`tools/build-mail.mjs`, `tokens.json` vs `tokens.example.json`, `build-guard.js`), and
-every MJML gotcha found so far.
-
-## Dark/light mode
-
-The site follows the visitor's OS/browser preference (`prefers-color-scheme`) by default, with
-a manual toggle (top-right corner, `#theme-toggle` / `starter/assets/js/theme.js`) that overrides it and
-persists the choice in `localStorage`. The contact modal re-themes too (a dark card in dark
-mode), not just the page canvas — it doesn't stay fixed-light the way the email templates
-deliberately do (see above); the website's modal is fully within our own CSS, so there's no
-equivalent mail-client-dark-mode-mangling constraint forcing it to stay light-only.
-
-- **Two independent color axes** in `starter/assets/css/base.css`: **page** tokens (`--site-bg`,
-  `--site-fg`, `--site-muted`, `--site-border`) style the canvas; **surface** tokens
-  (`--site-surface`, `--site-surface-fg`, `--site-surface-muted`, `--site-surface-label`) style
-  the modal card. Kept separate because the modal doesn't always reuse the page's exact
-  background/foreground pairing — e.g. `.btn-submit` deliberately inverts the surface tokens
-  for its own fill/text, independent of what the page tokens are doing. `--site-color-accent`
-  and `--site-danger` are shared constants, not split per axis.
-- Each token has raw `--dark-*`/`--light-*` hex values defined once near the top of `:root`;
-  `--site-*` then resolves to whichever set is active. **When doing BRAND CUSTOMIZATION, edit
-  the raw `--dark-*`/`--light-*` values, not the `--site-*` lines** — the `--site-*` lines are
-  the switching mechanism itself, not the palette.
-- Switching precedence: an explicit `[data-theme="light"]`/`[data-theme="dark"]` attribute on
-  `<html>` (set by the toggle) always wins; otherwise `@media (prefers-color-scheme: light)`
-  applies the light palette; the unconditional `:root` default (no query needed) is dark.
-- An early inline `<script>` in `index.html`'s `<head>` applies a stored `localStorage`
-  override (if any) and updates the `theme-color` `<meta>` tag before first paint, to avoid a
-  flash of the wrong theme. It must stay a plain synchronous script (no `defer`/`type="module"`)
-  and must come *after* the `theme-color` meta tag in document order, since it looks that tag up
-  by selector — moving it earlier silently breaks the meta-tag update (not the theme itself).
-- The `<select>` arrow icon (`.form-group select`'s `background-image`) is a literal data-URI
-  SVG, which can't reference CSS custom properties — its dark/light variants are spelled out as
-  separate rules instead of tokenized. Doesn't matter unless a project actually adds a
-  `<select>` to the contact form (none does by default).
-- **Both the mode and the toggle are optional, independently of each other** — see "Optional
-  features" below. Every block involved is marked `OPTIONAL (1/2)` (dark/light mode itself —
-  auto-follows the OS/browser preference, no JS) or `OPTIONAL (2/2)` (the manual toggle layered
-  on top of it). Keeping (1/2) without (2/2) is a valid, smaller combination (auto-only, no
-  override button); removing both means a single (dark) theme.
+**Always customize:** `base.css` tokens, `index.html`, `tokens.json`, `config.php`, favicons.
+Bespoke animations go in `starter/custom/` — see `starter/custom/README.md`.
 
 ## Optional features
 
-Everything ships "on" by default. Decide per project what's actually needed, then delete the
-rest — every optional block is delimited with a matching marker (`<!-- OPTIONAL: ... -->` /
-`<!-- /OPTIONAL -->` in HTML, `/* OPTIONAL: ... */` / `/* /OPTIONAL */` in CSS, a `// OPTIONAL:`
-comment in PHP/JS, or a whole-file comment for files that are optional in their entirety) so
-removal is a clean, complete delete rather than guesswork about what else goes with it.
+Everything ships on by default. Delete what's not needed — every optional block is delimited
+with matching `OPTIONAL` markers (in HTML, CSS, PHP and JS) listing every other file that goes
+with it, so removal is a complete delete rather than guesswork.
 
-Remove each feature in **its own commit**, separate from other customization — that keeps
-`git revert` available if the client changes their mind. Read these instructions backwards to add
-one back, and see [docs/touchpoints.md](docs/touchpoints.md) for what still has to be adapted
-once the structure is in place.
+Remove each feature in **its own commit**, separate from other customization, so `git revert`
+stays available if the client changes their mind. Read the instructions backwards to add one
+back, and see [docs/touchpoints.md](docs/touchpoints.md) for what still needs adapting.
 
-Work through these questions before starting the "New project checklist" below:
+1. **Contact form (modal)?** The core feature — assumed present. To remove: `#contact-dialog` in
+   `index.html`, `starter/assets/js/modal.js` + its import, `starter/app/submit.php`, and the
+   `mail-templates/contact/` + `starter/app/templates/contact*.html` pair. `post.js` is shared
+   with the newsletter form — delete it only if that's going too.
+2. **Which fields?** Name + Email are the only two `submit.php` requires.
+3. **Mailing-list opt-in checkbox on the contact form?** To remove: the marked block in
+   `index.html`'s `#contact-form` and the marked block near the end of `submit.php`.
+4. **Standalone mailing-list signup?** A separate inline single-field section — lower friction
+   than a checkbox buried in a longer form. To remove: the marked `.newsletter` block in
+   `index.html`, its styles in `components.css`, `newsletter.js` + its import.
+5. **Keeping either mailing list?** Both go through `newsletter_subscribe()` in
+   `starter/app/lib/newsletter.php`, which dispatches to `config.php`'s `newsletter.provider` —
+   `brevo` or `mailchimp`, implemented in `lib/newsletter/`. The kit only *adds addresses*; it
+   never sends campaigns, so pick whichever provider the client already uses. Brevo is the
+   default, being EU-hosted.
 
-1. **Does this project want the contact form (modal)?** This is the starter's core feature —
-   assumed present. If not needed at all, remove `#contact-dialog` from `index.html`,
-   `starter/assets/js/modal.js` (and its import in `main.js`), `starter/app/submit.php`, and the
-   `mail-templates/contact/` + `starter/app/templates/contact*.html` pair. `starter/assets/js/post.js` is
-   shared with the newsletter form — delete it only if that's going too.
-2. **If yes — which fields?** Name + Email are the only two `submit.php` actually requires;
-   Phone and Message are optional by default (see step 4 below for adding/removing rows).
-3. **Does this project want the mailing-list opt-in checkbox on the contact form?** An
-   optional checkbox (`name="newsletter"`) that, when checked, also subscribes the submitter
-   to the mailing list on successful contact submission. To remove: delete the marked block in
-   `index.html`'s `#contact-form` and the marked block near the end of `starter/app/submit.php`.
-4. **Does this project want the standalone mailing-list signup?** A separate, inline (not
-   modal) single-email-field section on the page — lower friction than a checkbox buried in
-   a longer form, for a passive "leave your email" ask. Same pattern used on the Buscardini
-   site. To remove: delete the marked `.newsletter` block in `index.html`, its styles in
-   `components.css`, `starter/assets/js/newsletter.js` and its import in `main.js`. `starter/assets/js/post.js`
-   stays as long as the contact form does.
-5. **If keeping either mailing-list feature**, both go through `newsletter_subscribe()` in
-   `starter/app/lib/newsletter.php`, which dispatches to the provider named in `config.php`'s
-   `newsletter.provider` — **`brevo`** or **`mailchimp`**, implemented in `lib/newsletter/`.
-   Fill in `newsletter.api_key` / `newsletter.list_id` too.
+   **Double opt-in differs between them** and the shipped copy assumes it doesn't happen — see
+   the note in `lib/newsletter/brevo.php` before changing `subscribe_confirm`.
 
-   The kit only *adds addresses to the list*; it never sends campaigns. Those are the client's
-   to run in the provider's own tools, so the deciding factor is usually whichever provider the
-   client already uses. Brevo is the default: EU-hosted, which is an easier conversation for a
-   client in a regulated sector than a US-based processor.
+   If neither survives: delete `subscribe.php`, `lib/newsletter.php`, `lib/newsletter/`, and the
+   `newsletter` config block.
+6. **Dark/light mode?** Two independently removable tiers — `OPTIONAL (1/2)` is the mode itself
+   (no JS), `OPTIONAL (2/2)` the manual toggle on top. Keep both, keep only (1/2), or remove
+   both for a single dark theme. See [docs/theming.md](docs/theming.md).
+7. **A second language?** Ships **built but inactive** — `pt/` exists and works, but it's
+   `noindex` and nothing links to it, so a single-language project can ignore it. Unlike the
+   others, forgetting this one is harmless, which is why it isn't on by default. See
+   [docs/language.md](docs/language.md).
 
-   **Double opt-in differs and the shipped copy assumes it doesn't happen.** Mailchimp always
-   double opt-ins (`status: 'pending'`, it sends its own confirmation email). Brevo only does
-   once a DOI template is configured in the account — the API call here doesn't trigger one. So
-   `subscribe_confirm` in `strings.php` deliberately says just "Thanks for subscribing."; add
-   the "check your inbox" line only once the project's provider actually sends a confirmation.
+## Deploying
 
-   If neither mailing-list feature survives step 3/4, also delete `starter/app/subscribe.php`,
-   `starter/app/lib/newsletter.php`, the whole `starter/app/lib/newsletter/` folder, and the
-   `newsletter` block in `config.example.php`/`config.php`. Adding a third provider is one file
-   in `lib/newsletter/` plus one `case` in the dispatcher — nothing else changes.
-6. **Does this project want dark/light mode at all?** See "Dark/light mode" above for the full
-   mechanism. Two independently removable tiers, marked `OPTIONAL (1/2)` and `OPTIONAL (2/2)`:
-   - Keep both for the default: auto-follows the OS/browser preference, with a manual toggle
-     button that overrides it and persists the choice.
-   - Keep only `OPTIONAL (1/2)` (delete every `OPTIONAL (2/2)` block, `#theme-toggle` in
-     `index.html`, and `starter/assets/js/theme.js` + its import) for auto-only — no toggle button, no
-     JS at all, purely `prefers-color-scheme`-driven.
-   - Delete both tiers entirely for a single (dark) theme — `--site-*` already resolves to
-     `--dark-*` unconditionally, so nothing else needs to change once the switching blocks are
-     gone.
-7. **Does this project want a second language?** Ships **built but inactive** — `pt/` exists as
-   a working Portuguese page, but it's `noindex` and nothing links to or declares it, so a
-   single-language project can simply ignore it. Unlike the other optional features, forgetting
-   this one is harmless rather than harmful, which is why it isn't on by default. See "The
-   second language" under "Language" below for the activation checklist, the removal steps if
-   you're sure, and the separate procedure for making Portuguese the default rather than English.
+Two patterns, depending on the host — see the global CLAUDE.md for both:
 
-## New project checklist
+- Plain SFTP/FTPS sync (most shared hosts).
+- cPanel Git Version Control + a manually-triggered GitHub Actions deploy (`workflow_dispatch`,
+  not `on: push`), where supported.
 
-1. Copy this whole repo as the starting point for the new client repo (or its `placeholder/`
-   subfolder, if the target project also has a WordPress `theme/`/`plugin/` per the Plura
-   lean repo structure). Before copying, note this starter's current commit
-   (`git log -1 --format="%H %ad" --date=short`) and add a line near the top of the new
-   project's own README: "Forked from site-placeholder-starter at commit `<hash>` (`<date>`)."
-   Cheap now, saves real reconstruction work later if this starter changes and the new project
-   ever wants to check what it might be missing. Then add that project to "Projects built from
-   this" above — the note records where the fork came from, the list records who needs telling
-   when something changes here, and neither substitutes for the other. See "What a project's own
-   README should say" for what else belongs in it, and what deliberately doesn't.
-2. **Decide the two languages before touching any copy** — they're independent, and getting
-   this wrong means redoing work rather than adjusting it (see "Language" below):
-   - What language does the **site** serve? Sets `$BASE` in `starter/app/strings.php`, `index.html`,
-     and — if a second language is kept — whether Tier 2's directory is `pt/` or `en/`.
-   - What language does the **owner** read? Sets `$OWNER` in `starter/app/strings.php`, the
-     chrome strings in `contact.mjml`, and the `form_type` hidden field's value in **both**
-     `index.html` and `pt/index.html` (same value in both — see "Portuguese notification copy"
-     in [docs/language.md](docs/language.md)). A Portuguese client with an English site is normal.
-3. Decide on "Optional features" above and delete what's not needed.
-4. `starter/assets/css/base.css` — replace the color/font values, keep the variable names.
-5. `index.html` — replace all placeholder text, URLs, JSON-LD fields (fill in `@type`,
-   address, phone, socials — don't invent `openingHours`/`geo`/`priceRange` without real
-   verified values), meta tags, favicon `<link>` paths. **Work from
-   [docs/touchpoints.md](docs/touchpoints.md)**: none of these values live in one place — the
-   site name alone appears eleven times per page, and the JSON-LD copies render nothing, so
-   they're the ones that get missed.
-6. Add real contact-form fields if needed beyond name/email/phone/message — copy a row+divider
-   pair in `mail-templates/contact/_partials/_fields.mjml` and rename both placeholders to the field's
-   `name`. No `submit.php` changes, and no label text to keep in sync — the email takes its
-   labels from the form's own `<label>` elements.
-7. `cp mail-templates/tokens.example.json mail-templates/tokens.json` (gitignored, same pattern
-   as `config.example.php` → `config.php`) and fill in the client's real `{{CLIENT_*}}`/
-   `{{BRAND_*}}` values — see `mail-templates/_tokens.json` for the full list, defaults, and
-   rules (contrast floors, the derived `CLIENT_PHONE_RAW`). Swap the header wordmark
-   (`_header.mjml`) for a real `<mj-image>` once a public-facing logo PNG exists (never point it
-   at `starter/app/templates/` — that's `.htaccess`-locked and unreachable by email clients; put
-   it under `starter/assets/images/mail/`).
-8. `npm install`, then `npm run build:mail` — replaces the tokens, compiles the MJML, and runs
-   `build-guard.js`, all in one step (see [docs/mail-templates.md](docs/mail-templates.md)). Then
-   `cp starter/app/config.example.php starter/app/config.php` and fill in real SMTP credentials
-   (and the `newsletter` provider/keys, if keeping either mailing-list feature).
-9. Generate favicons and `starter/assets/images/og.png` — see specs below.
-10. Copy `.vscode/sftp.json.example` → `sftp.json`, fill in real host/credentials.
-11. Update `robots.txt` / `sitemap.xml` / `site.webmanifest` with the real domain.
+**Before the first sync, run `npm run check:config`.** It fails if the markup offers a feature
+`config.php` can't serve — a contact form with no SMTP, a newsletter signup with no credentials.
+
+That state looks fine locally. It surfaces when a real visitor submits and their address is
+already gone. Fill the credentials in, or remove the feature. Never ship the middle.
 
 ## Favicon spec
 
-Design as just the icon/mark alone (not a full wordmark — illegible at 16–32px). Needed:
+Design as the icon/mark alone — a full wordmark is illegible at 16–32px.
 
 | File | Size | Notes |
 |---|---|---|
 | `starter/assets/favicons/favicon-96x96.png` | 96×96 | transparent OK |
-| `starter/assets/favicons/apple-touch-icon.png` | 180×180 | **solid background, no transparency, no pre-rounded corners** — iOS rounds it automatically |
+| `starter/assets/favicons/apple-touch-icon.png` | 180×180 | **solid background, no transparency, no pre-rounded corners** — iOS rounds it |
 | `starter/assets/favicons/favicon-192.png` | 192×192 | Android/PWA |
 | `starter/assets/favicons/favicon-512.png` | 512×512 | Android/PWA |
 
-A `favicon.svg` is a nice-to-have (crisp at any size in supporting browsers) but optional.
+A `favicon.svg` is a nice-to-have but optional.
 
-## Deploying
+## Commands
 
-Two patterns already in use across Plura projects, depending on what the host supports —
-see the global CLAUDE.md for the full writeup of both:
-- Plain SFTP/FTPS sync (most shared hosts).
-- cPanel Git Version Control + a manually-triggered (`workflow_dispatch`, not `on: push`)
-  GitHub Actions deploy, where the host supports it.
+| | |
+|---|---|
+| `npm run build:mail` | Replace tokens, compile MJML, guard against unreplaced ones. `-- --watch` to rebuild on save |
+| `npm run check:pages` | Structural drift between `index.html` and each language page |
+| `npm run check:config` | Markup offers nothing `config.php` can't serve |
 
-**Before the first sync, run `npm run check:config`.** It fails if the markup offers a feature
-`config.php` can't serve — a contact form with no SMTP, or a newsletter signup whose provider or
-credentials are blank. That state is invisible locally, because the page looks finished; it only
-surfaces when a real visitor submits and gets an error, and their address is gone by then. The
-fix is either filling the credentials in or removing the feature from the markup — **never
-shipping the half-configured middle**, which is what the check exists to make impossible.
+## Docs
 
-It's deliberately quiet when `config.php` doesn't exist at all: that's the normal state of a
-fresh fork, and it announces itself the moment any endpoint is hit.
+| | |
+|---|---|
+| [language.md](docs/language.md) | Where copy lives, the site/owner language split, activating or removing the second language |
+| [mail-templates.md](docs/mail-templates.md) | The compile pipeline, tokens, and the MJML gotchas that cost real debugging time |
+| [touchpoints.md](docs/touchpoints.md) | Every place a client value hides — a social account touches six, the site name twenty-five |
+| [theming.md](docs/theming.md) | The dark/light token architecture and switching precedence |
+| [forks.md](docs/forks.md) | Which projects use this, what their READMEs should say, applying a change, porting one back up to date |
 
-## Projects built from this
+## Conventions
 
-The propagation list. Each project's own README records the commit it forked from, but that
-answers "where did this come from" — not "who needs this change", which is the direction that
-matters when something lands here.
+**This starter has everything by default.** A project is the starter minus what it didn't need.
+So this repo is the reference for what "complete" looks like.
 
-| Project | Repo | Uses |
-| --- | --- | --- |
-| Sandra Macieira | [site-sandramacieira](https://github.com/plura/site-sandramacieira) | Full — pages, PHP endpoints, mail templates, both languages |
-| Prevention Lab | [site-preventionlab](https://github.com/plura/site-preventionlab) | Full |
-| Cristina Mesquita | [site-cristinamesquita](https://github.com/plura/site-cristinamesquita) | Conventions only — the CSS token architecture and layout structure, no PHP layer |
-| Buscardini | [site-buscardini](https://github.com/plura/site-buscardini) | Not yet — predates this starter (`process/`, `mail-template/`); planned migration |
+Docs here are written for whoever does that work, agent or human. The question isn't "can this
+be automated" — it's **"what does the executor need written down."** Which means:
 
-"Conventions only" matters when deciding what to propagate: a change to `strings.php` or the
-mail templates simply doesn't apply there, while a change to `base.css`'s token structure does.
+- **Every instruction names all the files it touches.** Most mistakes here are doing four fifths
+  of the right thing.
+- **Anything checkable is checked**, not left to memory.
+- **What can't be checked is mapped** — `touchpoints.md`, the travels-how table in `forks.md`.
 
-Deliberately **not** tracking how current each project is. Existence changes rarely; sync status
-changes constantly, and a stale "caught up as of…" column is worse than no column.
-
-## What a project's own README should say
-
-Record the **decisions**, not the mechanism. A fork's README starts going stale the moment it
-explains how something in here works — this repo changes, that copy doesn't, and nothing tells
-you they've diverged. `plura/site-sandramacieira` is the working example of the shape below.
-
-**Do include:**
-
-- The fork note from step 1 of the checklist, with links **pinned to the ported commit** rather
-  than a branch — branch links move once work merges upstream, so `/tree/<hash>#readme` keeps
-  pointing at the docs that were actually true when the port happened.
-- One line saying how the layout maps (e.g. "the starter's repo root is our `placeholder/`").
-- A **Divergences** section: which optional features were removed, the site/owner language
-  decision and whether Tier 2 is active, what's in `starter/custom/`, any file deliberately
-  deleted rather than left as empty tokens, and any place the project inverts a starter default
-  — with the reason, so the next person doesn't "fix" it back.
-
-**Don't include:** how the language system works, the compile commands, the optional-features
-tree, the mail-template gotchas, or a directory listing of `starter/`. All of that lives here
-and changes here. Link to it.
-
-The test: **would a reader who already knows this starter be surprised?** If not, it doesn't
-belong in the project's README.
-
-## "Update this installation accordingly"
-
-The procedure to follow when a project reports a change — a social account added, credentials
-filled in, a removed feature wanted back. Written so the prompt can stay one line.
-
-1. **Find every place it touches** — [docs/touchpoints.md](docs/touchpoints.md). Several render
-   nothing (the JSON-LD `sameAs` arrays) and some aren't greppable (a separator that goes with its
-   link, an icon SVG whose filename has to match).
-2. **Take structure from here, not content.** This starter has everything by default, so anything
-   the project removed comes back from it — but adapt language, copy, brand tokens and `data-*`
-   strings to the project. Never paste this repo's versions in.
-3. **Mirror across every language page.**
-4. **Run the checks:** `npm run build:mail` if `mail-templates/` changed, then `npm run
-   check:pages` and `php tools/check-config.php`.
-5. **Update the project README's Divergences** if this changed what's listed there.
-
-## Bringing a project up to date with the starter
-
-There is no update mechanism — a fork is a fork. Bringing one level again is a manual pass, and
-what that costs depends entirely on which file you're looking at. Measured against a real fork
-rather than guessed:
-
-| | Travels how | Why |
-| --- | --- | --- |
-| `starter/app/*.php`, `starter/app/lib/` | **Copy wholesale** | Projects diverge here by comments only (stripped `OPTIONAL` markers), never logic |
-| `starter/assets/js/*.js` | **Copy, then re-check** | Usually identical; the exceptions are brand values in `theme.js` and added imports in `main.js` |
-| `starter/assets/css/*.css` | **Merge by hand** | Brand tokens and stripped comments are interleaved through it |
-| `index.html`, `pt/index.html` | **Merge by hand** | Copy, logo markup and JSON-LD are the project's; only structural changes travel |
-| `robots.txt`, `sitemap.xml`, `site.webmanifest` | **Never** | Real domain and name — copying these back breaks the live site |
-| `starter/app/config.php`, `starter/app/strings.php` | **Never** | Credentials and project copy |
-| `starter/custom/**` | **Never** | Not the starter's, by definition |
-
-Start from the fork-commit note at the top of the project's own README (step 1 of the checklist
-above) — `git log <hash>..HEAD` in this repo lists exactly what the project is missing, which is
-faster than diffing files and guessing what was deliberate.
-
-The reason this stays a manual pass: making `starter/assets/` mechanically replaceable would mean
-brand values moving to an override file *and* projects no longer stripping the `OPTIONAL`
-comments they've acted on. That's a rewrite of how this starter is organized, to save a couple
-of easy merges a year. Not worth it at this scale — revisit if the number of live forks grows
-by an order of magnitude.
-
-
-## Language
-
-The starter ships in English, with a second language (Portuguese at `/pt/`) built but
-**inactive** — it exists as a working page, but nothing links to or declares it and it's
-`noindex`, so a single-language project can ignore it entirely.
-
-Two things worth knowing before you touch any copy, both covered in **[docs/language.md](docs/language.md)**:
-
-- **The site's language and the owner's language are separate axes.** A Portuguese client
-  running an English site gets English pages, English auto-replies, and a *Portuguese*
-  notification email — because they're the only one reading it.
-- **There is no JS dictionary.** Page copy lives in the markup, endpoint copy in
-  `starter/app/strings.php`. Each language is its own HTML file, so a page already is its
-  language.
-
-`docs/language.md` has the full picture: where every string lives, how to change the site's
-language, how to activate or remove the second one, how to swap which language is the default,
-and the drift check that keeps the two pages structurally aligned.
+Adding to this repo: if a change touches more than one file, say so **in the inline comment at
+the site of the work** — not only in a doc someone has to know to open.
