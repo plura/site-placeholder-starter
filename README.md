@@ -312,6 +312,22 @@ and changes here. Link to it.
 The test: **would a reader who already knows this starter be surprised?** If not, it doesn't
 belong in the project's README.
 
+## "Update this installation accordingly"
+
+The procedure to follow when a project reports a change — a social account added, credentials
+filled in, a removed feature wanted back. Written so the prompt can stay one line.
+
+1. **Find every place it touches** — [docs/touchpoints.md](docs/touchpoints.md). Several render
+   nothing (the JSON-LD `sameAs` arrays) and some aren't greppable (a separator that goes with its
+   link, an icon SVG whose filename has to match).
+2. **Take structure from here, not content.** This starter has everything by default, so anything
+   the project removed comes back from it — but adapt language, copy, brand tokens and `data-*`
+   strings to the project. Never paste this repo's versions in.
+3. **Mirror across every language page.**
+4. **Run the checks:** `npm run build:mail` if `mail-templates/` changed, then `npm run
+   check:pages` and `php tools/check-config.php`.
+5. **Update the project README's Divergences** if this changed what's listed there.
+
 ## Bringing a project up to date with the starter
 
 There is no update mechanism — a fork is a fork. Bringing one level again is a manual pass, and
