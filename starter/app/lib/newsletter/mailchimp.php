@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 /**
  * Adds an email to a Mailchimp audience via the Marketing API. Reached through
- * newsletter_subscribe() in lib/newsletter.php, never called directly.
+ * newsletter_subscribe() in lib/newsletter.php, never called directly — the credentials,
+ * transport and failure logging all live there.
  *
  * Double opt-in comes free here: posting status 'pending' makes Mailchimp send its own
  * confirmation email, so the address isn't on the list until the visitor clicks through. Brevo
@@ -17,8 +18,7 @@ declare(strict_types=1);
  */
 function mailchimp_subscribe(array $config, string $email, array $strings): array
 {
-    $apiKey = $config['newsletter']['api_key'] ?? '';
-    $listId = $config['newsletter']['list_id'] ?? '';
+    [$apiKey, $listId] = newsletter_credentials($config);
 
     // The datacenter suffix isn't cosmetic — the API hostname is built from it below, so a key
     // pasted without it can't produce a valid URL at all.
@@ -27,45 +27,29 @@ function mailchimp_subscribe(array $config, string $email, array $strings): arra
     }
 
     [, $dataCenter] = explode('-', $apiKey);
-    $url = "https://{$dataCenter}.api.mailchimp.com/3.0/lists/{$listId}/members";
 
-    $payload = json_encode([
-        'email_address' => $email,
-        'status'        => 'pending',
-    ]);
+    $result = newsletter_post(
+        "https://{$dataCenter}.api.mailchimp.com/3.0/lists/{$listId}/members",
+        ['Authorization: Basic ' . base64_encode('anystring:' . $apiKey)],
+        [
+            'email_address' => $email,
+            // Double opt-in: Mailchimp emails the visitor and only adds them once they confirm.
+            'status' => 'pending',
+        ]
+    );
 
-    $ch = curl_init($url);
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => $payload,
-        CURLOPT_HTTPHEADER     => [
-            'Content-Type: application/json',
-            'Authorization: Basic ' . base64_encode('anystring:' . $apiKey),
-        ],
-        CURLOPT_TIMEOUT => 10,
-    ]);
-
-    $response   = curl_exec($ch);
-    $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $curlError  = curl_error($ch);
-
-    if ($response === false) {
-        error_log('Mailchimp subscribe cURL error: ' . $curlError);
-        return ['success' => false, 'message' => $strings['generic_error']];
+    if ($result['failed']) {
+        return newsletter_failure('Mailchimp', 'cURL error: ' . $result['error'], $strings);
     }
 
-    if ($statusCode >= 200 && $statusCode < 300) {
+    if ($result['ok']) {
         return ['success' => true, 'message' => $strings['subscribe_confirm']];
     }
 
-    $data = json_decode($response, true);
-
     // Mailchimp returns 400 with this title if the address is already on the list.
-    if (($data['title'] ?? '') === 'Member Exists') {
+    if (($result['data']['title'] ?? '') === 'Member Exists') {
         return ['success' => true, 'message' => $strings['already_subscribed']];
     }
 
-    error_log('Mailchimp subscribe error: ' . $response);
-    return ['success' => false, 'message' => $data['detail'] ?? $strings['generic_error']];
+    return newsletter_failure('Mailchimp', $result['body'], $strings);
 }
