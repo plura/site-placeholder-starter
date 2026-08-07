@@ -24,8 +24,8 @@
 				<mj-include path="_partials/_kicker.mjml" />
 				<mj-text mj-class="heading" padding="0">Mensagem recebida</mj-text>
 				<mj-text mj-class="intro-text" padding="16px 0 0">
-					Obrigado, <strong>%name%</strong>. Ter&aacute; uma resposta assim que poss&iacute;vel.
-					Abaixo fica uma c&oacute;pia do que enviou.
+					Obrigado, <strong>%name%</strong>. Receber&aacute; resposta em breve. C&oacute;pia
+					da mensagem abaixo.
 				</mj-text>
 			</mj-column>
 		</mj-section>

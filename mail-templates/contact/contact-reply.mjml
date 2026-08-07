@@ -19,18 +19,18 @@
 			Copy stays person-neutral: this starter ships to businesses, collectives and
 			one-person studios alike, so no "we" and no "I" — write from the reader's side
 			("Message received" / "you'll hear back"), not the sender's. No em dashes.
+
+			Kept short (even with a typical name filled in) so it wraps evenly across two lines at
+			this width without needing a forced break or a non-breaking space to protect the end
+			of the sentence — short enough that an unlucky wrap point is unlikely to matter.
 		-->
 		<mj-section mj-class="card-body" css-class="card-body" padding="34px 38px 28px">
 			<mj-column>
-				<!-- No form-type field in this kicker, unlike contact.mjml's: its value is
-				     fixed in the OWNER's language (see the hidden field's comment in
-				     index.html), so showing it to the visitor would mix a stray owner-language
-				     word into what's otherwise entirely their own. -->
 				<mj-include path="_partials/_kicker.mjml" />
 				<mj-text mj-class="heading" padding="0">Message received</mj-text>
 				<mj-text mj-class="intro-text" padding="16px 0 0">
-					Thanks, <strong>%name%</strong>. You&rsquo;ll hear back as soon as possible.
-					Below is a copy of what you sent.
+					Thanks, <strong>%name%</strong>. You&rsquo;ll hear back soon. A copy of your
+					message follows.
 				</mj-text>
 			</mj-column>
 		</mj-section>
