@@ -1,4 +1,4 @@
-app/config.php
+starter/app/config.php
 mail-templates/tokens.json
 .vscode/sftp.json
 node_modules/

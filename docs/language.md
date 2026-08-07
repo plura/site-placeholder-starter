@@ -10,16 +10,21 @@ conflating them is the mistake to avoid:
 | | Follows | Files |
 | --- | --- | --- |
 | Page + auto-reply | **the visitor** | `index.html`, `pt/index.html`, `$BASE`/`$OVERRIDES` in `starter/app/strings.php`, `contact-reply*.mjml` |
-| Notification email | **the site owner** | `contact.mjml`, `contact/_partials/_fields.mjml`, `$OWNER` in `starter/app/strings.php` |
+| Notification email | **the site owner** | `contact.mjml`'s own chrome, `$OWNER` in `starter/app/strings.php`, the `form_type` hidden field in both pages |
 
 A Portuguese client running an English site gets an English page, English auto-replies to
 visitors, and a **Portuguese** notification — because they're the only one reading it. That's
 one template set to their language once at fork time, not a per-request variant.
-`_fields.mjml` is pulled in by `contact.mjml` alone, so it follows the owner too.
 
-The `%lang%` placeholder on the notification's date line shows which language version an
-enquiry came from — the owner's only cue as to which language to reply in. It renders as
-nothing on a single-language site.
+**`contact/_partials/_fields.mjml` sits on neither axis** — it has no language of its own.
+Every label in it is a `%label_FIELD%` placeholder filled from the submitting form's own
+`<label>` text, so the field grid always reads in the visitor's language, in all three emails.
+Nothing in that file is ever translated.
+
+The `%kicker%` line at the top of the notification carries form type, timestamp and which
+language version the enquiry came from — the owner's only cue as to which language to reply in.
+`build_kicker()` in `submit.php` drops whichever parts don't apply, so on a single-language site
+the language part simply isn't there.
 
 ## Where the copy lives
 
@@ -101,7 +106,8 @@ and declared in `hreflang` and the sitemap, and Google would index it. So the fa
 forgetting is silence, not a broken page on a client's domain.
 
 The parts that ship **live** are inert without a second language and cost nothing:
-`data-app-base`, `.page-controls`, `%lang%`, `$OVERRIDES` in `starter/app/strings.php`, and
+`data-app-base`, `.page-controls`, `$OVERRIDES` in `starter/app/strings.php`, the kicker's
+language part (`build_kicker()` drops it when there's no second language), and
 `contact-reply.pt.*` (only ever selected when a form posts `lang=pt`).
 
 ## Activating it
@@ -122,8 +128,8 @@ Then run `node tools/check-pages.mjs` (below) and submit both forms.
 
 Delete `pt/`, the commented blocks in `index.html` and `sitemap.xml`, `$OVERRIDES`, the
 `.lang-switch` rule in `components.css`, and `mail-templates/contact/contact-reply.pt.mjml` plus
-its compiled output. Leave `data-app-base`, `.page-controls`, and `%lang%` — all three are
-correct for a single root-level page.
+its compiled output. Leave `data-app-base`, `.page-controls`, and `build_kicker()` alone — all
+three are correct for a single root-level page.
 
 Only worth doing if you're certain the project will never want a second language. Left alone it
 publishes nothing.
