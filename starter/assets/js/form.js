@@ -1,6 +1,6 @@
-// Shared submit transport for the contact and newsletter forms. Only the parts that are
-// genuinely identical live here — posting, parsing, and deciding whether it worked. What each
-// form does to the page afterwards stays in its own module, because those legitimately differ.
+// What the contact and newsletter forms both do: post, and render the outcome. Only the parts
+// that are genuinely identical live here — what's left in each module is what actually differs
+// (the contact form's label collection, button labels and auto-close; nothing for the newsletter).
 //
 // Delete this file only if both forms are gone; it survives removing either one.
 
@@ -35,5 +35,44 @@ export async function post(endpoint, data) {
         return { ok: res.ok && json.success === true, message: json.message ?? '' };
     } catch {
         return { ok: false, message: '' };
+    }
+}
+
+/**
+ * Marks the form as submitted and shows the server's success message. The `is-sent` class is
+ * what hides the fields — the rule lives in components.css, so nothing here lists them.
+ *
+ * @param {HTMLFormElement} form
+ * @param {string}          message Server copy, already in the page's language.
+ */
+export function showSuccess(form, message) {
+    form.classList.add('is-sent');
+    form.appendChild(Object.assign(document.createElement('p'), {
+        className: 'form-success',
+        textContent: message,
+    }));
+}
+
+/**
+ * Shows a failure message, reusing the existing element on a repeat attempt rather than stacking
+ * one per try. Falls back to the form's own `data-network-error` when the server said nothing —
+ * a dead connection has no message worth showing a visitor.
+ *
+ * @param {HTMLFormElement} form
+ * @param {string}          message Server copy, or '' when the request never completed.
+ * @param {Element}         [before] Insert ahead of this element instead of appending.
+ */
+export function showError(form, message, before) {
+    const el = form.querySelector('.form-error')
+        || Object.assign(document.createElement('p'), { className: 'form-error' });
+
+    el.textContent = message || form.dataset.networkError;
+
+    if (form.contains(el)) return;
+
+    if (before) {
+        before.before(el);
+    } else {
+        form.appendChild(el);
     }
 }

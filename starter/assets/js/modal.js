@@ -1,4 +1,4 @@
-import { post } from './post.js';
+import { post, showSuccess, showError } from './form.js';
 
 const FOCUSABLE ='a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -13,7 +13,6 @@ const submitBtn = form.querySelector('[type="submit"]');
 // whatever the button ships with.
 const LABEL_SUBMIT     = submitBtn.textContent;
 const LABEL_SUBMITTING = submitBtn.dataset.submitting;
-const NETWORK_ERROR    = form.dataset.networkError;
 
 let opener = null;
 
@@ -91,18 +90,12 @@ form.addEventListener('submit', async function (e) {
     const { ok, message } = await post('submit.php', data);
 
     if (ok) {
-        form.classList.add('is-sent');
-        const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: message });
-        form.appendChild(msg);
+        showSuccess(form, message);
         setTimeout(closeModal, 2800);
         return;
     }
 
-    // The server owns every message it can produce — validation, mail failure, success. The page
-    // supplies only NETWORK_ERROR, for when there was no response to read at all.
     submitBtn.disabled = false;
     submitBtn.textContent = LABEL_SUBMIT;
-    const err = form.querySelector('.form-error') || Object.assign(document.createElement('p'), { className: 'form-error' });
-    err.textContent = message || NETWORK_ERROR;
-    if (!form.contains(err)) submitBtn.before(err);
+    showError(form, message, submitBtn);
 });

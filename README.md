@@ -75,7 +75,7 @@ back, and see [docs/touchpoints.md](docs/touchpoints.md) for what still needs ad
 
 1. **Contact form (modal)?** The core feature — assumed present. To remove: `#contact-dialog` in
    `index.html`, `starter/assets/js/modal.js` + its import, `starter/app/submit.php`, and the
-   `mail-templates/contact/` + `starter/app/templates/contact*.html` pair. `post.js` is shared
+   `mail-templates/contact/` + `starter/app/templates/contact*.html` pair. `form.js` is shared
    with the newsletter form — delete it only if that's going too.
 2. **Which fields?** Name + Email are the only two `submit.php` requires.
 3. **Mailing-list opt-in checkbox on the contact form?** To remove: the marked block in
