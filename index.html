@@ -245,11 +245,13 @@
                 <textarea id="message" name="message" placeholder="How can we help?"></textarea>
             </div>
             <!-- OPTIONAL: newsletter opt-in — also subscribes the submitter via starter/app/submit.php's
-                 optional block. Remove this label if this project has no mailing list. -->
-            <label class="form-group form-check">
-                <input type="checkbox" name="newsletter" value="1">
-                <span>I'd also like to receive news by email</span>
-            </label>
+                 optional block. Remove this whole .form-group if this project has no mailing list. -->
+            <div class="form-group">
+                <label class="form-check">
+                    <input type="checkbox" name="newsletter" value="1">
+                    <span>I'd also like to receive news by email</span>
+                </label>
+            </div>
             <!-- /OPTIONAL -->
             <!-- Identifies this form in the notification email's kicker (%form_type% in
                  contact.mjml/contact-reply.mjml) — useful once a project has more than one
