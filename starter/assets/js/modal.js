@@ -1,4 +1,4 @@
-import { post, showSuccess, showError, setBusy, resetForm, collectLabels } from './form.js';
+import { initForm } from './form.js';
 
 const FOCUSABLE ='a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -6,7 +6,6 @@ const dialog   = document.getElementById('contact-dialog');
 const openBtn  = document.getElementById('open-modal');
 const closeBtn = document.getElementById('close-modal');
 const form     = document.getElementById('contact-form');
-const submitBtn = form.querySelector('[type="submit"]');
 
 let opener = null;
 
@@ -40,7 +39,21 @@ function closeModal() {
     opener?.focus();
 }
 
-dialog.addEventListener('close', () => resetForm(form));
+// labels: the notification email renders them as its field names — see %label_FIELD% in
+// mail-templates/contact/_partials/_fields.mjml.
+//
+// If a project adds a <select> whose posted value is a slug rather than something readable, the
+// email will show the slug. Swap it for the option's visible text in a submit listener added
+// before this one, e.g.:
+//   form.addEventListener('submit', () => { ... }, { capture: true });
+const contactForm = initForm({
+    form,
+    endpoint: 'submit.php',
+    labels: true,
+    onSuccess: () => setTimeout(closeModal, 2800),
+});
+
+dialog.addEventListener('close', () => contactForm.reset());
 
 openBtn.addEventListener('click', openModal);
 closeBtn.addEventListener('click', closeModal);
@@ -48,32 +61,4 @@ closeBtn.addEventListener('click', closeModal);
 // Close on backdrop click (click lands on the dialog element itself, not .dialog__inner)
 dialog.addEventListener('click', e => {
     if (e.target === dialog) closeModal();
-});
-
-form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const data = new FormData(form);
-
-    // If a project adds a <select> whose posted value is a slug (not human-readable),
-    // swap it for the selected option's visible text before submitting — e.g.:
-    //   const interest = form.querySelector('[name="interest"]');
-    //   if (interest?.value) data.set('interest', interest.selectedOptions[0].text);
-
-    // The notification email renders these as its field labels — see %label_FIELD% in
-    // mail-templates/contact/_partials/_fields.mjml.
-    data.set('labels', JSON.stringify(collectLabels(form)));
-
-    setBusy(submitBtn, true);
-
-    const { ok, message } = await post('submit.php', data);
-
-    if (ok) {
-        showSuccess(form, message);
-        setTimeout(closeModal, 2800);
-        return;
-    }
-
-    setBusy(submitBtn, false);
-    showError(form, message, submitBtn);
 });

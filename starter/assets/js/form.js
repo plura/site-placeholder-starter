@@ -1,6 +1,6 @@
-// What the contact and newsletter forms both do: post, and render the outcome. Only the parts
-// that are genuinely identical live here — what's left in each module is what actually differs
-// (the contact form's label collection, button labels and auto-close; nothing for the newsletter).
+// Everything the contact and newsletter forms do the same way: post, render the outcome, reset.
+// Exports one function — a form is wired by describing it, not by calling six helpers in the
+// right order, which is the part both callers would otherwise repeat.
 //
 // Delete this file only if both forms are gone; it survives removing either one.
 
@@ -9,27 +9,30 @@
 // one copy of this module. Falls back to the root layout.
 const APP_BASE = document.documentElement.dataset.appBase ?? 'starter/app/';
 
+/** Idle button labels, so setBusy can restore one it replaced. Keyed on the element itself. */
+const idleLabels = new WeakMap();
+
 /**
- * POSTs a form to one of the starter/app/ endpoints.
+ * POSTs to one of the starter/app/ endpoints.
  *
  * Never rejects: a dead connection or a non-JSON response resolves as a failure with an empty
- * message, so callers fall through to their own copy rather than showing the browser's raw
- * error text ("Failed to fetch") to a visitor.
+ * message, so the caller falls back to the page's own copy rather than showing a visitor the
+ * browser's raw error text ("Failed to fetch").
  *
  * @param {string}   endpoint Filename under starter/app/, e.g. 'submit.php'.
- * @param {FormData} data     Fields to post. The page's language is added here.
+ * @param {FormData} data
  * @returns {Promise<{ok: boolean, message: string}>} `message` is the server's own copy, in the
- *          language the page was rendered in, and is empty when there was no response to read.
+ *          page's language, and empty when there was no response to read.
  */
-export async function post(endpoint, data) {
+async function post(endpoint, data) {
     // Tells the endpoint which language to answer in (see starter/app/strings.php). Inert on a
     // single-language site, where strings.php just falls through to its base copy.
     data.set('lang', document.documentElement.lang);
 
     try {
-        const res  = await fetch(APP_BASE + endpoint, { method: 'POST', body: data });
-        // Guarded so an HTML error page (a 500 from the host, say) is treated as a failure
-        // rather than throwing on the parse.
+        const res = await fetch(APP_BASE + endpoint, { method: 'POST', body: data });
+        // Guarded so an HTML error page — a 500 from the host, say — is a failure rather than a
+        // parse exception.
         const json = await res.json().catch(() => ({}));
 
         return { ok: res.ok && json.success === true, message: json.message ?? '' };
@@ -39,76 +42,19 @@ export async function post(endpoint, data) {
 }
 
 /**
- * Marks the form as submitted and shows the server's success message. The `is-sent` class is
- * what hides the fields — the rule lives in components.css, so nothing here lists them.
- *
- * @param {HTMLFormElement} form
- * @param {string}          message Server copy, already in the page's language.
- */
-export function showSuccess(form, message) {
-    form.classList.add('is-sent');
-    form.appendChild(Object.assign(document.createElement('p'), {
-        className: 'form-success',
-        textContent: message,
-    }));
-}
-
-/**
- * Shows a failure message, reusing the existing element on a repeat attempt rather than stacking
- * one per try. Falls back to the form's own `data-network-error` when the server said nothing —
- * a dead connection has no message worth showing a visitor.
- *
- * @param {HTMLFormElement} form
- * @param {string}          message Server copy, or '' when the request never completed.
- * @param {Element}         [before] Insert ahead of this element instead of appending.
- */
-export function showError(form, message, before) {
-    const el = form.querySelector('.form-error')
-        || Object.assign(document.createElement('p'), { className: 'form-error' });
-
-    el.textContent = message || form.dataset.networkError;
-
-    if (form.contains(el)) return;
-
-    if (before) {
-        before.before(el);
-    } else {
-        form.appendChild(el);
-    }
-}
-
-/**
- * Toggles the button's busy state. The label swap comes from the button's own `data-submitting`,
- * so a button without one just disables — which is what the newsletter's arrow wants.
+ * Toggles the button's busy state. The busy label comes from the button's own `data-submitting`;
+ * a button without one just disables, which is what the newsletter's arrow wants.
  *
  * @param {HTMLButtonElement} btn
  * @param {boolean}           busy
  */
-const idleLabels = new WeakMap();
-
-export function setBusy(btn, busy) {
+function setBusy(btn, busy) {
     if (!idleLabels.has(btn)) idleLabels.set(btn, btn.textContent);
 
     btn.disabled = busy;
 
     const busyLabel = btn.dataset.submitting;
     if (busyLabel) btn.textContent = busy ? busyLabel : idleLabels.get(btn);
-}
-
-/**
- * Returns the form to its pre-submit state — undoes everything showSuccess/showError did, plus
- * the field values and the button. Lives here rather than in the caller so it can't fall out of
- * step with what those two write; that split is what once left the opt-in checkbox on screen.
- *
- * @param {HTMLFormElement} form
- */
-export function resetForm(form) {
-    form.reset();
-    form.classList.remove('is-sent');
-    form.querySelectorAll('.form-success, .form-error').forEach((el) => el.remove());
-
-    const submitBtn = form.querySelector('[type="submit"]');
-    if (submitBtn) setBusy(submitBtn, false);
 }
 
 /**
@@ -119,7 +65,7 @@ export function resetForm(form) {
  * @param {HTMLFormElement} form
  * @returns {Record<string, string>} Keyed by field `name`.
  */
-export function collectLabels(form) {
+function collectLabels(form) {
     const labels = {};
 
     form.querySelectorAll('[name]').forEach((field) => {
@@ -132,4 +78,67 @@ export function collectLabels(form) {
     });
 
     return labels;
+}
+
+/**
+ * Wires a form's whole submit lifecycle.
+ *
+ * The server owns every message a visitor sees. The page supplies only `data-network-error`, for
+ * when the request never completed and there is no response to read.
+ *
+ * @param {object}          options
+ * @param {HTMLFormElement} options.form
+ * @param {string}          options.endpoint  Filename under starter/app/, e.g. 'submit.php'.
+ * @param {boolean}         [options.labels]  Post the form's own label text, for the notification
+ *                                            email's field names. Pointless on a single-field form.
+ * @param {() => void}      [options.onSuccess] Runs once the success message is on screen — the
+ *                                            contact form uses it to auto-close its dialog.
+ * @returns {{reset: () => void}} `reset` returns the form to its pre-submit state. It lives here
+ *          rather than in the caller so it can't fall out of step with what submitting writes;
+ *          that split is what once left the opt-in checkbox on screen after a send.
+ */
+export function initForm({ form, endpoint, labels = false, onSuccess }) {
+    const submitBtn = form.querySelector('[type="submit"]');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const data = new FormData(form);
+        if (labels) data.set('labels', JSON.stringify(collectLabels(form)));
+
+        setBusy(submitBtn, true);
+
+        const { ok, message } = await post(endpoint, data);
+
+        if (ok) {
+            // `is-sent` is what hides the fields — the rule lives in components.css, so nothing
+            // here lists them.
+            form.classList.add('is-sent');
+            form.appendChild(Object.assign(document.createElement('p'), {
+                className: 'form-success',
+                textContent: message,
+            }));
+
+            onSuccess?.();
+            return;
+        }
+
+        setBusy(submitBtn, false);
+
+        // Reuse the existing element on a repeat attempt rather than stacking one per try.
+        const error = form.querySelector('.form-error')
+            || Object.assign(document.createElement('p'), { className: 'form-error' });
+
+        error.textContent = message || form.dataset.networkError;
+        if (!form.contains(error)) form.appendChild(error);
+    });
+
+    return {
+        reset() {
+            form.reset();
+            form.classList.remove('is-sent');
+            form.querySelectorAll('.form-success, .form-error').forEach((el) => el.remove());
+            setBusy(submitBtn, false);
+        },
+    };
 }
