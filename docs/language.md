@@ -26,6 +26,28 @@ language version the enquiry came from — the owner's only cue as to which lang
 `build_kicker()` in `submit.php` drops whichever parts don't apply, so on a single-language site
 the language part simply isn't there.
 
+## Copy conventions
+
+Applies to every visitor-facing string: `index.html`, `pt/index.html`, `starter/app/strings.php`,
+and the mail templates.
+
+**English** — concise and neutral enough for a business, a freelancer, a portfolio or an
+institution, since the same starter serves all of them. Person-neutral: no "we", no "our".
+
+**Portuguese** — must be **gender-neutral**, and most obvious phrasings aren't:
+
+- Avoid gendered personal forms: `subscrito/subscrita`, `inscrito/inscrita`,
+  `bem-vindo/bem-vinda`, and `Obrigado` (which agrees with the speaker, not the reader).
+- **Don't write `Obrigado/a` or `inscrito/a`** as a workaround. It reads as a form, not as copy.
+- Instead, **restructure so the subject is the thing, not the person** — the message, the email,
+  the subscription, the action. `Este email já consta da lista` has no person to agree with;
+  `Já está inscrito` does.
+- `email`, not `e-mail`.
+- Aim for natural contemporary PT-PT rather than a literal translation of the English.
+
+**Terminology** — if the site calls the mailing list a *newsletter*, use that word everywhere
+rather than mixing *mailing list*, *lista de email* and *subscrição*.
+
 ## Where the copy lives
 
 | Where | What |

@@ -12,6 +12,9 @@ declare(strict_types=1);
 // Keys are semantic, not the English source text used by gettext/.po. This copy gets rewritten
 // every project, and source-string keys go stale the moment one does — a reworded string leaves
 // a dead key that quietly falls back to the new default-language text.
+//
+// Before rewording anything here, read "Copy conventions" in docs/language.md — particularly the
+// rule that Portuguese must be gender-neutral, which several obvious phrasings break.
 
 // Default-language copy — the only complete set, and the fallback for anything a translation
 // below leaves out.
@@ -20,12 +23,12 @@ $BASE = [
     'config_error'       => 'Server configuration error.',
     'required_fields'    => 'Please fill in the required fields.',
     'invalid_email'      => 'Please enter a valid email address.',
-    'send_error'         => 'Could not send. Please try again, or get in touch by email.',
+    'send_error'         => 'Couldn\'t send your message. Please try again, or get in touch by email.',
     'sent'               => 'Message sent. You\'ll hear back shortly.',
     // OPTIONAL: appended to 'sent' when the contact form's opt-in was ticked and the subscribe
     // succeeded. A separate sentence rather than a second full message, so the wording above
     // only exists once.
-    'sent_subscribed'    => 'You\'re on the mailing list too.',
+    'sent_subscribed'    => 'You\'ve also been added to the mailing list.',
 
     // %s is contact.site_name from config.php. Easy to miss when translating, since the subject
     // is built here rather than in the mail template. This one is visitor-facing — the auto-reply
@@ -39,7 +42,7 @@ $BASE = [
     // Brevo. Add "Check your inbox to confirm." once the project's provider actually sends one —
     // promising a confirmation that never arrives is worse than not mentioning it.
     'subscribe_confirm'         => 'Thanks for subscribing.',
-    'already_subscribed'        => 'You are already subscribed.',
+    'already_subscribed'        => 'This email is already subscribed.',
     'generic_error'             => 'Something went wrong. Please try again later.',
     // /OPTIONAL
 ];
@@ -51,19 +54,21 @@ $OVERRIDES = [
     'pt' => [
         'method_not_allowed' => 'Método não permitido.',
         'config_error'       => 'Erro de configuração do servidor.',
-        'required_fields'    => 'Por favor preencha os campos obrigatórios.',
-        'invalid_email'      => 'Por favor introduza um endereço de email válido.',
-        'send_error'         => 'Erro ao enviar. Por favor tente novamente ou utilize o email indicado.',
-        'sent'               => 'Mensagem enviada. Receberá uma resposta em breve.',
-        'sent_subscribed'    => 'Ficou também na mailing list.',
+        'required_fields'    => 'Preencha os campos obrigatórios.',
+        'invalid_email'      => 'Indique um endereço de email válido.',
+        'send_error'         => 'Não foi possível enviar a mensagem. Tente novamente ou envie um email diretamente.',
+        'sent'               => 'Mensagem enviada. Em breve receberá uma resposta.',
+        // The email is the subject, not the reader — "foi adicionado" then agrees with "email"
+        // rather than with a person whose gender this can't know. See docs/language.md.
+        'sent_subscribed'    => 'O seu email também foi adicionado à lista.',
 
         'subject_reply'  => '%s — mensagem recebida',
 
         // OPTIONAL: mailing list. See the note on subscribe_confirm in $BASE — this one drops the
         // confirmation instruction for the same reason.
         'newsletter_not_configured' => 'A subscrição não está configurada corretamente.',
-        'subscribe_confirm'         => 'Obrigado por subscrever.',
-        'already_subscribed'        => 'Já está subscrito!',
+        'subscribe_confirm'         => 'Subscrição efetuada com sucesso.',
+        'already_subscribed'        => 'Este email já consta da lista.',
         'generic_error'             => 'Ocorreu um erro. Por favor tente novamente mais tarde.',
         // /OPTIONAL
     ],
