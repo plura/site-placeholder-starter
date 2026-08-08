@@ -20,8 +20,8 @@ $BASE = [
     'config_error'       => 'Server configuration error.',
     'required_fields'    => 'Please fill in the required fields.',
     'invalid_email'      => 'Please enter a valid email address.',
-    'send_error'         => 'Could not send. Please try again, or email us.',
-    'sent'               => 'Message sent. We\'ll be in touch shortly.',
+    'send_error'         => 'Could not send. Please try again, or get in touch by email.',
+    'sent'               => 'Message sent. You\'ll hear back shortly.',
     // OPTIONAL: appended to 'sent' when the contact form's opt-in was ticked and the subscribe
     // succeeded. A separate sentence rather than a second full message, so the wording above
     // only exists once.
@@ -30,7 +30,7 @@ $BASE = [
     // %s is contact.site_name from config.php. Easy to miss when translating, since the subject
     // is built here rather than in the mail template. This one is visitor-facing — the auto-reply
     // goes back to whoever submitted the form. Its owner-facing counterpart is in $OWNER below.
-    'subject_reply'  => '%s — we received your message',
+    'subject_reply'  => '%s — message received',
 
     // OPTIONAL: mailing list — remove these four if this project has no newsletter.
     'newsletter_not_configured' => 'Subscriptions are not configured correctly.',
@@ -53,11 +53,11 @@ $OVERRIDES = [
         'config_error'       => 'Erro de configuração do servidor.',
         'required_fields'    => 'Por favor preencha os campos obrigatórios.',
         'invalid_email'      => 'Por favor introduza um endereço de email válido.',
-        'send_error'         => 'Erro ao enviar. Por favor tente novamente ou contacte-nos por email.',
-        'sent'               => 'Mensagem enviada. Entraremos em contacto em breve.',
-        'sent_subscribed'    => 'Ficou também na nossa mailing list.',
+        'send_error'         => 'Erro ao enviar. Por favor tente novamente ou utilize o email indicado.',
+        'sent'               => 'Mensagem enviada. Receberá uma resposta em breve.',
+        'sent_subscribed'    => 'Ficou também na mailing list.',
 
-        'subject_reply'  => '%s — recebemos o seu contacto',
+        'subject_reply'  => '%s — mensagem recebida',
 
         // OPTIONAL: mailing list. See the note on subscribe_confirm in $BASE — this one drops the
         // confirmation instruction for the same reason.
