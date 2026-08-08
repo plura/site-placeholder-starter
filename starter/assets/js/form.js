@@ -76,3 +76,60 @@ export function showError(form, message, before) {
         form.appendChild(el);
     }
 }
+
+/**
+ * Toggles the button's busy state. The label swap comes from the button's own `data-submitting`,
+ * so a button without one just disables — which is what the newsletter's arrow wants.
+ *
+ * @param {HTMLButtonElement} btn
+ * @param {boolean}           busy
+ */
+const idleLabels = new WeakMap();
+
+export function setBusy(btn, busy) {
+    if (!idleLabels.has(btn)) idleLabels.set(btn, btn.textContent);
+
+    btn.disabled = busy;
+
+    const busyLabel = btn.dataset.submitting;
+    if (busyLabel) btn.textContent = busy ? busyLabel : idleLabels.get(btn);
+}
+
+/**
+ * Returns the form to its pre-submit state — undoes everything showSuccess/showError did, plus
+ * the field values and the button. Lives here rather than in the caller so it can't fall out of
+ * step with what those two write; that split is what once left the opt-in checkbox on screen.
+ *
+ * @param {HTMLFormElement} form
+ */
+export function resetForm(form) {
+    form.reset();
+    form.classList.remove('is-sent');
+    form.querySelectorAll('.form-success, .form-error').forEach((el) => el.remove());
+
+    const submitBtn = form.querySelector('[type="submit"]');
+    if (submitBtn) setBusy(submitBtn, false);
+}
+
+/**
+ * Harvests each field's visible label text, for the notification email's `%label_FIELD%`
+ * placeholders. Optional-field markers are stripped structurally, via `.label-note`, rather than
+ * by matching the marker's text — so translating a label can't silently stop it working.
+ *
+ * @param {HTMLFormElement} form
+ * @returns {Record<string, string>} Keyed by field `name`.
+ */
+export function collectLabels(form) {
+    const labels = {};
+
+    form.querySelectorAll('[name]').forEach((field) => {
+        const label = form.querySelector(`label[for="${field.id}"]`);
+        if (!label) return;
+
+        const clean = label.cloneNode(true);
+        clean.querySelector('.label-note')?.remove();
+        labels[field.name] = clean.textContent.trim();
+    });
+
+    return labels;
+}

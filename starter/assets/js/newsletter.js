@@ -1,4 +1,4 @@
-import { post, showSuccess, showError } from './form.js';
+import { post, showSuccess, showError, setBusy } from './form.js';
 
 // OPTIONAL: only needed if this project keeps the standalone mailing-list signup in index.html.
 // Guarded on #newsletter-form existing, so leaving this imported after deleting that markup
@@ -13,7 +13,7 @@ if (form) {
 
         const data = new FormData(form);
 
-        submitBtn.disabled = true;
+        setBusy(submitBtn, true);
 
         const { ok, message } = await post('subscribe.php', data);
 
@@ -22,7 +22,7 @@ if (form) {
             return;
         }
 
-        submitBtn.disabled = false;
+        setBusy(submitBtn, false);
         showError(form, message);
     });
 }

@@ -1,4 +1,4 @@
-import { post, showSuccess, showError } from './form.js';
+import { post, showSuccess, showError, setBusy, resetForm, collectLabels } from './form.js';
 
 const FOCUSABLE ='a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -7,12 +7,6 @@ const openBtn  = document.getElementById('open-modal');
 const closeBtn = document.getElementById('close-modal');
 const form     = document.getElementById('contact-form');
 const submitBtn = form.querySelector('[type="submit"]');
-
-// Copy comes from the markup, not a dictionary — each language is its own HTML file, so the
-// page already is its language and there is nothing for JS to resolve. The idle label is just
-// whatever the button ships with.
-const LABEL_SUBMIT     = submitBtn.textContent;
-const LABEL_SUBMITTING = submitBtn.dataset.submitting;
 
 let opener = null;
 
@@ -46,13 +40,7 @@ function closeModal() {
     opener?.focus();
 }
 
-dialog.addEventListener('close', () => {
-    form.reset();
-    submitBtn.disabled = false;
-    submitBtn.textContent = LABEL_SUBMIT;
-    form.querySelectorAll('.form-success, .form-error').forEach(el => el.remove());
-    form.classList.remove('is-sent');
-});
+dialog.addEventListener('close', () => resetForm(form));
 
 openBtn.addEventListener('click', openModal);
 closeBtn.addEventListener('click', closeModal);
@@ -72,20 +60,11 @@ form.addEventListener('submit', async function (e) {
     //   const interest = form.querySelector('[name="interest"]');
     //   if (interest?.value) data.set('interest', interest.selectedOptions[0].text);
 
-    // Optional-field markers are stripped structurally, via .label-note, rather than by matching
-    // the marker's text — so translating the labels can't silently stop it working.
-    const labels = {};
-    form.querySelectorAll('[name]').forEach(field => {
-        const label = form.querySelector(`label[for="${field.id}"]`);
-        if (!label) return;
-        const clean = label.cloneNode(true);
-        clean.querySelector('.label-note')?.remove();
-        labels[field.name] = clean.textContent.trim();
-    });
-    data.set('labels', JSON.stringify(labels));
+    // The notification email renders these as its field labels — see %label_FIELD% in
+    // mail-templates/contact/_partials/_fields.mjml.
+    data.set('labels', JSON.stringify(collectLabels(form)));
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = LABEL_SUBMITTING;
+    setBusy(submitBtn, true);
 
     const { ok, message } = await post('submit.php', data);
 
@@ -95,7 +74,6 @@ form.addEventListener('submit', async function (e) {
         return;
     }
 
-    submitBtn.disabled = false;
-    submitBtn.textContent = LABEL_SUBMIT;
+    setBusy(submitBtn, false);
     showError(form, message, submitBtn);
 });
