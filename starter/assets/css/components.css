@@ -285,6 +285,16 @@ dialog p {
     accent-color: var(--site-surface-fg);
     cursor: pointer;
 }
+
+/* Slightly smaller once there's a pointer rather than a thumb — 16px reads heavy next to the
+   label at desktop sizes, but is the smaller of the two on a touch screen. The only width
+   breakpoint in the site CSS; everything else here is fluid. */
+@media (min-width: 480px) {
+    .form-check input[type="checkbox"] {
+        width: 14px;
+        height: 14px;
+    }
+}
 /* /OPTIONAL */
 
 /* Select arrow is a data-URI SVG — can't reference CSS custom properties, so light/dark
