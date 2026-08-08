@@ -235,13 +235,23 @@ send_mail(
 // itself, since the notification/reply emails have already sent successfully by this point.
 // Safe to delete this block (and the checkbox in index.html) if this project has no
 // newsletter, or delete the newsletter feature's other pieces per the README.
+$subscribed = false;
+
 if (!empty($_POST['newsletter'])) {
     require_once __DIR__ . '/lib/newsletter.php';
     $optin = newsletter_subscribe($config, $data['email'], $strings);
-    if (!$optin['success']) {
+    $subscribed = $optin['success'];
+
+    if (!$subscribed) {
         error_log('Newsletter opt-in via contact form failed: ' . $optin['message']);
     }
 }
+// /OPTIONAL
 
 // —— Done ————————————————————————————————————————————————————————————————————
-echo json_encode(['success' => true, 'message' => $strings['sent']]);
+// Only claims the subscription when it actually went through. A provider failure here is
+// best-effort and doesn't fail the submission, so the plain message is the honest one.
+echo json_encode([
+    'success' => true,
+    'message' => $subscribed ? $strings['sent_subscribed'] : $strings['sent'],
+]);
