@@ -1,65 +1,100 @@
 <!--
-	BRAND CUSTOMIZATION: this file is the single place brand identity lives for the whole
-	mail template. Replace the color/font values below with the client's actual brand tokens.
-	Keep the mj-class NAMES and the padding/structural values as-is (in this file and in
-	every partial that references them) — those encode layout/responsive behavior, not
-	brand identity, and are what make the whole pattern reusable across projects.
+	TOKEN LIFECYCLES — two syntaxes, deliberately different so a replace pass for one can never
+	touch the other. Full reference in mail-templates/_tokens.json.
+	  %field%             runtime. Filled by starter/app/submit.php on every send. Never replaced by anyone.
+	  double-curly UPPER  build-time. Replaced once per client, BEFORE the MJML compile.
 
-	Placeholder palette used here:
-	  #eeeeee — frame/background (the color surrounding the white card)
-	  #ffffff — card background
-	  #111111 — primary text
-	  #767676 — muted/secondary text
-	  #4a90d9 — accent (divider, message-quote border, cta button text-on-dark)
+	Note for anyone editing this comment block: MJML ships HTML comments verbatim into the
+	compiled output, so don't spell an actual "{{ }}"-wrapped example in here — build-guard.js
+	regex-scans compiled HTML for exactly that shape and would false-flag its own documentation.
+
+	This file is the single place brand identity lives. Replace the double-curly values below;
+	keep every mj-class NAME and every padding value as-is — those encode layout and responsive
+	behavior, not brand, and are what every other partial and contact/contact-reply(.pt).mjml
+	reference by name.
 -->
 <mj-attributes>
-	<mj-all font-family="Helvetica Neue, Helvetica, Arial, sans-serif" />
-	<mj-text font-size="14px" line-height="1.7" color="#111111" />
-	<mj-body width="560px" background-color="#eeeeee" />
+	<mj-all font-family="{{BRAND_FONT}}" />
+	<mj-text font-size="14px" line-height="1.6" color="{{BRAND_INK}}" />
+	<mj-body width="600px" background-color="{{BRAND_FRAME}}" />
 
-	<mj-class name="page-frame" background-color="#eeeeee" padding="48px 16px" />
-	<mj-class name="header-pad" background-color="#eeeeee" padding="0" />
-	<mj-class name="footer-pad" background-color="#eeeeee" padding="28px 48px 20px" />
-	<mj-class name="credit-pad" background-color="#eeeeee" padding="0 48px 32px" />
-	<mj-class name="body-card" background-color="#ffffff" padding="36px 48px 48px" />
-	<mj-class name="card-top" background-color="#ffffff" padding="36px 48px 0" />
-	<mj-class name="card-row" background-color="#ffffff" padding="0 48px" />
-	<mj-class name="card-bottom" background-color="#ffffff" padding="0 48px 48px" />
-	<mj-class name="footer-column" border-top="1px solid #dddddd" padding-top="20px" />
+	<mj-class name="page-frame" background-color="{{BRAND_FRAME}}" padding="36px 20px 28px" />
+	<mj-class name="header-pad" background-color="{{BRAND_FRAME}}" padding="0" />
+	<mj-class name="credit-pad" background-color="{{BRAND_FRAME}}" padding="22px 28px 0" />
 
-	<mj-class name="logo-image" width="175px" padding="0 0 28px" />
-	<mj-class name="accent-divider" border-color="#4a90d9" border-width="3px" padding="0" />
+	<!-- No wrapper groups these into one shared border+radius box: mj-wrapper cannot nest inside
+	     another mj-wrapper, and page-frame above already claims the one wrapper slot. Instead
+	     each of these three classes carries its own background + left/right border, stacked with
+	     zero gap between them so the borders line up into what reads as one continuous card edge.
+	     card-body alone closes the top (border-top + top radius); footer-band (own background,
+	     no border needed) closes the bottom with its own radius — see _footer.mjml. -->
+	<mj-class name="card-body" background-color="{{BRAND_SURFACE}}" border="1px solid {{BRAND_DARK}}" border-bottom="none" border-radius="{{BRAND_RADIUS}} {{BRAND_RADIUS}} 0 0" padding="34px 38px 34px" />
+	<mj-class name="field-row" background-color="{{BRAND_SURFACE}}" border-left="1px solid {{BRAND_DARK}}" border-right="1px solid {{BRAND_DARK}}" padding="0 38px" />
+	<mj-class name="field-row-last" background-color="{{BRAND_SURFACE}}" border-left="1px solid {{BRAND_DARK}}" border-right="1px solid {{BRAND_DARK}}" padding="0 38px 34px" />
 
-	<mj-class name="heading" font-family="Georgia, 'Times New Roman', serif" font-size="22px" font-weight="400" color="#111111" line-height="1.3" align="left" />
-	<mj-class name="date-text" font-size="10px" letter-spacing="0.05em" text-transform="uppercase" color="#767676" align="right" />
-	<mj-class name="intro-text" font-size="13px" line-height="1.8" padding="0 0 32px" />
-	<mj-class name="urgent-text" font-size="13px" line-height="1.8" align="center" padding="20px 0 0" />
-	<mj-class name="field-divider" border-color="#eeeeee" border-width="1px" padding="0 0 20px" />
-	<mj-class name="field-label-text" color="#767676" font-size="9px" letter-spacing="0.12em" text-transform="uppercase" align="left" padding="14px 0" />
-	<mj-class name="field-value-text" color="#111111" font-size="14px" line-height="1.7" align="left" padding="14px 0" />
-	<mj-class name="message-label-text" color="#767676" font-size="9px" letter-spacing="0.12em" text-transform="uppercase" align="left" padding="0 0 4px" />
-	<mj-class name="footer-name" align="center" font-size="11px" font-weight="bold" letter-spacing="0.2em" text-transform="uppercase" color="#111111" padding="0 0 6px" />
-	<mj-class name="footer-text" align="center" font-size="11px" color="#767676" letter-spacing="0.05em" line-height="1.9" padding="0 0 6px" />
-	<mj-class name="credit-text" align="center" font-size="10px" color="#999999" letter-spacing="0.05em" />
-	<mj-class name="cta-button" background-color="#111111" color="#ffffff" font-size="12px" font-weight="300" letter-spacing="0.1em" text-transform="uppercase" border-radius="0" align="center" padding="24px 0 0" inner-padding="14px 32px" />
+	<mj-class name="logo-image" width="140px" padding="0 0 24px" align="center" />
+	<mj-class name="wordmark" align="center" font-size="12px" font-weight="bold" letter-spacing="0.22em" text-transform="uppercase" color="{{BRAND_INK}}" />
+
+	<mj-class name="accent-flag" border-color="{{BRAND_ACCENT}}" border-width="3px" width="40px" align="left" padding="0 0 20px" />
+	<mj-class name="kicker" font-size="10px" letter-spacing="0.16em" text-transform="uppercase" color="{{BRAND_MUTED}}" align="left" padding="0 0 8px" />
+	<mj-class name="heading" font-family="{{BRAND_FONT_HEADING}}" font-size="20px" font-weight="normal" color="{{BRAND_INK}}" line-height="1.3" letter-spacing="-0.01em" align="left" padding="0 0 28px" />
+	<mj-class name="intro-text" font-size="12px" line-height="1.8" color="{{BRAND_MUTED}}" padding="0 0 26px" />
+
+	<mj-class name="field-divider" border-color="{{BRAND_TINT}}" border-width="1px" padding="0 0 18px" />
+	<mj-class name="field-label-text" color="{{BRAND_MUTED}}" font-size="10px" letter-spacing="0.14em" text-transform="uppercase" line-height="1.6" align="left" padding="5px 20px 18px 0" />
+	<mj-class name="field-value-text" color="{{BRAND_INK}}" font-size="14px" line-height="1.6" align="left" padding="0 0 18px" />
+	<mj-class name="message-label-text" color="{{BRAND_MUTED}}" font-size="10px" letter-spacing="0.14em" text-transform="uppercase" line-height="1.6" align="left" padding="6px 20px 0 0" />
+	<mj-class name="message-text" color="{{BRAND_INK}}" font-size="14px" line-height="1.75" align="left" padding="0" />
+
+	<mj-class name="footer-band" background-color="{{BRAND_DARK}}" border-radius="0 0 {{BRAND_RADIUS_INNER}} {{BRAND_RADIUS_INNER}}" padding="24px 38px" />
+	<mj-class name="footer-name" align="center" font-size="11px" font-weight="bold" letter-spacing="0.2em" text-transform="uppercase" color="{{BRAND_SURFACE}}" padding="0 0 12px" />
+	<mj-class name="footer-text" align="center" font-size="11px" color="{{BRAND_DARK_MUTED}}" line-height="1.9" padding="0" />
+	<mj-class name="footer-rule" border-color="{{BRAND_DARK_RULE}}" border-width="1px" width="40px" padding="14px 0" />
+	<mj-class name="footer-social" align="center" font-size="11px" letter-spacing="0.1em" text-transform="uppercase" color="{{BRAND_DARK_MUTED}}" padding="0" />
+	<mj-class name="credit-text" align="center" font-size="10px" color="{{BRAND_MUTED}}" letter-spacing="0.06em" line-height="1.9" />
 </mj-attributes>
 
 <mj-style inline="inline">
-	.footer-link { color: #767676; text-decoration: none; }
-	.credit-link { color: #999999; text-decoration: none; font-weight: bold; }
-	.urgent-link { color: #111111; font-weight: bold; text-decoration: underline; text-decoration-color: #4a90d9; }
-	.message-quote { background: #eeeeee; border-left: 3px solid #4a90d9; padding: 16px 20px; font-size: 14px; line-height: 1.7; color: #111111; }
+	.header-link { color: {{BRAND_INK}}; text-decoration: none; }
+	/* Styles the logo's ALT TEXT for the many Outlook configurations that block images by
+	   default. Without this the email opens with unstyled browser-default alt text, which is
+	   the first thing the reader sees. Falls back to something close to the wordmark variant. */
+	.logo-fallback img { font-size: 12px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; color: {{BRAND_INK}}; text-decoration: none; }
+	.value-link { color: {{BRAND_ACCENT}}; text-decoration: none; }
+	.footer-link { color: {{BRAND_DARK_MUTED}}; text-decoration: none; }
+	.footer-name-link { color: {{BRAND_SURFACE}}; text-decoration: none; }
+	.credit-link { color: {{BRAND_MUTED}}; text-decoration: none; font-weight: bold; }
 </mj-style>
 
 <mj-style>
+	/*
+		Dark mode: the only thing worth defending is the surface RELATIONSHIP. Under forced
+		inversion the white body darkens and the dark band lightens, so the band ends up lighter
+		than the body it's meant to anchor and the card reads upside down. Re-asserting the three
+		surfaces keeps that hierarchy in every client that honours the media query (Apple Mail,
+		iOS). Text colors are left alone deliberately: they're inline and survive, and blanket
+		overrides here would flatten the label/value contrast. Outlook.com's inversion cannot be
+		prevented by any means. Test, don't hope.
+	*/
+	@media (prefers-color-scheme: dark) {
+		.page-frame > table > tbody > tr > td { background-color: {{BRAND_FRAME}} !important; }
+		.card-body > table > tbody > tr > td,
+		.field-row > table > tbody > tr > td,
+		.field-row-last > table > tbody > tr > td { background-color: {{BRAND_SURFACE}} !important; }
+		.footer-band > table > tbody > tr > td { background-color: {{BRAND_DARK}} !important; }
+		.credit-pad > table > tbody > tr > td { background-color: {{BRAND_FRAME}} !important; }
+	}
+
 	@media only screen and (max-width: 480px) {
-		.page-frame > table > tbody > tr > td { padding: 24px !important; }
-		.body-card > table > tbody > tr > td { padding: 28px 24px 32px !important; }
-		.card-top > table > tbody > tr > td { padding: 28px 24px 0 !important; }
-		.card-row > table > tbody > tr > td { padding: 0 24px !important; }
-		.card-bottom > table > tbody > tr > td { padding: 0 24px 32px !important; }
-		.footer-pad > table > tbody > tr > td { padding: 24px 24px 16px !important; }
-		.credit-pad > table > tbody > tr > td { padding: 0 24px 24px !important; }
+		.page-frame > table > tbody > tr > td { padding: 18px 12px 22px !important; }
+		.card-body > table > tbody > tr > td { padding: 26px 22px 26px !important; }
+		.field-row > table > tbody > tr > td { padding: 0 22px !important; }
+		.field-row-last > table > tbody > tr > td { padding: 0 22px 30px !important; }
+		.footer-band > table > tbody > tr > td { padding: 22px 20px !important; }
+		.credit-pad > table > tbody > tr > td { padding: 20px 18px 0 !important; }
+		.f-label, .f-label td { padding: 0 0 4px !important; }
+		.f-value, .f-value td { padding: 0 0 16px !important; }
+		.m-label, .m-label td { padding: 0 0 8px !important; }
 	}
 </mj-style>
 

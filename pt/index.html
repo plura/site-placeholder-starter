@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!--
+    OPTIONAL (Tier 2): the Portuguese version of index.html.
+
+    This is a full copy of the root page, not a template — static HTML has no include
+    mechanism, so the <head> is duplicated wholesale. ANY structural change to index.html
+    (favicons, meta, the theme script, form fields, the JSON-LD block) has to be mirrored
+    here, or the two versions drift. Only the copy, the paths, and the language metadata
+    below are meant to differ.
+
+    Paths are one level deeper than the root page — hence ../starter/assets, ../site.webmanifest,
+    and data-app-base="../starter/app/".
+
+    Remove this whole directory for a single-language site; see docs/language.md.
+-->
+<html lang="pt" data-app-base="../starter/app/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Name | Descrição numa linha</title>
+    <meta name="description" content="Site Name — descrição de uma a duas frases, igual à descrição do JSON-LD abaixo.">
+    <!-- noindex while Tier 2 is inactive: nothing links here and nothing declares it, so a
+         forgotten copy of this page can't be indexed with placeholder copy still on it. Switch
+         to "index, follow" as step 1 of activating the second language — see docs/language.md. -->
+    <meta name="robots" content="noindex">
+    <link rel="canonical" href="https://example.com/pt/">
+
+    <!-- OPTIONAL (Tier 2): language alternates — INACTIVE, ships commented out. Must list
+         exactly the same set as the root page, itself included; a one-sided pairing is
+         ignored outright.
+    <link rel="alternate" hreflang="en"        href="https://example.com/">
+    <link rel="alternate" hreflang="pt"        href="https://example.com/pt/">
+    <link rel="alternate" hreflang="x-default" href="https://example.com/">
+    -->
+
+    <meta name="theme-color" content="#1a1a1a">
+
+    <!-- OPTIONAL (2/2): manual toggle — see the note on the inline script in index.html.
+         The stored preference is shared with the root page (same origin), so the theme
+         survives switching language. -->
+    <script>
+        (function () {
+            var stored = localStorage.getItem('theme');
+            if (stored === 'light' || stored === 'dark') {
+                document.documentElement.setAttribute('data-theme', stored);
+            }
+            var theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', theme === 'light' ? '#f5f4f2' : '#1a1a1a');
+        })();
+    </script>
+    <!-- /OPTIONAL -->
+
+    <!-- Favicons — see README for the asset spec (sizes, formats) -->
+    <link rel="icon" type="image/png" sizes="96x96" href="../starter/assets/favicons/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../starter/assets/favicons/apple-touch-icon.png">
+    <link rel="manifest" href="../site.webmanifest">
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website">
+    <meta property="og:url"         content="https://example.com/pt/">
+    <meta property="og:site_name"   content="Site Name">
+    <meta property="og:title"       content="Site Name | Descrição numa linha">
+    <meta property="og:description" content="Descrição de uma a duas frases, igual à descrição do JSON-LD abaixo.">
+    <meta property="og:locale"      content="pt_PT">
+    <meta property="og:image"       content="https://example.com/starter/assets/images/og.png">
+    <meta property="og:image:width"  content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt"    content="Site Name">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:title"       content="Site Name | Descrição numa linha">
+    <meta name="twitter:description" content="Descrição de uma a duas frases, igual à descrição do JSON-LD abaixo.">
+    <meta name="twitter:image"       content="https://example.com/starter/assets/images/og.png">
+    <meta name="twitter:image:alt"   content="Site Name">
+
+    <!--
+        BRAND CUSTOMIZATION: keep every field identical to index.html's block except the
+        localized ones (url, description) — this describes the same business, not a second one.
+    -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Site Name",
+        "url": "https://example.com/pt/",
+        "image": "https://example.com/starter/assets/images/og.png",
+        "description": "Descrição de uma a duas frases, igual à meta description acima.",
+        "telephone": "+351900000000",
+        "email": "info@example.com",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Address line",
+            "addressLocality": "City",
+            "postalCode": "0000-000",
+            "addressCountry": "PT"
+        },
+        "sameAs": [
+            "https://www.instagram.com/",
+            "https://www.facebook.com/",
+            "https://www.linkedin.com/"
+        ]
+    }
+    </script>
+
+    <!-- Webfonts — see the note in index.html. Keep both pages' font tags identical. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cardo&family=Outfit:wght@300;400&display=swap">
+
+    <link rel="stylesheet" href="../starter/assets/css/base.css">
+    <link rel="stylesheet" href="../starter/assets/css/layout.css">
+    <link rel="stylesheet" href="../starter/assets/css/components.css">
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- Fixed top-right rail. Both controls inside it are optional; the rail itself only needs
+     removing if neither survives. -->
+<div class="page-controls">
+    <!-- OPTIONAL (2/2): manual toggle — see the note on the inline script in <head> above. -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema claro/escuro">
+        <i data-lucide="sun" width="18" height="18" class="theme-toggle__icon theme-toggle__icon--sun"></i>
+        <i data-lucide="moon" width="18" height="18" class="theme-toggle__icon theme-toggle__icon--moon"></i>
+    </button>
+    <!-- /OPTIONAL -->
+
+    <!-- OPTIONAL (Tier 2): language switch — INACTIVE, ships commented out. Points back at the
+         root page; uncomment together with its counterpart in index.html.
+    <a class="lang-switch" href="../" hreflang="en" lang="en" aria-label="View in English">EN</a>
+    -->
+</div>
+
+<div class="page">
+
+    <!--
+        Visually-hidden but fully crawlable/accessible heading + description — a coming-soon
+        page like this often has no room for a literal on-screen heading, but search engines
+        (and screen readers) still need real content to understand what the page is about.
+        Keep this in sync with the meta description / JSON-LD above.
+    -->
+    <h1 class="sr-only">Site Name — Descrição numa linha</h1>
+    <p class="sr-only">Descrição de uma a duas frases do negócio, igual à meta description e ao JSON-LD acima.</p>
+
+    <!--
+        Logo placeholder — replace with the client's actual logo mark/wordmark and any
+        entrance animation (see starter/assets/js/main.js for where bespoke animation modules hook in).
+    -->
+    <div class="site-logo">
+        <p class="site-logo__name">Site Name</p>
+        <p class="site-logo__tagline">Tagline</p>
+    </div>
+
+    <div class="divider" id="divider"></div>
+
+    <!-- OPTIONAL: mailing list signup — see the note in index.html. -->
+    <div class="newsletter">
+        <p class="newsletter__kicker">Fique a par das novidades</p>
+        <!-- See the note in index.html. -->
+        <form id="newsletter-form" novalidate
+              data-network-error="Não foi possível subscrever. Tente novamente.">
+            <div class="newsletter__row">
+                <label for="newsletter-email" class="sr-only">Email</label>
+                <input type="email" id="newsletter-email" name="email" placeholder="o.seu@email.com" required>
+                <button type="submit" class="newsletter__submit" aria-label="Subscrever">
+                    <i data-lucide="arrow-right" width="16" height="16"></i>
+                </button>
+            </div>
+            <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+        </form>
+    </div>
+    <!-- /OPTIONAL -->
+
+    <footer class="footer">
+        <div class="contact">
+            <a href="tel:+351900000000">
+                <i data-lucide="phone" width="17" height="17"></i>
+                +351 900 000 000
+            </a>
+            <a href="mailto:info@example.com">
+                <i data-lucide="mail" width="17" height="17"></i>
+                info@example.com
+            </a>
+        </div>
+
+        <div class="cta-wrap">
+            <button class="btn-cta" id="open-modal">Saber Mais</button>
+        </div>
+
+        <div class="socials">
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
+                <span class="social-icon" style="mask-image: url('../starter/assets/icons/instagram.svg')"></span>
+            </a>
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">
+                <span class="social-icon" style="mask-image: url('../starter/assets/icons/facebook.svg')"></span>
+            </a>
+            <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <span class="social-icon" style="mask-image: url('../starter/assets/icons/linkedin.svg')"></span>
+            </a>
+        </div>
+
+        <div class="legal">
+            <p>&copy; 2026 Site Name. Todos os direitos reservados.</p>
+            <p class="footer-credit">Powered by <a href="https://plura.pt" target="_blank" rel="noopener">Plura</a></p>
+        </div>
+    </footer>
+
+</div>
+
+<!-- Modal -->
+<dialog id="contact-dialog" aria-labelledby="modal-title">
+    <div class="dialog__inner">
+        <button class="modal-close" id="close-modal" aria-label="Fechar">
+            <i data-lucide="x" width="20" height="20"></i>
+        </button>
+        <h2 id="modal-title">Fique a par</h2>
+        <p>Deixe os seus dados e receberá uma resposta assim que o site estiver disponível.</p>
+        <form id="contact-form" novalidate
+              data-network-error="Erro ao enviar. Tente novamente ou utilize o email indicado.">
+            <div class="form-group">
+                <label for="name">Nome</label>
+                <input type="text" id="name" name="name" placeholder="O seu nome" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="o.seu@email.com" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Telefone <span class="label-note">(opcional)</span></label>
+                <input type="tel" id="phone" name="phone" placeholder="+351 900 000 000">
+            </div>
+            <div class="form-group">
+                <label for="message">Mensagem <span class="label-note">(opcional)</span></label>
+                <textarea id="message" name="message" placeholder="A sua mensagem"></textarea>
+            </div>
+            <!-- OPTIONAL: newsletter opt-in — see the note in index.html. -->
+            <div class="form-group">
+                <label class="form-check">
+                    <input type="checkbox" name="newsletter" value="1">
+                    <span>Também quero receber novidades por email</span>
+                </label>
+            </div>
+            <!-- /OPTIONAL -->
+            <!-- Same value as index.html, deliberately not translated — see the note there.
+                 The owner reads one language regardless of which page this came from. -->
+            <input type="hidden" name="form_type" value="Contact form">
+            <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+            <button type="submit" class="btn-submit" data-submitting="A enviar…">Enviar</button>
+        </form>
+    </div>
+</dialog>
+
+<script defer src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+<script type="module" src="../starter/assets/js/main.js"></script>
+</body>
+</html>

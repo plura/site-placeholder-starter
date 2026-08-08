@@ -1,7 +1,7 @@
 <mjml>
 <mj-head>
-	<mj-title>Novo Contacto</mj-title>
-	<mj-preview>Novo Contacto — Site Name</mj-preview>
+	<mj-title>New enquiry</mj-title>
+	<mj-preview>New enquiry from %name% via {{CLIENT_NAME}}</mj-preview>
 	<mj-include path="../_partials/_head.mjml" />
 </mj-head>
 <mj-body>
@@ -9,18 +9,18 @@
 
 		<mj-include path="../_partials/_header.mjml" />
 
-		<mj-section mj-class="card-top" css-class="card-top">
-			<mj-column width="70%">
-				<mj-text mj-class="heading" padding="0 0 20px">Novo contacto</mj-text>
-			</mj-column>
-			<mj-column width="30%">
-				<mj-text mj-class="date-text" padding="0 0 20px">%date%</mj-text>
+		<mj-section mj-class="card-body" css-class="card-body" padding="34px 38px 28px">
+			<mj-column>
+				<mj-include path="_partials/_kicker.mjml" />
+				<mj-text mj-class="heading" padding="0">New enquiry</mj-text>
 			</mj-column>
 		</mj-section>
 
-		<mj-include path="../_partials/_fields.mjml" />
+		<!-- Shared with contact-reply(.pt).mjml so the visitor's copy matches exactly. -->
+		<mj-include path="_partials/_fields.mjml" />
 
 		<mj-include path="../_partials/_footer.mjml" />
+
 		<mj-include path="../_partials/_credit.mjml" />
 
 	</mj-wrapper>

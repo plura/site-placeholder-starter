@@ -1,0 +1,25 @@
+{
+	"CLIENT_NAME": "Site Name",
+	"CLIENT_URL": "https://example.com/",
+	"CLIENT_EMAIL": "info@example.com",
+	"CLIENT_PHONE": "+351 900 000 000",
+	"CLIENT_ADDRESS": "Address line, Postal Code City",
+	"CLIENT_MAP_URL": "https://maps.app.goo.gl/",
+	"CLIENT_INSTAGRAM": "https://www.instagram.com/",
+	"CLIENT_FACEBOOK": "https://www.facebook.com/",
+	"CLIENT_LINKEDIN": "https://www.linkedin.com/",
+
+	"BRAND_FONT": "Arial, Helvetica, sans-serif",
+	"BRAND_FONT_HEADING": "Arial, Helvetica, sans-serif",
+	"BRAND_ACCENT": "#3d5a80",
+	"BRAND_INK": "#1a1a1a",
+	"BRAND_MUTED": "#6f6f6f",
+	"BRAND_SURFACE": "#ffffff",
+	"BRAND_FRAME": "#f4f3f1",
+	"BRAND_TINT": "#f1efec",
+	"BRAND_DARK": "#2b2926",
+	"BRAND_DARK_MUTED": "#a49e97",
+	"BRAND_DARK_RULE": "#4a443d",
+	"BRAND_RADIUS": "14px",
+	"BRAND_RADIUS_INNER": "13px"
+}

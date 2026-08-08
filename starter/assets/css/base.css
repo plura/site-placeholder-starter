@@ -2,9 +2,13 @@
 	BRAND CUSTOMIZATION: swap the color/font values below for the client's actual brand.
 	Keep the variable NAMES as-is — layout.css/components.css/logo.css (once added) all
 	reference these names, not literal values, so a rebrand is just editing this one block.
-	Replace the Google Fonts @import (or remove it) with whatever the client's fonts are.
+
+	The webfonts themselves are loaded by <link> tags in each page's <head>, not by an
+	@import here: @import serializes the request chain (the browser has to fetch and parse
+	this file before it even discovers the font URL), while a <link> starts immediately and
+	can be paired with preconnect. Changing fonts means editing those tags and the two
+	--site-font- values below.
 */
-@import url('https://fonts.googleapis.com/css2?family=Cardo&family=Outfit:wght@300;400&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -112,11 +116,12 @@
 /* /OPTIONAL */
 
 /* OPTIONAL (2/2): manual toggle — only meaningful together with OPTIONAL (1/2) above. Gives
-   [data-theme="light"] (set by #theme-toggle / assets/js/theme.js) explicit override power over
+   [data-theme="light"] (set by #theme-toggle / starter/assets/js/theme.js) explicit override power over
    the OS/browser preference. Remove alongside the toggle button + inline anti-FOUC script in
-   index.html, assets/js/theme.js and its import in main.js, the .theme-toggle rules and the
-   [data-theme] select-SVG rule in components.css, if this project should auto-follow the
-   OS/browser preference only, with no manual override. */
+   index.html, starter/assets/js/theme.js and its import in main.js, the .theme-toggle rules and the
+   [data-theme] select-SVG rule in components.css (leaving the shared .page-controls rail, which
+   the language switch also uses), if this project should auto-follow the OS/browser preference
+   only, with no manual override. */
 :root[data-theme="light"] {
     --site-bg:            var(--light-bg);
     --site-fg:            var(--light-fg);

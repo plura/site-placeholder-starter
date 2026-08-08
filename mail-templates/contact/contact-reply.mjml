@@ -1,7 +1,9 @@
 <mjml>
 <mj-head>
-	<mj-title>Obrigado pelo seu contacto</mj-title>
-	<mj-preview>Obrigado pelo seu contacto — Site Name</mj-preview>
+	<mj-title>Message received</mj-title>
+	<!-- Written from the visitor's side. Never reuse contact.mjml's preview here: that one is
+	     addressed to the site owner and would read oddly to the person who just wrote in. -->
+	<mj-preview>Thanks for getting in touch. Here is a copy of what you sent.</mj-preview>
 	<mj-include path="../_partials/_head.mjml" />
 </mj-head>
 <mj-body>
@@ -9,18 +11,34 @@
 
 		<mj-include path="../_partials/_header.mjml" />
 
-		<mj-section mj-class="body-card" css-class="body-card">
+		<!--
+			Differs from contact.mjml by exactly two things: this heading string, and the
+			intro-text block below it. Everything else, including the _fields.mjml include, is
+			identical, which is what guarantees this copy matches the notification.
+
+			Copy stays person-neutral: this starter ships to businesses, collectives and
+			one-person studios alike, so no "we" and no "I" — write from the reader's side
+			("Message received" / "you'll hear back"), not the sender's. No em dashes.
+
+			Kept short (even with a typical name filled in) so it wraps evenly across two lines at
+			this width without needing a forced break or a non-breaking space to protect the end
+			of the sentence — short enough that an unlucky wrap point is unlikely to matter.
+		-->
+		<mj-section mj-class="card-body" css-class="card-body" padding="34px 38px 28px">
 			<mj-column>
-				<mj-text mj-class="heading" align="center" padding="0 0 20px">Obrigado pelo seu contacto</mj-text>
-				<mj-text mj-class="intro-text" align="center">Olá %name%, recebemos a sua mensagem. Iremos analisá-la e entraremos em contacto consigo brevemente.</mj-text>
-				<mj-raw><tr><td class="message-quote">%message%</td></tr></mj-raw>
-				<mj-divider mj-class="field-divider" padding="20px 0 0" />
-				<mj-text mj-class="urgent-text">Se o assunto for urgente, pode contactar-nos diretamente através do <a href="tel:+351900000000" class="urgent-link">+351&zwnj; 900&zwnj; 000&zwnj; 000</a>.</mj-text>
-				<mj-button mj-class="cta-button" href="https://example.com/">Visitar o site</mj-button>
+				<mj-include path="_partials/_kicker.mjml" />
+				<mj-text mj-class="heading" padding="0">Message received</mj-text>
+				<mj-text mj-class="intro-text" padding="16px 0 0">
+					Thanks, <strong>%name%</strong>. You&rsquo;ll hear back soon. A copy of your
+					message follows.
+				</mj-text>
 			</mj-column>
 		</mj-section>
 
+		<mj-include path="_partials/_fields.mjml" />
+
 		<mj-include path="../_partials/_footer.mjml" />
+
 		<mj-include path="../_partials/_credit.mjml" />
 
 	</mj-wrapper>

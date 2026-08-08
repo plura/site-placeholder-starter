@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="pt">
+<!-- data-app-base: where the PHP endpoints sit relative to THIS page. Read by modal.js and
+     newsletter.js, which are shared by every language version and so cannot hardcode a depth. -->
+<html lang="en" data-app-base="starter/app/">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +9,25 @@
     <meta name="description" content="Site Name — one to two sentence description matching the JSON-LD description below.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://example.com/">
+
+    <!-- OPTIONAL (Tier 2): language alternates — INACTIVE, ships commented out. Uncomment to
+         publish the Portuguese version; see "Activating it" in docs/language.md for
+         the rest of the checklist. Every version must list every version including itself — a
+         one-sided pairing is ignored outright — and x-default names the version served to
+         locales matching none of the others.
+    <link rel="alternate" hreflang="en"        href="https://example.com/">
+    <link rel="alternate" hreflang="pt"        href="https://example.com/pt/">
+    <link rel="alternate" hreflang="x-default" href="https://example.com/">
+    -->
+
     <meta name="theme-color" content="#1a1a1a">
 
     <!-- OPTIONAL (2/2): manual toggle — remove this script (and #theme-toggle below,
-         assets/js/theme.js + its import in main.js, and the OPTIONAL (2/2) blocks in
+         starter/assets/js/theme.js + its import in main.js, and the OPTIONAL (2/2) blocks in
          base.css/components.css) for an auto-only (no manual override) dark/light site — the
          OPTIONAL (1/2) blocks alone already make the site auto-follow the OS/browser
          preference with no JS at all. Remove both tiers for a single-theme site.
-         Applies a stored light/dark override (see assets/js/theme.js) before first paint, so
+         Applies a stored light/dark override (see starter/assets/js/theme.js) before first paint, so
          there's no flash of the wrong theme. Deliberately does nothing when no override is
          stored — the CSS's own @media (prefers-color-scheme) handles following the system
          setting live in that case; this script only needs to step in when a manual choice
@@ -33,8 +46,8 @@
     <!-- /OPTIONAL -->
 
     <!-- Favicons — see README for the asset spec (sizes, formats) -->
-    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicons/favicon-96x96.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="starter/assets/favicons/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="starter/assets/favicons/apple-touch-icon.png">
     <link rel="manifest" href="site.webmanifest">
 
     <!-- Open Graph -->
@@ -43,8 +56,8 @@
     <meta property="og:site_name"   content="Site Name">
     <meta property="og:title"       content="Site Name | One-line Description">
     <meta property="og:description" content="One to two sentence description matching the JSON-LD description below.">
-    <meta property="og:locale"      content="pt_PT">
-    <meta property="og:image"       content="https://example.com/assets/images/og.png">
+    <meta property="og:locale"      content="en_GB">
+    <meta property="og:image"       content="https://example.com/starter/assets/images/og.png">
     <meta property="og:image:width"  content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt"    content="Site Name">
@@ -53,7 +66,7 @@
     <meta name="twitter:card"        content="summary_large_image">
     <meta name="twitter:title"       content="Site Name | One-line Description">
     <meta name="twitter:description" content="One to two sentence description matching the JSON-LD description below.">
-    <meta name="twitter:image"       content="https://example.com/assets/images/og.png">
+    <meta name="twitter:image"       content="https://example.com/starter/assets/images/og.png">
     <meta name="twitter:image:alt"   content="Site Name">
 
     <!--
@@ -69,7 +82,7 @@
         "@type": "LocalBusiness",
         "name": "Site Name",
         "url": "https://example.com/",
-        "image": "https://example.com/assets/images/og.png",
+        "image": "https://example.com/starter/assets/images/og.png",
         "description": "One to two sentence description matching the meta description above.",
         "telephone": "+351900000000",
         "email": "info@example.com",
@@ -88,20 +101,39 @@
     }
     </script>
 
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/layout.css">
-    <link rel="stylesheet" href="assets/css/components.css">
+    <!-- Webfonts. Loaded here rather than via @import in base.css so the browser can start
+         fetching them without parsing a stylesheet first. preconnect warms both hosts —
+         googleapis serves the CSS, gstatic the font files, and the latter needs crossorigin
+         because fonts are always fetched in CORS mode. Swap for the client's real fonts and
+         keep --site-font-serif/--site-font-sans in base.css in sync. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cardo&family=Outfit:wght@300;400&display=swap">
+
+    <link rel="stylesheet" href="starter/assets/css/base.css">
+    <link rel="stylesheet" href="starter/assets/css/layout.css">
+    <link rel="stylesheet" href="starter/assets/css/components.css">
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
 
-<!-- OPTIONAL (2/2): manual toggle — see the note on the inline script in <head> above. -->
-<button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema claro/escuro">
-    <i data-lucide="sun" width="18" height="18" class="theme-toggle__icon theme-toggle__icon--sun"></i>
-    <i data-lucide="moon" width="18" height="18" class="theme-toggle__icon theme-toggle__icon--moon"></i>
-</button>
-<!-- /OPTIONAL -->
+<!-- Fixed top-right rail. Both controls inside it are optional; the rail itself only needs
+     removing if neither survives. -->
+<div class="page-controls">
+    <!-- OPTIONAL (2/2): manual toggle — see the note on the inline script in <head> above. -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme">
+        <i data-lucide="sun" width="18" height="18" class="theme-toggle__icon theme-toggle__icon--sun"></i>
+        <i data-lucide="moon" width="18" height="18" class="theme-toggle__icon theme-toggle__icon--moon"></i>
+    </button>
+    <!-- /OPTIONAL -->
+
+    <!-- OPTIONAL (Tier 2): language switch — INACTIVE, ships commented out. Uncomment together
+         with the hreflang tags in <head>. A real link rather than a JS button, so crawlers
+         follow it; labelled with the language you get by clicking, not the one you're on.
+    <a class="lang-switch" href="pt/" hreflang="pt" lang="pt" aria-label="Ver em português">PT</a>
+    -->
+</div>
 
 <div class="page">
 
@@ -116,7 +148,7 @@
 
     <!--
         Logo placeholder — replace with the client's actual logo mark/wordmark and any
-        entrance animation (see assets/js/main.js for where bespoke animation modules hook in).
+        entrance animation (see starter/assets/js/main.js for where bespoke animation modules hook in).
     -->
     <div class="site-logo">
         <p class="site-logo__name">Site Name</p>
@@ -127,15 +159,19 @@
 
     <!-- OPTIONAL: mailing list signup, separate from the contact form — a lower-friction inline
          ask (no modal) for a single-field "leave your email" action. Remove this whole block
-         (and its styles in components.css, assets/js/newsletter.js + its import in main.js,
-         and app/subscribe.php + app/lib/mailchimp.php) if this project has no mailing list. -->
+         (and its styles in components.css, starter/assets/js/newsletter.js + its import in main.js,
+         and starter/app/subscribe.php + starter/app/lib/mailchimp.php) if this project has no mailing list. -->
     <div class="newsletter">
-        <p class="newsletter__kicker">Fique a par das novidades</p>
-        <form id="newsletter-form" novalidate>
+        <p class="newsletter__kicker">Stay up to date</p>
+        <!-- data-network-error: shown only when the request never completes (offline, server
+             unreachable). Anything the server itself answers with is rendered from its own
+             response, so this is the one string the JS needs that PHP can't supply. -->
+        <form id="newsletter-form" novalidate
+              data-network-error="Could not subscribe. Please try again.">
             <div class="newsletter__row">
                 <label for="newsletter-email" class="sr-only">Email</label>
-                <input type="email" id="newsletter-email" name="email" placeholder="o.seu@email.com" required>
-                <button type="submit" class="newsletter__submit" aria-label="Subscrever">
+                <input type="email" id="newsletter-email" name="email" placeholder="your@email.com" required>
+                <button type="submit" class="newsletter__submit" aria-label="Subscribe">
                     <i data-lucide="arrow-right" width="16" height="16"></i>
                 </button>
             </div>
@@ -157,23 +193,23 @@
         </div>
 
         <div class="cta-wrap">
-            <button class="btn-cta" id="open-modal">Saber Mais</button>
+            <button class="btn-cta" id="open-modal">Learn More</button>
         </div>
 
         <div class="socials">
             <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
-                <span class="social-icon" style="mask-image: url('assets/icons/instagram.svg')"></span>
+                <span class="social-icon" style="mask-image: url('starter/assets/icons/instagram.svg')"></span>
             </a>
             <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">
-                <span class="social-icon" style="mask-image: url('assets/icons/facebook.svg')"></span>
+                <span class="social-icon" style="mask-image: url('starter/assets/icons/facebook.svg')"></span>
             </a>
             <a href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn">
-                <span class="social-icon" style="mask-image: url('assets/icons/linkedin.svg')"></span>
+                <span class="social-icon" style="mask-image: url('starter/assets/icons/linkedin.svg')"></span>
             </a>
         </div>
 
         <div class="legal">
-            <p>&copy; 2026 Site Name. Todos os direitos reservados.</p>
+            <p>&copy; 2026 Site Name. All rights reserved.</p>
             <p class="footer-credit">Powered by <a href="https://plura.pt" target="_blank" rel="noopener">Plura</a></p>
         </div>
     </footer>
@@ -183,42 +219,55 @@
 <!-- Modal -->
 <dialog id="contact-dialog" aria-labelledby="modal-title">
     <div class="dialog__inner">
-        <button class="modal-close" id="close-modal" aria-label="Fechar">
+        <button class="modal-close" id="close-modal" aria-label="Close">
             <i data-lucide="x" width="20" height="20"></i>
         </button>
-        <h2 id="modal-title">Fique a par</h2>
-        <p>Deixe os seus dados e entraremos em contacto assim que estivermos disponíveis.</p>
-        <form id="contact-form" novalidate>
+        <h2 id="modal-title">Get in touch</h2>
+        <p>Leave your details and you'll hear back as soon as the site is live.</p>
+        <form id="contact-form" novalidate
+              data-network-error="Could not send. Please try again, or get in touch by email.">
             <div class="form-group">
-                <label for="name">Nome</label>
-                <input type="text" id="name" name="name" placeholder="O seu nome" required>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Your name" required>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="o.seu@email.com" required>
+                <input type="email" id="email" name="email" placeholder="your@email.com" required>
             </div>
             <div class="form-group">
-                <label for="phone">Telefone (opcional)</label>
+                <!-- The optional marker is a span, not text, so modal.js can strip it before
+                     posting the label as a field name without matching on language. -->
+                <label for="phone">Phone <span class="label-note">(optional)</span></label>
                 <input type="tel" id="phone" name="phone" placeholder="+351 900 000 000">
             </div>
             <div class="form-group">
-                <label for="message">Mensagem (opcional)</label>
-                <textarea id="message" name="message" placeholder="Em que podemos ajudar?"></textarea>
+                <label for="message">Message <span class="label-note">(optional)</span></label>
+                <textarea id="message" name="message" placeholder="Your message"></textarea>
             </div>
-            <!-- OPTIONAL: newsletter opt-in — also subscribes the submitter via app/submit.php's
-                 optional block. Remove this label if this project has no mailing list. -->
-            <label class="form-check">
-                <input type="checkbox" name="newsletter" value="1">
-                <span>Também quero receber novidades por email</span>
-            </label>
+            <!-- OPTIONAL: newsletter opt-in — also subscribes the submitter via starter/app/submit.php's
+                 optional block. Remove this whole .form-group if this project has no mailing list. -->
+            <div class="form-group">
+                <label class="form-check">
+                    <input type="checkbox" name="newsletter" value="1">
+                    <span>I'd also like to receive news by email</span>
+                </label>
+            </div>
             <!-- /OPTIONAL -->
+            <!-- Identifies this form in the notification email's kicker (%form_type% in
+                 contact.mjml/contact-reply.mjml) — useful once a project has more than one
+                 contact-shaped form. Value is in the OWNER's language, not the visitor's: the
+                 owner reads one language regardless of which page the enquiry came from, same
+                 as contact.mjml's own chrome strings. Keep this identical in pt/index.html;
+                 translate it only if the owner's language changes — see "Portuguese
+                 notification copy" in docs/language.md. -->
+            <input type="hidden" name="form_type" value="Contact form">
             <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
-            <button type="submit" class="btn-submit">Enviar</button>
+            <button type="submit" class="btn-submit" data-submitting="Sending…">Send</button>
         </form>
     </div>
 </dialog>
 
 <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
-<script type="module" src="assets/js/main.js"></script>
+<script type="module" src="starter/assets/js/main.js"></script>
 </body>
 </html>
