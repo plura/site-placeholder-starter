@@ -22,9 +22,10 @@ $BASE = [
     'invalid_email'      => 'Please enter a valid email address.',
     'send_error'         => 'Could not send. Please try again, or email us.',
     'sent'               => 'Message sent. We\'ll be in touch shortly.',
-    // OPTIONAL: only used when the contact form's opt-in checkbox was ticked and the subscribe
-    // succeeded. Says more than the standalone signup's message because two things happened.
-    'sent_subscribed'    => 'Message sent, and you\'re on the mailing list. We\'ll be in touch shortly.',
+    // OPTIONAL: appended to 'sent' when the contact form's opt-in was ticked and the subscribe
+    // succeeded. A separate sentence rather than a second full message, so the wording above
+    // only exists once.
+    'sent_subscribed'    => 'You\'re on the mailing list too.',
 
     // %s is contact.site_name from config.php. Easy to miss when translating, since the subject
     // is built here rather than in the mail template. This one is visitor-facing — the auto-reply
@@ -54,7 +55,7 @@ $OVERRIDES = [
         'invalid_email'      => 'Por favor introduza um endereço de email válido.',
         'send_error'         => 'Erro ao enviar. Por favor tente novamente ou contacte-nos por email.',
         'sent'               => 'Mensagem enviada. Entraremos em contacto em breve.',
-        'sent_subscribed'    => 'Mensagem enviada e ficou na nossa mailing list. Entraremos em contacto em breve.',
+        'sent_subscribed'    => 'Ficou também na nossa mailing list.',
 
         'subject_reply'  => '%s — recebemos o seu contacto',
 

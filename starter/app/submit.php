@@ -249,9 +249,14 @@ if (!empty($_POST['newsletter'])) {
 // /OPTIONAL
 
 // —— Done ————————————————————————————————————————————————————————————————————
-// Only claims the subscription when it actually went through. A provider failure here is
-// best-effort and doesn't fail the submission, so the plain message is the honest one.
+// Same join-what-applies shape as build_kicker() above: one sentence per outcome, assembled
+// from whichever actually happened. The subscription line is only added when the provider
+// confirmed it — that call is best-effort and doesn't fail the submission, so claiming it
+// unconditionally would sometimes be untrue.
 echo json_encode([
     'success' => true,
-    'message' => $subscribed ? $strings['sent_subscribed'] : $strings['sent'],
+    'message' => implode(' ', array_filter([
+        $strings['sent'],
+        $subscribed ? $strings['sent_subscribed'] : '',
+    ])),
 ]);

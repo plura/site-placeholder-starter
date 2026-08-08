@@ -52,7 +52,7 @@ dialog.addEventListener('close', () => {
     submitBtn.disabled = false;
     submitBtn.textContent = LABEL_SUBMIT;
     form.querySelectorAll('.form-success, .form-error').forEach(el => el.remove());
-    form.querySelectorAll('.form-group, .form-check, .btn-submit').forEach(el => el.style.display = '');
+    form.classList.remove('is-sent');
 });
 
 openBtn.addEventListener('click', openModal);
@@ -91,9 +91,7 @@ form.addEventListener('submit', async function (e) {
     const { ok, message } = await post('submit.php', data);
 
     if (ok) {
-        // .form-check is the OPTIONAL newsletter opt-in, which isn't a .form-group — leaving it
-        // out strands a lone checkbox under the success message.
-        form.querySelectorAll('.form-group, .form-check, .btn-submit').forEach(el => el.style.display = 'none');
+        form.classList.add('is-sent');
         const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: message });
         form.appendChild(msg);
         setTimeout(closeModal, 2800);

@@ -22,7 +22,7 @@ if (form) {
         const { ok, message } = await post('subscribe.php', data);
 
         if (ok) {
-            form.querySelector('.newsletter__row').style.display = 'none';
+            form.classList.add('is-sent');
             const msg = Object.assign(document.createElement('p'), { className: 'form-success', textContent: message });
             form.appendChild(msg);
             return;

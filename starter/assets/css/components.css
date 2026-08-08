@@ -321,6 +321,14 @@ dialog p {
 /* /OPTIONAL */
 
 /* ── Form feedback ── */
+/* Set on the <form> once a submission succeeds, so what disappears is declared here rather than
+   listed in a JS selector — and undone by removing one class, with no inline styles to restore.
+   .form-check is the OPTIONAL newsletter opt-in; harmless to leave listed if that's removed. */
+.is-sent :is(.form-group, .form-check, .btn-submit),
+.is-sent .newsletter__row {
+    display: none;
+}
+
 .form-success {
     font-size: var(--site-text-sm);
     color: var(--site-surface-fg);
