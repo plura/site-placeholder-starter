@@ -2,22 +2,27 @@
    Fixed top-right rail for the theme toggle and/or the language switch. Both are optional and
    independently removable, so the rail and the shared circle styling live outside either one's
    OPTIONAL block — positioning one relative to the other would leave the survivor misplaced
-   when the other is deleted. Remove this section only if both controls are gone. */
+   when the other is deleted. Remove this section only if both controls are gone.
+
+   Anything in the rail carries .page-control for the circle, plus its own class for whatever
+   it puts inside. Listing the control classes in a shared selector instead would mean a new
+   control — including one added from starter/custom/ — rendering unstyled until someone
+   remembered to extend it. */
 .page-controls {
     position: fixed;
-    top: var(--site-space-lg);
-    right: var(--site-space-lg);
+    top: var(--site-space-sm);
+    right: var(--site-space-sm);
     z-index: 2;
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
-:is(.theme-toggle, .lang-switch) {
+.page-control {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     background: none;
     border: 1px solid var(--site-border);
     border-radius: 50%;
@@ -26,9 +31,24 @@
     transition: border-color var(--site-transition), color var(--site-transition);
 }
 
-:is(.theme-toggle, .lang-switch):hover {
+.page-control:hover {
     border-color: var(--site-color-accent);
     color: var(--site-color-accent);
+}
+
+/* Roomier once there's screen to spare. Mobile keeps the tighter values as the base, so the
+   rail stays out of the way of a page that's mostly one centred column. */
+@media (min-width: 480px) {
+    .page-controls {
+        top: var(--site-space-lg);
+        right: var(--site-space-lg);
+        gap: 8px;
+    }
+
+    .page-control {
+        width: 36px;
+        height: 36px;
+    }
 }
 
 /* OPTIONAL (2/2): manual toggle — remove alongside the #theme-toggle button + inline anti-FOUC
