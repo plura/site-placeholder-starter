@@ -245,13 +245,13 @@
                 <textarea id="message" name="message" placeholder="Your message"></textarea>
             </div>
             <!-- OPTIONAL: newsletter opt-in — also subscribes the submitter via starter/app/submit.php's
-                 optional block. Remove this whole .form-group if this project has no mailing list. -->
-            <div class="form-group">
-                <label class="form-check">
-                    <input type="checkbox" name="newsletter" value="1">
-                    <span>I'd also like to receive news by email</span>
-                </label>
-            </div>
+                 optional block. Not wrapped in a .form-group: that styles its label as a block
+                 caption and its input as a full-width underlined field, neither of which suits a
+                 checkbox. .form-check carries the matching row spacing itself. -->
+            <label class="form-check">
+                <input type="checkbox" name="newsletter" value="1">
+                <span>I'd also like to receive news by email</span>
+            </label>
             <!-- /OPTIONAL -->
             <!-- Identifies this form in the notification email's kicker (%form_type% in
                  contact.mjml/contact-reply.mjml) — useful once a project has more than one

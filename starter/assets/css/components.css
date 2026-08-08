@@ -264,8 +264,10 @@ dialog p {
 
 /* OPTIONAL: newsletter opt-in checkbox inside the contact form — remove alongside the
    <label class="form-check"> in index.html if this project has no mailing list. */
-/* Carries .form-group alongside this in the markup, for the shared row spacing — so this only
-   describes the checkbox-and-label layout, and the opt-in hides with every other field. */
+/* A sibling of .form-group, not a child of one. .form-group isn't just row spacing — it styles
+   its label as a block caption and its input as a full-width underlined field, both of which are
+   wrong for a checkbox sitting beside its text. It carries the same margin-bottom so the rows
+   still line up, and .is-sent lists it explicitly for that reason. */
 .form-check {
     display: flex;
     align-items: center;
@@ -273,6 +275,7 @@ dialog p {
     font-size: var(--site-text-sm);
     color: var(--site-surface-muted);
     cursor: pointer;
+    margin-bottom: 1.1rem;
 }
 
 .form-check input[type="checkbox"] {
@@ -324,7 +327,7 @@ dialog p {
 /* ── Form feedback ── */
 /* Set on the <form> once a submission succeeds, so what disappears is declared here rather than
    listed in a JS selector — and undone by removing one class, with no inline styles to restore. */
-.is-sent :is(.form-group, .btn-submit),
+.is-sent :is(.form-group, .form-check, .btn-submit),
 .is-sent .newsletter__row {
     display: none;
 }
