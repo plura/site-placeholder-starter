@@ -18,10 +18,11 @@ equivalent mail-client-dark-mode-mangling constraint forcing it to stay light-on
   `--site-*` then resolves to whichever set is active. **When doing BRAND CUSTOMIZATION, edit
   the raw `--dark-*`/`--light-*` values, not the `--site-*` lines** — the `--site-*` lines are
   the switching mechanism itself, not the palette. `--dark-bg`/`--light-bg` are the one exception
-  to "defined once": they're repeated as literal hexes in the `theme-color` `<meta>` and the JS
-  that updates it (`index.html`, `pt/index.html`, `starter/assets/js/theme.js`), because
-  `theme-color` paints browser chrome rather than the page and a `<meta>` can't read a custom
-  property. Recolouring the background means editing all four spots.
+  to "defined once": they're repeated as literal hexes in the `theme-color` `<meta>` and the
+  inline pre-paint script of each page (`index.html`, `pt/index.html`), because `theme-color`
+  paints browser chrome rather than the page and a `<meta>` can't read a custom property.
+  Recolouring the background means editing those four spots; `starter/assets/js/theme.js` isn't
+  one of them — it reads `--site-bg` off the computed style.
 - Switching precedence: an explicit `[data-theme="light"]`/`[data-theme="dark"]` attribute on
   `<html>` (set by the toggle) always wins; otherwise `@media (prefers-color-scheme: light)`
   applies the light palette; the unconditional `:root` default (no query needed) is dark.

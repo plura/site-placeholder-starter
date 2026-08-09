@@ -16,6 +16,9 @@ if (toggleBtn) {
 
         root.setAttribute('data-theme', next);
         localStorage.setItem(STORAGE_KEY, next);
-        themeColorMeta?.setAttribute('content', next === 'light' ? '#f5f4f2' : '#1a1a1a');
+        // setAttribute above forces a style recalc, so --site-bg already holds the new theme's
+        // background — read it back instead of repeating the hex. The inline pre-paint script in
+        // <head> can't do this: it runs above the stylesheet <link>s, so nothing resolves yet.
+        themeColorMeta?.setAttribute('content', getComputedStyle(root).getPropertyValue('--site-bg').trim());
     });
 }

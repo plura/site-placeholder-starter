@@ -66,7 +66,7 @@ A manual pass. The cost depends on the file.
 | | Travels how |
 | --- | --- |
 | `starter/app/*.php`, `starter/app/lib/` | **Copy wholesale.** Installations diverge here by stripped comments, never logic |
-| `starter/assets/js/*.js` | **Copy, then re-check.** Exceptions: brand values in `theme.js`, added imports in `main.js` |
+| `starter/assets/js/*.js` | **Copy, then re-check.** Exception: added imports in `main.js`. `theme.js` no longer carries brand values — it reads them from the CSS |
 | `starter/assets/css/*.css` | **Merge by hand.** Brand tokens interleaved throughout |
 | `index.html`, `pt/index.html` | **Merge by hand.** Only structural changes travel |
 | `robots.txt`, `sitemap.xml`, `site.webmanifest` | **Never.** Real domain — copying back breaks the live site |

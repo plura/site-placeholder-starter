@@ -34,10 +34,12 @@
     */
     --site-color-accent: #4a90d9; /* constant across both themes */
 
-    /* --dark-bg / --light-bg are duplicated as literals in the theme-color <meta> and the JS that
-       updates it (index.html, pt/index.html, starter/assets/js/theme.js). A <meta> can't read a
-       custom property, and theme-color paints browser chrome (Android address bar, iOS status bar,
-       PWA title bar) rather than the page, so CSS can't reach it — recolour all four spots together. */
+    /* --dark-bg / --light-bg are duplicated as literals in the theme-color <meta> and the inline
+       pre-paint script of each page (index.html, pt/index.html) — four spots, recolour together.
+       A <meta> can't read a custom property, and theme-color paints browser chrome (Android
+       address bar, iOS status bar, PWA title bar) rather than the page, so CSS can't reach it.
+       theme.js doesn't repeat them: it runs on click, after the stylesheets, so it reads
+       --site-bg back off the computed style instead. */
     --dark-bg:            #1a1a1a;
     --dark-fg:            #f0f0f0;
     --dark-muted:         #999999;
