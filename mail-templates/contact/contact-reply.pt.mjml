@@ -6,12 +6,16 @@
 	Only the reply is translated. contact.mjml (the notification) goes to the site owner, who
 	reads one language regardless of which version the visitor used.
 
+	Where the English opens with a thanks, this opens with the name alone: "Obrigado" agrees with
+	the sender, whose gender the starter cannot know, and "Obrigado/a" reads as a form rather than
+	as copy. See "Copy conventions" in docs/language.md.
+
 	Compiles to starter/app/templates/contact-reply.pt.html — see the README for the command.
 -->
 <mjml>
 <mj-head>
 	<mj-title>Mensagem recebida</mj-title>
-	<mj-preview>Obrigado pelo contacto. Aqui fica uma c&oacute;pia do que enviou.</mj-preview>
+	<mj-preview>Aqui fica uma c&oacute;pia do que enviou. Receber&aacute; resposta em breve.</mj-preview>
 	<mj-include path="../_partials/_head.mjml" />
 </mj-head>
 <mj-body>
@@ -24,7 +28,7 @@
 				<mj-include path="_partials/_kicker.mjml" />
 				<mj-text mj-class="heading" padding="0">Mensagem recebida</mj-text>
 				<mj-text mj-class="intro-text" padding="16px 0 0">
-					Obrigado, <strong>%name%</strong>. Receber&aacute; resposta em breve. C&oacute;pia
+					Ol&aacute;, <strong>%name%</strong>. Receber&aacute; resposta em breve. C&oacute;pia
 					da mensagem abaixo.
 				</mj-text>
 			</mj-column>
