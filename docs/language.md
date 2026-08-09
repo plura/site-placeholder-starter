@@ -56,7 +56,7 @@ rather than mixing *mailing list*, *lista de email* and *subscrição*.
 | `starter/app/strings.php` | Everything the endpoints return, **including both email subject lines** — `$BASE`/`$OVERRIDES` follow the visitor, `$OWNER` doesn't |
 | `mail-templates/` | Email copy, inline — recompile after editing |
 
-**There is no JS dictionary.** `modal.js` and `newsletter.js` take their copy from the markup:
+**There is no JS dictionary.** The JS takes its copy from the markup:
 the idle button label is the button's own text, and the two strings with no natural home are
 `data-` attributes. Each language is a separate HTML file, so a page already *is* its language
 and there's nothing for JS to resolve. Every other message the user sees comes from the

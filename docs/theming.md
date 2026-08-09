@@ -4,8 +4,9 @@ The site follows the visitor's OS/browser preference (`prefers-color-scheme`) by
 a manual toggle (top-right corner, `#theme-toggle` / `starter/assets/js/theme.js`) that overrides it and
 persists the choice in `localStorage`. The contact modal re-themes too (a dark card in dark
 mode), not just the page canvas — it doesn't stay fixed-light the way the email templates
-deliberately do (see above); the website's modal is fully within our own CSS, so there's no
-equivalent mail-client-dark-mode-mangling constraint forcing it to stay light-only.
+deliberately do (see [mail-templates.md](mail-templates.md)); the website's modal is fully within
+our own CSS, so there's no equivalent mail-client-dark-mode-mangling constraint forcing it to
+stay light-only.
 
 - **Two independent color axes** in `starter/assets/css/base.css`: **page** tokens (`--site-bg`,
   `--site-fg`, `--site-muted`, `--site-border`) style the canvas; **surface** tokens
@@ -36,8 +37,9 @@ equivalent mail-client-dark-mode-mangling constraint forcing it to stay light-on
   separate rules instead of tokenized. Doesn't matter unless a project actually adds a
   `<select>` to the contact form (none does by default).
 - **Both the mode and the toggle are optional, independently of each other** — see "Optional
-  features" below. Every block involved is marked `OPTIONAL (1/2)` (dark/light mode itself —
-  auto-follows the OS/browser preference, no JS) or `OPTIONAL (2/2)` (the manual toggle layered
-  on top of it). Keeping (1/2) without (2/2) is a valid, smaller combination (auto-only, no
-  override button); removing both means a single (dark) theme.
+  features" in the [README](../README.md). Every block involved is marked `OPTIONAL (1/2)`
+  (dark/light mode itself — auto-follows the OS/browser preference, no JS) or
+  `OPTIONAL (2/2)` (the manual toggle layered on top of it). Keeping (1/2) without (2/2) is a
+  valid, smaller combination (auto-only, no override button); removing both means a single
+  (dark) theme.
 

@@ -33,8 +33,11 @@ typeface.
 npm run build:mail
 ```
 
-Run from the repo root, after any `mail-templates/` edit (`npm install` once first). It's
-`tools/build-mail.mjs`: replaces every `{{TOKEN}}` in a throwaway copy of `mail-templates/`
+Run from the repo root, after any `mail-templates/` edit. There is nothing to install — the MJML
+CLI is fetched and cached by `npx` on first use, which is why the repo declares no dependencies
+and why the first run needs a network connection.
+
+It's `tools/build-mail.mjs`: replaces every `{{TOKEN}}` in a throwaway copy of `mail-templates/`
 (never the sources themselves — see the comment at the top of that file for why), compiles the
 three contact templates with MJML into `starter/app/templates/`, and finishes by running
 `node mail-templates/build-guard.js starter/app/templates` — which fails the build if any
@@ -57,10 +60,9 @@ test point; open one of those files directly in a browser. `npm run build:mail -
 rebuilds on every `mail-templates/` change, so that file can just be left open with a browser
 auto-refresh extension (e.g. VS Code's Live Preview) pointed at it.
 
-Prefer to see the exact MJML CLI invocations instead (for debugging a compile that `build:mail`
-doesn't explain well enough on its own)? They're spelled out in `tools/build-mail.mjs`'s use of
-the `mjml` package — same compile, just wired to run programmatically against the temp copy
-rather than shelled out three times.
+To debug a compile that `build:mail` doesn't explain well enough on its own, the exact CLI flags
+are in the `npx mjml` invocation in `tools/build-mail.mjs` — one run per template, against the
+temp copy.
 
 ## Mail template gotchas (cost real debugging time — read before changing structure)
 
@@ -91,8 +93,8 @@ rather than shelled out three times.
   field is *absent* from a template — `strtr()` in `submit.php` will substitute it if that field
   happens to be one it's filling that send, and even where it doesn't, it makes the template
   look (to a human grepping the compiled output, or to a future contributor skimming it) like it
-  still uses a placeholder it deliberately doesn't. Bitten by both shapes of this while writing
-  the redesign — worth checking any comment near a placeholder-heavy section before it ships.
+  still uses a placeholder it deliberately doesn't. Check any comment near a placeholder-heavy
+  section before it ships.
 - Raw HTML spliced via `<mj-raw>` into an existing column must be a bare `<tr><td>` — never
   a full `<table>`. A column's content shares one `<tbody>`, and `<table>` is not a valid
   direct child of `<tbody>`; browsers "fix" this via foster parenting, silently relocating

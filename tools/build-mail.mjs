@@ -2,7 +2,7 @@
 /**
  * Replaces every {{TOKEN}} in mail-templates/, compiles the three contact templates with MJML,
  * and runs build-guard.js against the result — the full pipeline documented under "Compiling
- * the MJML" in the README, as one command instead of four.
+ * the MJML" in docs/mail-templates.md, as one command instead of four.
  *
  *     npm run build:mail
  *     npm run build:mail -- --watch
@@ -18,12 +18,10 @@
  * accumulating hand-edits in place, which is what would make future starter updates (copying
  * mail-templates/ wholesale into an already-customized installation) turn into a diff-and-merge exercise.
  *
- * There is no way to preview mail-templates/*.mjml directly, in a browser or in the VS Code MJML
- * extension — the source deliberately has no color/font values, only tokens, so it has nothing
- * to render correctly. The compiled starter/app/templates/*.html this script produces is the
- * real test point; open one of those files directly in a browser. --watch rebuilds on every
- * mail-templates/ change so that file can just be left open with a browser auto-refresh
- * extension (e.g. VS Code's Live Preview) pointed at it.
+ * The .mjml sources cannot be previewed — they hold tokens, not values, so there is nothing for
+ * a browser or the VS Code MJML extension to render correctly. The compiled output is the real
+ * test point; --watch rebuilds it on every mail-templates/ change. See "Compiling the MJML" in
+ * docs/mail-templates.md.
  */
 import { readFile, writeFile, readdir, mkdtemp, rm, cp, access } from 'node:fs/promises';
 import { watch } from 'node:fs';

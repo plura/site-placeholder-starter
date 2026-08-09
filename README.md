@@ -32,7 +32,7 @@ invented once.
    `submit.php` change, and no label text to keep in sync.
 7. **`cp mail-templates/tokens.example.json mail-templates/tokens.json`** and fill in the
    client's real values. See `mail-templates/_tokens.json` for the full list and rules.
-8. **`npm install && npm run build:mail`**, then `cp starter/app/config.example.php
+8. **`npm run build:mail`**, then `cp starter/app/config.example.php
    starter/app/config.php` and fill in SMTP credentials (and the `newsletter` block, if keeping
    a mailing list).
 9. **Generate favicons** and `starter/assets/images/og.png` — see [Favicon spec](#favicon-spec).
