@@ -1,0 +1,35 @@
+# Triggers a cPanel Git Version Control deploy over HTTPS. OPTIONAL — pairs with
+# .cpanel.yml.example; see docs/deploying.md.
+#
+# THIS FILE MOVES UP ONE LEVEL ON INSTALL, to the repo root, exactly like .cpanel.yml.example.
+# GitHub only reads workflows from <repo-root>/.github/workflows/, never from a subdirectory,
+# so a copy left inside placeholder/ does nothing at all — silently.
+#
+# Setup: drop the .example suffix, fill in the four values below, then generate a cPanel API
+# token (cPanel -> Security -> Manage API Tokens) and store it as a repo secret named
+# CPANEL_TOKEN. This calls cPanel's UAPI on port 2083, so it works on hosts where SSH is
+# firewalled - which shared hosts very often do, whatever their key-management UI implies.
+name: Deploy to cPanel
+
+on:
+  # Auto-deploy: merging to main IS the decision to ship. Correct when work happens on branches
+  # and main is always meant to be live. DELETE THIS BLOCK for manual-only, if you commit
+  # directly to main while iterating - otherwise every half-finished commit goes live.
+  push:
+    branches: [main]
+  # Always keep this: it is the manual "Run workflow" button, and the only trigger if the
+  # push block above is removed.
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to cPanel
+        uses: pinkasey/cpanel-deploy-action@v1.0.0
+        with:
+          hostname: 'https://example.com'
+          repository_root: '/home/USER/repositories/REPO-NAME'
+          branch: main
+          cpanel_username: 'USER'
+          cpanel_token: '${{ secrets.CPANEL_TOKEN }}'

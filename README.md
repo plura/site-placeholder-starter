@@ -51,6 +51,8 @@ starter/                everything the browser loads
 mail-templates/         MJML source (not deployed)
 tools/                  build + checks (not deployed)
 docs/                   the rest of this documentation
+.cpanel.yml.example     \ optional git-deploy pair — these two move UP a level on
+.github/workflows/      / install, to the project's repo root, not into placeholder/
 ```
 
 `starter/` is wrapped so the placeholder can share a webroot with something else — the real site
@@ -104,11 +106,17 @@ back, and see [docs/touchpoints.md](docs/touchpoints.md) for what still needs ad
 
 ## Deploying
 
-Two patterns, depending on the host — see the global CLAUDE.md for both:
+Two patterns, depending on the host — see [docs/deploying.md](docs/deploying.md) for the full
+comparison and setup:
 
-- Plain SFTP/FTPS sync (most shared hosts).
-- cPanel Git Version Control + a manually-triggered GitHub Actions deploy (`workflow_dispatch`,
-  not `on: push`), where supported.
+- Plain SFTP/FTPS sync (most shared hosts). Ships ready in `.vscode/sftp.json.example`.
+- cPanel Git Version Control + a GitHub Actions trigger, where supported. Ships as
+  `.cpanel.yml.example` and `.github/workflows/deploy.yml.example` — **the only two files here
+  that move UP a level on install**, to the project's repo root rather than into `placeholder/`.
+
+Prefer the git deploy where the host offers it: what's live becomes a commit you can name.
+Its one regression is that `cp -R` can never delete, so removing a file from the repo never
+removes it from the webroot.
 
 **Before the first sync, run `npm run check:config`.** It fails if the markup offers a feature
 `config.php` can't serve — a contact form with no SMTP, a newsletter signup with no credentials.
@@ -146,6 +154,7 @@ A `favicon.svg` is a nice-to-have but optional.
 | [touchpoints.md](docs/touchpoints.md) | Every place a client value hides — a social account touches six, the site name twenty-five |
 | [theming.md](docs/theming.md) | The dark/light token architecture and switching precedence |
 | [installations.md](docs/installations.md) | Which projects use this, what their READMEs should say, applying a change, porting one back up to date |
+| [deploying.md](docs/deploying.md) | SFTP vs cPanel git, which the host decides, and the two ways the git one bites |
 
 ## Conventions
 
