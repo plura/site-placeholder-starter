@@ -58,8 +58,12 @@ Setup, once:
    format" from cPanel's bundled git. Shared hosts also frequently firewall SSH outright even
    while offering a key-management page (`ssh -v -o ConnectTimeout=8 user@host` — a timeout
    means no shell).
-4. cPanel → Security → Manage API Tokens, generate one, store it as a GitHub repo secret named
-   `CPANEL_TOKEN`.
+4. cPanel → Security → Manage API Tokens, generate one. Two names are involved and only one of
+   them matters:
+   - The **cPanel-side label** is cosmetic — nothing reads it. Use `github-deploy`, so the
+     token is identifiable when auditing an account later.
+   - The **GitHub secret** must be named exactly `CPANEL_TOKEN`, which is what the workflow
+     references.
 5. Upload `starter/app/config.php` over SFTP. It is gitignored, so no deploy will ever create
    or update it.
 
