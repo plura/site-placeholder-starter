@@ -1,6 +1,11 @@
 # Deploying
 
-Two patterns. Pick one per project — the choice is the host's, not a preference.
+**The standard is cPanel Git Version Control, auto-deploying on merge to `main`.** SFTP is the
+fallback for hosts that can't do it, and stays configured alongside either way — see
+[Both at once](#both-at-once).
+
+So the only question per project is whether the host allows the standard, and that is the
+host's answer, not a preference:
 
 | | SFTP sync | cPanel Git Version Control |
 | --- | --- | --- |
@@ -13,10 +18,13 @@ Two patterns. Pick one per project — the choice is the host's, not a preferenc
 **Check the host first.** Log into cPanel and look for Git™ Version Control under Files. If it
 isn't there, the question is settled: SFTP.
 
-Git deploy is the better answer where it's available — the live site becomes a commit you can
-name, deploys are reproducible and logged, rollback is `git revert` plus a re-run, and write
-credentials live in a secret store instead of on a laptop. Its one real regression is that
-`cp -R` cannot delete.
+Why it's the standard: the live site becomes a commit you can name, deploys are reproducible
+and logged, rollback is `git revert` plus a re-run, and write credentials live in a secret store
+instead of on a laptop. Its one real regression is that `cp -R` cannot delete.
+
+**A project's own README should not re-explain any of this** — it belongs here, once. Record
+only what deviates: a host quirk, a trigger that isn't auto-on-push, or setup that isn't
+finished yet. See "What a project's README should say" in [installations.md](installations.md).
 
 ## SFTP sync
 

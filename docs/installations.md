@@ -41,9 +41,13 @@ Record the **decisions**, not the mechanism. `site-sandramacieira` is the workin
 - A **Divergences** section: removed features, the site/owner language decision, what's in
   `starter/custom/`, anything deleted rather than left empty, and any inverted default — with
   the reason, so nobody "fixes" it back.
+- **Deployment, only where it deviates** from the standard in
+  [deploying.md](deploying.md) — a host quirk worth knowing, a trigger that isn't
+  auto-on-push, SFTP because the host has no git, or setup that isn't wired up yet. The
+  per-project values (cPanel user, paths) are already in `.cpanel.yml`; don't restate them.
 
 **Don't include:** how the language system works, compile commands, the optional-features tree,
-MJML gotchas, or a listing of `starter/`. Link here instead.
+MJML gotchas, a listing of `starter/`, or how deploying works. Link here instead.
 
 The test: would a reader who already knows this starter be surprised? If not, cut it.
 

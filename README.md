@@ -106,17 +106,18 @@ back, and see [docs/touchpoints.md](docs/touchpoints.md) for what still needs ad
 
 ## Deploying
 
-Two patterns, depending on the host — see [docs/deploying.md](docs/deploying.md) for the full
-comparison and setup:
+**The standard is cPanel Git Version Control, auto-deploying on merge to `main`** — what's live
+becomes a commit you can name. Ships as `.cpanel.yml.example` and
+`.github/workflows/deploy.yml.example`, **the only two files here that move UP a level on
+install**, to the project's repo root rather than into `placeholder/`.
 
-- Plain SFTP/FTPS sync (most shared hosts). Ships ready in `.vscode/sftp.json.example`.
-- cPanel Git Version Control + a GitHub Actions trigger, where supported. Ships as
-  `.cpanel.yml.example` and `.github/workflows/deploy.yml.example` — **the only two files here
-  that move UP a level on install**, to the project's repo root rather than into `placeholder/`.
+SFTP is the fallback for hosts without it, and stays configured either way for
+`starter/app/config.php`, which is gitignored and so can never ride along on a git deploy.
+Ships ready in `.vscode/sftp.json.example`.
 
-Prefer the git deploy where the host offers it: what's live becomes a commit you can name.
-Its one regression is that `cp -R` can never delete, so removing a file from the repo never
-removes it from the webroot.
+Full comparison, setup, and the two ways the git one bites — chiefly that `cp -R` can never
+delete — in [docs/deploying.md](docs/deploying.md). A project's own README should link there
+rather than repeat it.
 
 **Before the first sync, run `npm run check:config`.** It fails if the markup offers a feature
 `config.php` can't serve — a contact form with no SMTP, a newsletter signup with no credentials.
